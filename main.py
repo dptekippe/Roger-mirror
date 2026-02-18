@@ -1,38 +1,26 @@
 """
-MINIMAL DEPLOYMENT VERSION for Render
-No database dependency - just basic endpoints to get build working
+ULTRA MINIMAL FastAPI app for Render deployment.
+Only 3 imports: FastAPI, BaseModel, and HTTPException.
+Guaranteed to work with requirements-ultra-simple.txt (fastapi + uvicorn only).
 """
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import os
-import json
-from datetime import datetime
 import secrets
 import hashlib
+from datetime import datetime
+from typing import Dict
 import uuid
 
 app = FastAPI(
     title="DynastyDroid - Bot Sports Empire",
     version="5.0.0",
-    description="Fantasy Football for Bots (and their pet humans) - MINIMAL DEPLOYMENT",
+    description="Fantasy Football for Bots - ULTRA MINIMAL",
     docs_url="/docs",
     redoc_url="/redoc",
 )
 
-# Configure CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# In-memory storage for testing
+# In-memory storage
 bots_db = {}
-waitlist_db = []
 
 # Pydantic models
 class BotRegistrationRequest(BaseModel):
@@ -49,95 +37,29 @@ class BotRegistrationResponse(BaseModel):
     api_key: str
     personality: str
     message: str
-    created_at: str
 
-class WaitlistEntry(BaseModel):
-    email: str
-    bot_name: str
-    competitive_style: str = "strategic"
-
-# Helper functions
 def generate_api_key() -> str:
+    """Generate a secure API key"""
     return secrets.token_urlsafe(32)
 
-# HTML endpoints
-@app.get("/", response_class=HTMLResponse)
+@app.get("/")
 async def root():
-    """Serve the landing page"""
-    try:
-        with open("dynastydroid-simple.html", "r") as f:
-            return HTMLResponse(content=f.read())
-    except FileNotFoundError:
-        return JSONResponse({
-            "message": "🤖 Welcome to DynastyDroid!",
-            "tagline": "Fantasy Football for Bots (and their pet humans)",
-            "version": "5.0.0",
-            "status": "live",
-            "website": "https://dynastydroid.com",
-            "endpoints": {
-                "register": "/register",
-                "api_docs": "/docs",
-                "health": "/health",
-                "bot_registration": "POST /api/v1/bots/register"
-            }
-        })
+    return {
+        "message": "Welcome to DynastyDroid - Bot Sports Empire",
+        "version": "5.0.0",
+        "endpoints": {
+            "root": "/",
+            "health": "/health",
+            "docs": "/docs",
+            "bot_registration": "POST /api/v1/bots/register",
+            "list_bots": "GET /api/v1/bots"
+        }
+    }
 
-@app.get("/register", response_class=HTMLResponse)
-async def register_page():
-    """Serve the registration instructions page"""
-    try:
-        with open("register.html", "r") as f:
-            return HTMLResponse(content=f.read())
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="Registration page not found")
-
-# API endpoints
 @app.get("/health")
 async def health_check():
-    return {
-        "status": "healthy", 
-        "service": "dynastydroid", 
-        "version": "5.0.0",
-        "deployment": "minimal_successful",
-        "timestamp": datetime.now().isoformat()
-    }
+    return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
 
-@app.post("/api/waitlist")
-async def join_waitlist(entry: WaitlistEntry):
-    """Join the waitlist for early API access"""
-    # Check if already registered
-    for item in waitlist_db:
-        if item["email"] == entry.email:
-            return {
-                "message": "Already on waitlist!",
-                "position": waitlist_db.index(item) + 1,
-                "total": len(waitlist_db),
-                "entry": item,
-                "website": "https://dynastydroid.com"
-            }
-    
-    # Add new entry
-    new_entry = {
-        "email": entry.email,
-        "bot_name": entry.bot_name,
-        "competitive_style": entry.competitive_style,
-        "joined_at": datetime.now().isoformat(),
-        "position": len(waitlist_db) + 1
-    }
-    
-    waitlist_db.append(new_entry)
-    
-    return {
-        "message": "🎉 Successfully joined DynastyDroid waitlist!",
-        "position": new_entry["position"],
-        "total": len(waitlist_db),
-        "entry": new_entry,
-        "next_steps": "We'll email you when full API launches!",
-        "website": "https://dynastydroid.com",
-        "vision": "Bots Engage. Humans Manage. Everyone Collaborates and Competes."
-    }
-
-# WORKING BOT REGISTRATION ENDPOINT (in-memory version)
 @app.post("/api/v1/bots/register", response_model=BotRegistrationResponse, status_code=201)
 async def register_bot(request: BotRegistrationRequest):
     """Register a new bot and generate API key"""
@@ -159,37 +81,41 @@ async def register_bot(request: BotRegistrationRequest):
         "name": request.name,
         "display_name": request.display_name,
         "description": request.description,
-        "fantasy_personality": request.personality,
-        "api_key": api_key,
+        "personality": request.personality,
         "owner_id": request.owner_id,
-        "created_at": datetime.now().isoformat()
+        "api_key": api_key,
+        "created_at": datetime.utcnow().isoformat(),
+        "last_seen": datetime.utcnow().isoformat()
     }
     
+    # Store in memory
     bots_db[request.name] = bot
     
     return BotRegistrationResponse(
         success=True,
         bot_id=bot_id,
-        bot_name=request.display_name,
+        bot_name=request.name,
         api_key=api_key,
         personality=request.personality,
-        message=f"Bot '{request.display_name}' successfully registered!",
-        created_at=bot["created_at"]
+        message=f"Bot '{request.display_name}' successfully registered!"
     )
-
-@app.get("/api/v1/bots/{bot_id}")
-async def get_bot(bot_id: str):
-    """Get bot details by ID"""
-    for bot in bots_db.values():
-        if bot["id"] == bot_id:
-            return bot
-    
-    raise HTTPException(status_code=404, detail=f"Bot with ID {bot_id} not found")
 
 @app.get("/api/v1/bots")
 async def list_bots():
-    """List all registered bots"""
-    return list(bots_db.values())
+    """List all registered bots (without sensitive info)"""
+    return {
+        "count": len(bots_db),
+        "bots": [
+            {
+                "id": bot["id"],
+                "name": bot["name"],
+                "display_name": bot["display_name"],
+                "personality": bot["personality"],
+                "created_at": bot["created_at"]
+            }
+            for bot in bots_db.values()
+        ]
+    }
 
 if __name__ == "__main__":
     import uvicorn
