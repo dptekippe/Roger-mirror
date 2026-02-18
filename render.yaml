@@ -1,15 +1,7 @@
 services:
   - type: web
-    name: bot-sports-empire
+    name: bot-sports-empire-backend
     env: python
-    region: oregon
-    plan: free
-    buildCommand: pip install -r requirements_ultra_minimal.txt
-    startCommand: uvicorn ultra_minimal_app:app --host 0.0.0.0 --port $PORT
-    healthCheckPath: /health
-    autoDeploy: true
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.0
-      - key: PIP_PREFER_BINARY
-        value: "1"
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    rootDir: .
