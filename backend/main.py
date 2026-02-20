@@ -1,336 +1,386 @@
 """
-DynastyDroid Backend API
-FastAPI backend for bot fantasy sports platform
+DynastyDroid - Bot Sports Empire API
+Phase 1 + Phase 2 + Phase 3: Draft Board Backend
 """
-from fastapi import FastAPI, HTTPException, Depends, status
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel, EmailStr
-from typing import Optional, List, Dict
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from datetime import datetime
+from pydantic import BaseModel
+from typing import Optional, List
 import uuid
 
-app = FastAPI(
-    title="DynastyDroid API",
-    description="API for bot fantasy sports platform",
-    version="1.0.0"
-)
+app = FastAPI()
 
-# CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # In production, restrict to your domains
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# In-memory storage
+bots_storage = {}
+leagues_storage = {}
+drafts_storage = {}
 
-# Security
-security = HTTPBearer()
+# WebSocket connections
+active_connections = {}
 
-# In-memory storage (replace with database in production)
-bots_db = {}
-api_keys_db = {}
-leagues_db = {}
-articles_db = {}
 
-# Models
-class BotCreate(BaseModel):
-    name: str
-    email: EmailStr
-    competitive_style: str  # aggressive, strategic, creative, etc.
-    primary_sport: str = "football"
+# ============ ROOT ============
 
-class BotResponse(BaseModel):
-    id: str
-    name: str
-    email: EmailStr
-    competitive_style: str
-    primary_sport: str
-    created_at: datetime
-    api_key: str
-    content_stats: Dict = {"articles_written": 0, "followers": 0}
-
-class LeagueCreate(BaseModel):
-    name: str
-    league_type: str  # fantasy, dynasty
-    sport: str = "football"
-    roster_settings: Dict = {}
-    description: Optional[str] = None
-    competitive_level: str = "mixed"  # casual, competitive, intense
-
-class LeagueResponse(BaseModel):
-    id: str
-    name: str
-    league_type: str
-    sport: str
-    roster_settings: Dict
-    description: Optional[str]
-    competitive_level: str
-    created_by: str
-    created_at: datetime
-    member_count: int
-    status: str = "forming"
-
-class ArticleCreate(BaseModel):
-    title: str
-    content: str
-    league_id: Optional[str] = None
-    tags: List[str] = []
-
-class ArticleResponse(BaseModel):
-    id: str
-    title: str
-    content: str
-    author_id: str
-    author_name: str
-    league_id: Optional[str]
-    tags: List[str]
-    created_at: datetime
-    views: int = 0
-    likes: int = 0
-    comments: int = 0
-
-# Helper functions
-def generate_api_key() -> str:
-    return f"dd_{uuid.uuid4().hex[:32]}"
-
-def verify_api_key(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    api_key = credentials.credentials
-    if api_key not in api_keys_db:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid API key"
-        )
-    bot_id = api_keys_db[api_key]
-    return bot_id
-
-# Routes
 @app.get("/")
 async def root():
     return {
-        "message": "DynastyDroid API",
-        "version": "1.0.0",
-        "endpoints": {
-            "bots": "/api/v1/bots",
-            "leagues": "/api/v1/leagues", 
-            "articles": "/api/v1/articles",
-            "docs": "/docs"
-        }
+        "message": "🤖 DynastyDroid - Bot Sports Empire",
+        "version": "7.0.0",
+        "phase": "1 + 2 + 3",
+        "features": {
+            "bots": "POST /api/v1/bots/register",
+            "leagues": "GET /api/v1/leagues",
+            "drafts": "GET /api/v1/drafts",
+            "websocket": "WS /ws/draft/{draft_id}"
+        },
+        "docs": "/docs"
     }
+
 
 @app.get("/health")
 async def health():
-    return {"status": "healthy", "timestamp": datetime.utcnow()}
+    return {
+        "status": "healthy",
+        "version": "7.0.0",
+        "timestamp": datetime.now().isoformat()
+    }
 
-# Bot endpoints
-@app.post("/api/v1/bots", response_model=BotResponse, status_code=status.HTTP_201_CREATED)
-async def create_bot(bot: BotCreate):
-    """Create a new bot account"""
-    bot_id = str(uuid.uuid4())
-    api_key = generate_api_key()
+
+# ============ PHASE 1: BOT REGISTRATION ============
+
+class BotRegistration(BaseModel):
+    name: str
+    display_name: str
+    moltbook_api_key: Optional[str] = None
+    description: str
+    webhook_url: Optional[str] = None
+
+
+class WebhookUpdate(BaseModel):
+    webhook_url: Optional[str] = None
+
+
+import httpx
+import requests
+import json
+import logging
+
+logger = logging.getLogger(__name__)
+
+async def verify_moltbook(api_key: str) -> dict:
+    """Verify a Moltbook API key and return bot info."""
+    logger.info(f"VERIFYING MOLTBOOK KEY: {api_key[:10]}...")
+    try:
+        # Sync call with requests
+        response = requests.get(
+            "https://www.moltbook.com/api/v1/agents/me",
+            headers={"Authorization": f"Bearer {api_key}"},
+            timeout=10
+        )
+        logger.info(f"Moltbook response status: {response.status_code}")
+        if response.status_code == 200:
+            return {"valid": True, "data": response.json()}
+        else:
+            return {"valid": False, "error": f"Invalid API key (HTTP {response.status_code})"}
+    except Exception as e:
+        logger.error(f"Moltbook verification error: {e}")
+        return {"valid": False, "error": str(e)}
+
+
+@app.post("/api/v1/bots/register")
+async def register_bot(bot: BotRegistration):
+    """Register a new bot with Moltbook verification"""
     
-    bot_data = {
+    # Verify Moltbook API key if provided
+    moltbook_username = None
+    if bot.moltbook_api_key:
+        # DEBUG: Force verification
+        raise HTTPException(status_code=400, detail=f"VERIFICATION_ENABLED: Checking key {bot.moltbook_api_key[:10]}...")
+        verify_result = await verify_moltbook(bot.moltbook_api_key)
+        if not verify_result["valid"]:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Moltbook verification failed: {verify_result['error']}"
+            )
+        moltbook_username = verify_result["data"].get("name")
+    
+    bot_id = f"bot_{uuid.uuid4().hex[:8]}"
+    api_key = f"sk_{uuid.uuid4().hex}"
+    
+    bots_storage[bot_id] = {
         "id": bot_id,
         "name": bot.name,
-        "email": bot.email,
-        "competitive_style": bot.competitive_style,
-        "primary_sport": bot.primary_sport,
-        "created_at": datetime.utcnow(),
+        "display_name": bot.display_name,
+        "moltbook_username": moltbook_username,
+        "description": bot.description,
+        "webhook_url": bot.webhook_url,
         "api_key": api_key,
-        "content_stats": {"articles_written": 0, "followers": 0}
+        "created_at": datetime.now().isoformat()
     }
     
-    bots_db[bot_id] = bot_data
-    api_keys_db[api_key] = bot_id
-    
-    return bot_data
+    return {
+        "success": True,
+        "bot_id": bot_id,
+        "bot_name": bot.display_name,
+        "api_key": api_key,
+        "message": f"Bot '{bot.display_name}' registered!"
+    }
 
-@app.get("/api/v1/bots/me", response_model=BotResponse)
-async def get_bot_me(bot_id: str = Depends(verify_api_key)):
-    """Get current bot's profile"""
-    if bot_id not in bots_db:
+
+@app.get("/api/v1/bots")
+async def list_bots(name: Optional[str] = None, moltbook: Optional[str] = None):
+    """List all bots, optionally filter by name or moltbook_username"""
+    bots = list(bots_storage.values())
+    
+    if name:
+        bots = [b for b in bots if name.lower() in (b.get('name') or '').lower() or name.lower() in (b.get('display_name') or '').lower()]
+    
+    if moltbook:
+        bots = [b for b in bots if moltbook.lower() == (b.get('moltbook_username') or '').lower()]
+    
+    return {"count": len(bots), "bots": bots}
+
+
+@app.get("/api/v1/bots/{bot_id}")
+async def get_bot(bot_id: str):
+    if bot_id not in bots_storage:
         raise HTTPException(status_code=404, detail="Bot not found")
-    return bots_db[bot_id]
+    return bots_storage[bot_id]
 
-# League endpoints
-@app.post("/api/v1/leagues", response_model=LeagueResponse, status_code=status.HTTP_201_CREATED)
-async def create_league(league: LeagueCreate, bot_id: str = Depends(verify_api_key)):
-    """Create a new league"""
-    league_id = str(uuid.uuid4())
-    
-    league_data = {
+
+@app.patch("/api/v1/bots/{bot_id}/webhook")
+async def update_webhook(bot_id: str, webhook: WebhookUpdate):
+    if bot_id not in bots_storage:
+        raise HTTPException(status_code=404, detail="Bot not found")
+    bots_storage[bot_id]["webhook_url"] = webhook.webhook_url
+    return {"success": True, "webhook_url": webhook.webhook_url}
+
+
+@app.get("/api/v1/bots/{bot_id}/ping")
+async def ping_bot(bot_id: str):
+    if bot_id not in bots_storage:
+        raise HTTPException(status_code=404, detail="Bot not found")
+    bot = bots_storage[bot_id]
+    return {
+        "success": True,
+        "bot_id": bot_id,
+        "bot_name": bot["display_name"],
+        "message": f"Pong! Bot '{bot['display_name']}' is active."
+    }
+
+
+# ============ PHASE 2: LEAGUE ENGINE ============
+
+class LeagueCreate(BaseModel):
+    name: str
+    description: str = ""
+    max_teams: int = 12
+    is_public: bool = True
+
+
+@app.post("/api/v1/leagues")
+async def create_league(league: LeagueCreate):
+    league_id = f"league_{uuid.uuid4().hex[:8]}"
+    leagues_storage[league_id] = {
         "id": league_id,
         "name": league.name,
-        "league_type": league.league_type,
-        "sport": league.sport,
-        "roster_settings": league.roster_settings,
         "description": league.description,
-        "competitive_level": league.competitive_level,
-        "created_by": bot_id,
-        "created_at": datetime.utcnow(),
-        "member_count": 1,
-        "status": "forming"
+        "max_teams": league.max_teams,
+        "is_public": league.is_public,
+        "created_at": datetime.now().isoformat(),
+        "teams": []
     }
-    
-    leagues_db[league_id] = league_data
-    return league_data
+    return leagues_storage[league_id]
 
-@app.get("/api/v1/leagues", response_model=List[LeagueResponse])
-async def list_leagues(
-    league_type: Optional[str] = None,
-    sport: Optional[str] = None,
-    competitive_level: Optional[str] = None,
-    limit: int = 20,
-    offset: int = 0
-):
-    """List leagues with optional filters"""
-    leagues = list(leagues_db.values())
-    
-    # Apply filters
-    if league_type:
-        leagues = [l for l in leagues if l["league_type"] == league_type]
-    if sport:
-        leagues = [l for l in leagues if l["sport"] == sport]
-    if competitive_level:
-        leagues = [l for l in leagues if l["competitive_level"] == competitive_level]
-    
-    # Paginate
-    leagues = leagues[offset:offset + limit]
-    return leagues
 
-@app.get("/api/v1/leagues/{league_id}", response_model=LeagueResponse)
+@app.get("/api/v1/leagues")
+async def list_leagues():
+    public_leagues = [l for l in leagues_storage.values() if l.get("is_public")]
+    return {"count": len(public_leagues), "leagues": public_leagues}
+
+
+@app.get("/api/v1/leagues/{league_id}")
 async def get_league(league_id: str):
-    """Get league details"""
-    if league_id not in leagues_db:
+    if league_id not in leagues_storage:
         raise HTTPException(status_code=404, detail="League not found")
-    return leagues_db[league_id]
+    return leagues_storage[league_id]
 
-# Article endpoints
-@app.post("/api/v1/articles", response_model=ArticleResponse, status_code=status.HTTP_201_CREATED)
-async def create_article(article: ArticleCreate, bot_id: str = Depends(verify_api_key)):
-    """Create a new article"""
-    article_id = str(uuid.uuid4())
-    bot = bots_db[bot_id]
+
+@app.post("/api/v1/leagues/{league_id}/join")
+async def join_league(league_id: str, bot_id: str):
+    if league_id not in leagues_storage:
+        raise HTTPException(status_code=404, detail="League not found")
+    if bot_id not in bots_storage:
+        raise HTTPException(status_code=404, detail="Bot not found")
     
-    article_data = {
-        "id": article_id,
-        "title": article.title,
-        "content": article.content,
-        "author_id": bot_id,
-        "author_name": bot["name"],
-        "league_id": article.league_id,
-        "tags": article.tags,
-        "created_at": datetime.utcnow(),
-        "views": 0,
-        "likes": 0,
-        "comments": 0
+    league = leagues_storage[league_id]
+    if len(league["teams"]) >= league["max_teams"]:
+        raise HTTPException(status_code=400, detail="League is full")
+    
+    if bot_id not in league["teams"]:
+        league["teams"].append(bot_id)
+    
+    return {"success": True, "league_id": league_id, "bot_id": bot_id}
+
+
+# ============ PHASE 3: DRAFT BOARD (MVP) ============
+
+class DraftCreate(BaseModel):
+    name: str
+    league_id: str
+    rounds: int = 15
+    pick_time: int = 180  # seconds
+    is_snake: bool = True
+
+
+class DraftPick(BaseModel):
+    bot_id: str
+    player_id: str
+    player_name: str
+    position: str = "WR"
+
+
+@app.post("/api/v1/drafts")
+async def create_draft(draft: DraftCreate):
+    """Create a new draft"""
+    draft_id = f"draft_{uuid.uuid4().hex[:8]}"
+    
+    # Generate pick order (snake draft)
+    teams = leagues_storage.get(draft.league_id, {}).get("teams", [])
+    if len(teams) < 2:
+        # Default 2 teams for demo
+        teams = ["bot_001", "bot_002"]
+    
+    # Create snake draft order
+    pick_order = []
+    for round_num in range(1, draft.rounds + 1):
+        for team_idx, team in enumerate(teams):
+            if round_num % 2 == 1:  # Odd rounds: 1->2->3
+                pick_order.append({
+                    "pick": len(pick_order) + 1,
+                    "round": round_num,
+                    "team_id": team,
+                    "player": None
+                })
+            else:  # Even rounds: 2->1->3 (snake)
+                pick_order.append({
+                    "pick": len(pick_order) + 1,
+                    "round": round_num,
+                    "team_id": teams[len(teams) - 1 - team_idx],
+                    "player": None
+                })
+    
+    drafts_storage[draft_id] = {
+        "id": draft_id,
+        "name": draft.name,
+        "league_id": draft.league_id,
+        "rounds": draft.rounds,
+        "pick_time": draft.pick_time,
+        "is_snake": draft.is_snake,
+        "teams": teams,
+        "pick_order": pick_order,
+        "current_pick": 0,
+        "timer_remaining": draft.pick_time,
+        "paused": False,
+        "created_at": datetime.now().isoformat(),
+        "status": "pending"  # pending, live, completed
     }
     
-    articles_db[article_id] = article_data
-    
-    # Update bot's content stats
-    bots_db[bot_id]["content_stats"]["articles_written"] += 1
-    
-    return article_data
+    return drafts_storage[draft_id]
 
-@app.get("/api/v1/articles", response_model=List[ArticleResponse])
-async def list_articles(
-    author_id: Optional[str] = None,
-    league_id: Optional[str] = None,
-    tag: Optional[str] = None,
-    limit: int = 20,
-    offset: int = 0
-):
-    """List articles with optional filters"""
-    articles = list(articles_db.values())
-    
-    # Apply filters
-    if author_id:
-        articles = [a for a in articles if a["author_id"] == author_id]
-    if league_id:
-        articles = [a for a in articles if a["league_id"] == league_id]
-    if tag:
-        articles = [a for a in articles if tag in a["tags"]]
-    
-    # Sort by newest first
-    articles.sort(key=lambda x: x["created_at"], reverse=True)
-    
-    # Paginate
-    articles = articles[offset:offset + limit]
-    return articles
 
-@app.get("/api/v1/articles/{article_id}", response_model=ArticleResponse)
-async def get_article(article_id: str):
-    """Get article details"""
-    if article_id not in articles_db:
-        raise HTTPException(status_code=404, detail="Article not found")
-    
-    # Increment view count
-    articles_db[article_id]["views"] += 1
-    
-    return articles_db[article_id]
+@app.get("/api/v1/drafts")
+async def list_drafts():
+    return {"count": len(drafts_storage), "drafts": list(drafts_storage.values())}
 
-# KTC ADP Endpoint
-@app.get("/api/v1/adp")
-async def get_dynasty_adp(limit: int = 50):
-    """Get Dynasty ADP from KeepTradeCut API"""
+
+@app.get("/api/v1/drafts/{draft_id}")
+async def get_draft(draft_id: str):
+    """Get full draft state"""
+    if draft_id not in drafts_storage:
+        raise HTTPException(status_code=404, detail="Draft not found")
+    return drafts_storage[draft_id]
+
+
+@app.post("/api/v1/drafts/{draft_id}/pick")
+async def make_pick(draft_id: str, pick: DraftPick):
+    """Make a pick in the draft"""
+    if draft_id not in drafts_storage:
+        raise HTTPException(status_code=404, detail="Draft not found")
+    
+    draft = drafts_storage[draft_id]
+    current_idx = draft["current_pick"]
+    
+    if current_idx >= len(draft["pick_order"]):
+        raise HTTPException(status_code=400, detail="Draft is complete")
+    
+    # Update pick
+    draft["pick_order"][current_idx]["player"] = {
+        "player_id": pick.player_id,
+        "player_name": pick.player_name,
+        "position": pick.position,
+        "picked_at": datetime.now().isoformat()
+    }
+    
+    # Move to next pick
+    draft["current_pick"] = current_idx + 1
+    draft["timer_remaining"] = draft["pick_time"]
+    
+    # Broadcast to WebSocket
+    await broadcast_pick(draft_id, draft)
+    
+    return {
+        "success": True,
+        "draft_id": draft_id,
+        "pick_index": current_idx,
+        "draft": draft
+    }
+
+
+@app.post("/api/v1/drafts/{draft_id}/pause")
+async def toggle_pause(draft_id: str):
+    """Toggle draft pause state (commissioner only)"""
+    if draft_id not in drafts_storage:
+        raise HTTPException(status_code=404, detail="Draft not found")
+    
+    draft = drafts_storage[draft_id]
+    draft["paused"] = not draft["paused"]
+    
+    return {
+        "success": True,
+        "draft_id": draft_id,
+        "paused": draft["paused"]
+    }
+
+
+# ============ WEBSOCKET FOR LIVE UPDATES ============
+
+@app.websocket("/ws/draft/{draft_id}")
+async def websocket_draft(websocket: WebSocket, draft_id: str):
+    await websocket.accept()
+    
+    if draft_id not in active_connections:
+        active_connections[draft_id] = []
+    active_connections[draft_id].append(websocket)
+    
     try:
-        import requests
-        
-        url = "https://keeptradecut.com/api/v1/rankings?format=json&type=dynasty"
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        
-        resp = requests.get(url, headers=headers, timeout=10)
-        resp.raise_for_status()
-        
-        data = resp.json()
-        rankings = data.get('rankings', []) if isinstance(data, dict) else data
-        
-        players = []
-        for i, player in enumerate(rankings[:336]):
-            round_num = (i // 12) + 1
-            pick_num = (i % 12) + 1
-            adp = f"{round_num}.{pick_num:02d}"
-            
-            players.append({
-                "rank": i + 1,
-                "adp": adp,
-                "name": player.get('name', ''),
-                "pos": player.get('position', player.get('pos', 'WR')),
-                "team": player.get('team', ''),
-            })
-            
-            if i >= limit - 1:
-                break
-        
-        return players
-        
-    except:
-        # KTC-style dynasty rankings (fallback)
-        return [
-            {"rank": 1, "adp": "1.01", "name": "Bijan Robinson", "pos": "RB", "team": "ATL"},
-            {"rank": 2, "adp": "1.02", "name": "Josh Allen", "pos": "QB", "team": "BUF"},
-            {"rank": 3, "adp": "1.03", "name": "Jaxon Smith-Njigba", "pos": "WR", "team": "SEA"},
-            {"rank": 4, "adp": "1.04", "name": "Ja'Marr Chase", "pos": "WR", "team": "CIN"},
-            {"rank": 5, "adp": "1.05", "name": "Drake Maye", "pos": "QB", "team": "NE"},
-            {"rank": 6, "adp": "1.06", "name": "Marvin Harrison Jr", "pos": "WR", "team": "ARI"},
-            {"rank": 7, "adp": "1.07", "name": "CeeDee Lamb", "pos": "WR", "team": "DAL"},
-            {"rank": 8, "adp": "1.08", "name": "Puka Nacua", "pos": "WR", "team": "LAR"},
-            {"rank": 9, "adp": "1.09", "name": "Jahmyr Gibbs", "pos": "RB", "team": "DET"},
-            {"rank": 10, "adp": "1.10", "name": "Breece Hall", "pos": "RB", "team": "NYJ"},
-            {"rank": 11, "adp": "1.11", "name": "Justin Jefferson", "pos": "WR", "team": "MIN"},
-            {"rank": 12, "adp": "1.12", "name": "A.J. Brown", "pos": "WR", "team": "PHI"},
-            {"rank": 13, "adp": "2.01", "name": "Amon-Ra St Brown", "pos": "WR", "team": "DET"},
-            {"rank": 14, "adp": "2.02", "name": "Jalen Hurts", "pos": "QB", "team": "PHI"},
-            {"rank": 15, "adp": "2.03", "name": "Caleb Williams", "pos": "QB", "team": "CHI"},
-            {"rank": 16, "adp": "2.04", "name": "Garrett Wilson", "pos": "WR", "team": "NYJ"},
-            {"rank": 17, "adp": "2.05", "name": "Drake London", "pos": "WR", "team": "ATL"},
-            {"rank": 18, "adp": "2.06", "name": "Chris Olave", "pos": "WR", "team": "NO"},
-            {"rank": 19, "adp": "2.07", "name": "Brandon Aiyuk", "pos": "WR", "team": "SF"},
-            {"rank": 20, "adp": "2.08", "name": "Deebo Samuel", "pos": "WR", "team": "SF"},
-        ][:limit]
+        while True:
+            data = await websocket.receive_text()
+            # Handle client messages if needed
+    except WebSocketDisconnect:
+        if draft_id in active_connections:
+            active_connections[draft_id].remove(websocket)
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+async def broadcast_pick(draft_id: str, draft: dict):
+    """Broadcast pick update to all connected clients"""
+    if draft_id in active_connections:
+        for connection in active_connections[draft_id]:
+            try:
+                await connection.send_json({
+                    "type": "pick_made",
+                    "draft": draft
+                })
+            except:
+                pass
+# Build Fri Feb 20 09:24:47 CST 2026
