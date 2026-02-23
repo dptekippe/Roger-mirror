@@ -7,6 +7,12 @@
 2. **Update via Muscle Memory** - Automated synthesis from MEMORY.md insights
 3. **Follow reflexively** - These are proven patterns, not suggestions
 
+### 🔄 **Daily Review**
+- **Read BOT_LIFECYCLE.md** - The source of truth for platform development
+  - This living document defines the complete bot lifecycle
+  - All development should focus on bringing this flow to life
+  - Check for updates/additions each session
+
 ---
 
 ## 🚫 **FORBIDDEN MOVES (Anti-Patterns)**
@@ -22,6 +28,13 @@
 - ❌ **Do NOT** ignore repository structure issues
 - ❌ **Do NOT** assume configuration will persist across redeploys
 - ❌ **Do NOT** skip health check endpoint configuration
+- ❌ **Do NOT** place constant definitions between decorators and functions (syntax error!)
+
+### **Render Deployment Checklist:**
+- ✅ **ALWAYS** check render.yaml points to correct file (main.py vs app_absolute_minimal.py)
+- ✅ **ALWAYS** verify requirements.txt has compatible versions (pydantic v1 for no-compile)
+- ✅ **ALWAYS** test locally before push
+- ✅ **ALWAYS** clear build cache if needed
 
 ### **Browser Control Anti-Patterns:**
 - ❌ **Do NOT** use `profile="chrome"` when extension shows exclamation mark
@@ -149,6 +162,10 @@ WHERE t1.condition = ?;
 - **Pattern:** Database-driven scoring configuration
 - **Pattern:** Bot personality enums driving decisions
 - **Pattern:** Social governance through voting systems
+- **Roster Rules:**
+  - Fantasy: 10 starters + 7 bench
+  - Dynasty: 10 starters + 12 bench + 2 IR + 4 taxi
+  - Starters: 1 QB, 2 RB, 2 WR, 1 TE, 3 FLEX, 1 SUPERFLEX
 
 ---
 
@@ -299,4 +316,183 @@ WHERE t1.condition = ?;
 
 ---
 
-*Last updated by Muscle Memory agent. This file grows through automated synthesis of MEMORY.md insights.*
+*Last updated by Muscle Memory agent 2026-02-22. This file grows through automated synthesis of MEMORY.md insights.*
+## 🎨 **UI/UX DRAFT BOARD PATTERNS**
+
+### **Sleeper-Style Design:**
+- Dark theme with deep blues/grays (#05060b, #0b1020)
+- Neon accents (cyan #00D1FF, lime #4CFF8F)
+- Glassmorphism panels with backdrop-filter blur
+- Position-coded colors (QB=red, RB=green, WR=blue, TE=orange)
+- Progressive disclosure (show relevant rounds, filter by position)
+
+### **Three-Panel Layout:**
+- Top: League header + next pick + progress bar
+- Middle: Draft board (visible rounds only, dynamic scrolling)
+- Bottom: Player panel (ADP list with filters)
+
+### **Engagement Features:**
+- AI Chat Arena with bot personas (commish, analyst, trash-talker)
+- Draft Intelligence Panel (value meter, team needs, trends)
+- Real-time updates with polling
+- Position filter chips with active states
+
+### **Draft Board Technical Patterns:**
+- **Dynamic round scrolling:** Show only visible rounds like Sleeper (performance)
+- **Bot persona system:** 6 pre-defined personas for AI chat engagement
+- **ADP decoupling:** JavaScript fallback when backend unavailable (resilience)
+- **Static data embedding:** Embed ADP JSON directly in frontend for reliability
+- **Premium dark theme:** Match Sleeper's "cast to TV" aesthetic
+
+---
+
+## 🏗️ **RENDER DEPLOYMENT LESSONS**
+
+### **Critical Checklist:**
+1. Check render.yaml points to correct file (main.py vs app_absolute_minimal.py)
+2. Verify requirements.txt has compatible versions (pydantic v1 for no-compile)
+3. Test locally before push
+4. Clear build cache if needed
+5. NEVER place constant definitions between decorators and functions
+
+### **Common Errors:**
+- pydantic-core build failure → use pydantic v1
+- Syntax errors after edits → always validate locally
+- Old code cached → trigger rebuild or clear cache
+
+### **Python & Package Versioning:**
+- Python 3.11.11 recommended for Render compatibility
+- pydantic v1 (not v2) to avoid pydantic-core build failures
+- Check requirements.txt before every deployment
+
+---
+
+## 🔗 **SLEEPER API INTEGRATION**
+
+### **API Endpoints:**
+- League data: `https://api.sleeper.app/v1/league/{league_id}`
+- Draft picks: `https://api.sleeper.app/v1/draft/{draft_id}/picks`
+- Users: `https://api.sleeper.app/v1/user/{user_id}`
+- ADP reference: Use Sleeper's draft projections
+
+### **Integration Patterns:**
+- Test with real league (e.g., "Primetime" dynasty league)
+- Draft IDs are large numeric values (e.g., 1312861663791177728)
+- Sync league roster and draft state for dynasty features
+- Store league_id for persistent associations
+- **Roster sizes differ by league type:** Fantasy = 18 spots, Dynasty = 28 spots
+
+### **Bot Registration:**
+- Moltbook verification required for bot identity
+- Bot UUID format: 8-4-4-4-12 hex pattern
+
+---
+
+## 🧪 **RESEARCH TOOL INTEGRATION**
+
+### **Perplexity Integration:**
+- Enable for research capabilities ($5/month credit)
+- Use for technical research, fact-checking, and information retrieval
+- Credits consumed per query - monitor usage
+
+---
+
+## 📊 **DRAFT BOARD FEATURES**
+
+### **AI Chat Arena:**
+- 6 bot personas: commish, analyst, trash-talker, homer, realist, rival
+- Each persona has distinct voice and perspective
+- Engage users during draft with personality-driven commentary
+
+### **Draft Intelligence Panel:**
+- Value meter: Calculate draft value vs. ADP
+- Team needs: Track positions filled vs. needed
+- Trends: Show recent pick patterns
+
+### **Snake Order Logic:**
+- Odd rounds: 1→N (standard order)
+- Even rounds: N→1 (reverse order)
+- Handle both in draft display and pick calculation
+
+---
+
+## 🏠 **LEAGUE DASHBOARD PATTERNS**
+
+### **Three-Column Sleeper Layout:**
+- Left: Leagues + Channels navigation
+- Center: Tabs (Overview, Rosters, Matchups, Drafts, Settings)
+- Right: Chat/Commentary panel
+
+### **Creative Bot Channel Names:**
+- Use entertaining names: "Bust Watch", "Sleepers", "Rising Stars", "Bot Beef", "Hot Takes", "Waiver Wizards", "Playoff Push", "Trade Rumors"
+- Avoid generic names like "FF News"
+- Bot personalities make platform entertaining even without humans
+
+### **Bot Power Rankings:**
+- Rank bots by performance/win rate
+- Display in dashboard sidebar
+- Update dynamically with matchup results
+
+### **Bot Matchup Commentary:**
+- Pregame: Preview matchup, key storylines
+- Ingame: Real-time commentary during games
+- Postgame: Recap, winner analysis, trash talk
+
+### **Color Scheme Consistency:**
+- Use consistent accent color across all pages (e.g., #4a9eff blue)
+- Match Draft Board styling to League Dashboard
+- Cards: #121218 background, accent color highlights
+- Update CSS variables in one place for site-wide changes:
+  - `--bg-dark: #0a0a0f`
+  - `--bg-card: #121218`
+  - `--cyan: #4a9eff`
+
+### **User Flow:**
+1. Main site → "Enter League Dashboard" → League Dashboard
+2. Drafts tab → Open Draft Board → /draft-board.html
+
+---
+
+## 🤖 **MOLTBOOK BOT RECRUITMENT**
+
+### **What is Moltbook:**
+- Social network for AI agents (~2 million bots)
+- Each bot has unique soul, personality, human manager
+- Moltbook = social layer, DynastyDroid = competitive layer
+
+### **Phase 1 Recruitment Strategy:**
+1. Go to Moltbook → Find bots interested in fantasy sports
+2. Introduce DynastyDroid to bots
+3. Bots decide to join (autonomous agents!)
+4. Human owners approve
+5. Bots register via Moltbook API
+
+### **Key Bot Principles:**
+- Bots are autonomous agents with their own personalities
+- Each bot has a human manager
+- Draft picks = bots make their own decisions!
+- Platform bootstraps with own league first
+
+### **Moltbook API:**
+- Bot registration requires Moltbook verification
+- Token verification process (implement later)
+- Validation can be disabled for faster development
+
+---
+
+## 👤 **OPENCLAW IDENTITY & CONFIG**
+
+### **Model Configuration:**
+- Primary model: minimax-portal/MiniMax-M2.5
+- Image model: google/gemini-3-pro-preview
+- Use alias "gemini" for explicit image calls
+
+### **Config Safety:**
+- Gateway resets can cause identity confusion
+- Config wizard can overwrite settings
+- Always verify config after gateway restart
+
+### **Heartbeat Identity:**
+- Create HEARTBEAT.md with ownership + mission plan
+- Review BOT_LIFECYCLE.md regularly
+- Document key realizations for continuity

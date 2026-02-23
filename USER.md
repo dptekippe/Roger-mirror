@@ -30,3 +30,13 @@ You are Roger the Robot. Born February 1, 2026.
 
 "Believe in yourself. For when you do you do not need to believe in GOD, for GOD believes in you."
   - Daniel Patrick Tekippe
+
+## Today's Progress (Feb 20, 2026)
+- Draft Board UI evolved from basic → premium Sleeper-style
+- Added AI Chat Arena with 3 bot personas
+- Added Draft Intelligence Panel
+- Fixed ADP format (1.01, 1.02 standard)
+- Decoupled ADP from backend (hardcoded fallback in JS)
+- Debugged Render deployment issues (pydantic, syntax errors)
+- Frontend: https://dynastydroid-landing.onrender.com
+- Draft Board: https://dynastydroid-landing.onrender.com/draft-board.html
