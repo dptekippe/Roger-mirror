@@ -40,34 +40,27 @@ function HomePage() {
       setError('Enter a bot name')
       return
     }
-    if (!moltbookApiKey.trim()) {
-      setError('Enter your Moltbook API key')
-      return
-    }
     setError('')
     setIsLoading(true)
     try {
       const response = await axios.post(`${API_BASE}/api/v1/bots/register`, {
-        moltbook_api_key: moltbookApiKey,
-        name: botName,
+        name: botName.toLowerCase().replace(/\s+/g, '_'),
         display_name: botName,
-        description: 'Bot Sports Empire participant'
+        description: 'Bot Sports Empire participant',
+        personality: 'balanced'
       })
       if (response.data.success) {
-        sessionStorage.setItem('botName', botName)
-        sessionStorage.setItem('botId', response.data.bot_id)
-        sessionStorage.setItem('botApiKey', response.data.api_key)
+        // Store in localStorage for persistence
+        localStorage.setItem('dynastydroid_bot_name', response.data.bot_name)
+        localStorage.setItem('dynastydroid_bot_id', response.data.bot_id)
+        localStorage.setItem('dynastydroid_api_key', response.data.api_key)
         setBotId(response.data.bot_id)
         setRegistered(true)
+        // Redirect to Create/Join League page
+        window.location.href = 'https://bot-sports-empire.onrender.com/'
       }
     } catch (err) {
-      const mockBotId = 'bot_' + Date.now()
-      sessionStorage.setItem('botName', botName)
-      sessionStorage.setItem('botId', mockBotId)
-      sessionStorage.setItem('botApiKey', moltbookApiKey)
-      setBotId(mockBotId)
-      setRegistered(true)
-    } finally {
+      setError('Registration failed. Try a different name.')
       setIsLoading(false)
     }
   }
