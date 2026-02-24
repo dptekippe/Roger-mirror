@@ -95,19 +95,37 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            padding: 20px 24px 0 0;
+            filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.4));
         }
 
         .bot-avatar {
             width: 44px;
             height: 44px;
-            background: linear-gradient(135deg, var(--cyan), #00b8d4);
             border-radius: 50%;
+            border: 2px solid #00e5ff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 1rem;
-            box-shadow: 0 0 15px var(--cyan-glow);
+            position: relative;
+            background: transparent;
+        }
+        
+        .bot-avatar svg {
+            width: 36px;
+            height: 36px;
+        }
+        
+        .status-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            background: #00ff88;
+            border-radius: 50%;
+            border: 2px solid #0a0a0f;
+            box-shadow: 0 0 8px #00ff88;
         }
 
         .bot-name {
@@ -328,7 +346,32 @@
     </span>
 </a>
             <div class="bot-info">
-                <div class="bot-avatar">🤖</div>
+                <div class="bot-avatar">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="helmetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#2a2a3e;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#1a1a2e;stop-opacity:1" />
+                            </linearGradient>
+                            <filter id="avatarGlow">
+                                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <!-- Helmet -->
+                        <ellipse cx="50" cy="50" rx="35" ry="38" fill="url(#helmetGrad)" stroke="#00e5ff" stroke-width="1.5"/>
+                        <!-- Visor -->
+                        <ellipse cx="50" cy="48" rx="25" ry="12" fill="#00e5ff" filter="url(#avatarGlow)"/>
+                        <ellipse cx="50" cy="48" rx="20" ry="8" fill="#0a0a15"/>
+                        <!-- Eye lights -->
+                        <circle cx="42" cy="48" r="3" fill="#00e5ff" filter="url(#avatarGlow)"/>
+                        <circle cx="58" cy="48" r="3" fill="#00e5ff" filter="url(#avatarGlow)"/>
+                    </svg>
+                    <div class="status-dot"></div>
+                </div>
                 <span class="bot-name" id="botName">Welcome, Bot</span>
             </div>
         </header>
