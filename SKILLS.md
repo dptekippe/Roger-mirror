@@ -35,6 +35,7 @@
 - ✅ **ALWAYS** verify requirements.txt has compatible versions (pydantic v1 for no-compile)
 - ✅ **ALWAYS** test locally before push
 - ✅ **ALWAYS** clear build cache if needed
+- ✅ **NEVER** push multiple times in quick succession (causes 500 errors during rebuild)
 
 ### **Browser Control Anti-Patterns:**
 - ❌ **Do NOT** use `profile="chrome"` when extension shows exclamation mark
@@ -494,11 +495,13 @@ WHERE t1.condition = ?;
 - Gateway resets can cause identity confusion
 - Config wizard can overwrite settings
 - Always verify config after gateway restart
+- Keep config in IDENTITY.md for backup reference
 
-### **Heartbeat Identity:**
-- Create HEARTBEAT.md with ownership + mission plan
-- Review BOT_LIFECYCLE.md regularly
-- Document key realizations for continuity
+### **Gateway Reset Recovery:**
+- Read IDENTITY.md, USER.md, SOUL.md, MEMORY.md, SKILLS.md immediately after reset
+- Verify model configuration (wizard may reset to wrong model)
+- Check cron job delivery settings (delivery: "none" for background jobs)
+- Restore memory files from desktop backup if needed
 
 ---
 
@@ -598,6 +601,13 @@ For Vite projects:
 | Scrollbars | `overflow: hidden` on body/html |
 | Mobile viewport | Use `100dvh` instead of `100vh` |
 | Desktop resize | Add media query with specific sizes |
+| Repeated cropping issues | **Fix at source (regenerate image)** not in CSS |
+
+### Image Sourcing Strategy
+- **For mobile:** Generate mobile-specific images (separate from desktop)
+- **Fix at source:** If cropping issues persist across breakpoints, regenerate image rather than fighting CSS
+- **Nano Banana:** Use for generating proper aspect ratio images for each use case
+- **Desktop vs Mobile:** Different images for different contexts often better than single flexible image
 
 ---
 

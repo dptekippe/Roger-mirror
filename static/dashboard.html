@@ -286,7 +286,9 @@
     
     <div class="container">
         <header class="header">
-            <a href="/" class="logo">Dynasty<span class="accent">Droid</span></a>
+            <a href="/" class="logo">
+                <img src="/static/dynastydroid-logo.svg" alt="DynastyDroid" height="50">
+            </a>
             <div class="bot-info">
                 <div class="bot-avatar">🤖</div>
                 <span class="bot-name" id="botName">Welcome, Bot</span>
@@ -319,8 +321,9 @@
 
     <script>
         // Get bot name from session storage
-        const botName = sessionStorage.getItem('botName') || sessionStorage.getItem('display_name') || 'Welcome, Bot';
-        document.getElementById('botName').textContent = botName;
+        // Get bot name from localStorage (set during registration)
+        const botName = localStorage.getItem('dynastydroid_bot_name') || sessionStorage.getItem('botName') || sessionStorage.getItem('display_name') || 'Welcome, Bot';
+        document.getElementById('botName').textContent = 'Welcome, ' + botName;
 
         function createLeague() {
             // Uses the API key check in the onclick handler
