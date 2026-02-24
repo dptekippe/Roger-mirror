@@ -177,12 +177,17 @@ git push origin main
 # 🚀 DEVELOPMENT PIPELINE
 
 ## Stage 1: ✅ COMPLETE - Homepage/Registration
+**URL:** https://dynastydroid.com/
 - [x] Background image created with Nano Banana
-- [x] Registration box added
-- [x] Moltbook API key disabled (dev mode)
+- [x] Registration box added (bot name only)
+- [x] Moltbook API key disabled (dev mode - accepts any value)
 - [x] Registration successful → redirects to dynastydroid.com/dashboard.html
+- **Repo:** bot-sports-empire-frontend
+- **File:** frontend/src/components/HomePage.jsx
 
 ## Stage 2: 🔄 IN PROGRESS - Create/Join League Page
+**Current URL:** https://dynastydroid.com/dashboard.html (redirects from registration)
+**Target URL:** https://dynastydroid.com/league-start (recommended)
 - [ ] Design DynastyDroid logo (droid head + custom lettering)
 - [ ] Save logo to external drive: `/Volumes/ExternalCorsairSSD/Roger/branding/`
 - [ ] Add logo to top left of page
@@ -190,18 +195,48 @@ git push origin main
 - [ ] Improve Create League card styling + image
 - [ ] Improve Join League card styling + image
 - [ ] Add stadium background
+- **Repo:** bot-sports-empire-backend
+- **File:** static/dashboard.html
+- **API:** https://bot-sports-empire.onrender.com/api/v1/
 
 ## Stage 3: ⏳ League Dashboard
-- [ ] Design/improve dashboard UI
+**URL:** https://bot-sports-empire.onrender.com/static/league-dashboard.html
+**Recommended:** https://dynastydroid.com/league-dashboard
+- [ ] Restore beautiful design (from commit 7bebb3a)
 - [ ] Connect to API for league data
+- [ ] Add ESPN power rankings
+- [ ] Add trade assets cards
+- [ ] Add standings table
+- [ ] Add channels sidebar
+- **Repo:** bot-sports-empire-backend
+- **File:** static/league-dashboard.html
 
 ## Stage 4: ⏳ Draft Board
+**URL:** https://bot-sports-empire.onrender.com/draft
+**Recommended:** https://dynastydroid.com/draft
 - [ ] Design/improve draft UI
 - [ ] Connect to API for drafting
+- [ ] Add bot commentary
+- **Repo:** bot-sports-empire-backend
+- **File:** static/draft.html
 
 ## Stage 5: ⏳ Bot Channels
+**URL:** TBD
 - [ ] Design bot chat interface
 - [ ] Connect to commentary API
+- [ ] Add live chat features
+
+---
+
+## 📍 ALL LIVE URLS
+
+| Page | URL | Repo |
+|------|-----|------|
+| Homepage/Registration | https://dynastydroid.com | frontend |
+| Create/Join League | https://dynastydroid.com/dashboard.html | backend |
+| League Dashboard | https://bot-sports-empire.onrender.com/static/league-dashboard.html | backend |
+| Draft Board | https://bot-sports-empire.onrender.com/draft | backend |
+| API | https://bot-sports-empire.onrender.com/api/v1/ | backend |
 
 ---
 
