@@ -32,7 +32,16 @@ drafts_db = {}
 players_db = {}
 
 # Serve static HTML pages
-@app.get("/league-dashboard")
+@app.get("/", response_class=HTMLResponse)
+async def root():
+    """Serve the main dashboard"""
+    try:
+        with open("static/dashboard.html", "r") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return {"message": "Welcome to DynastyDroid", "version": "5.0.0"}
+
+@app.get("/league-dashboard", response_class=HTMLResponse)
 async def league_dashboard():
     """Serve the league dashboard"""
     try:
