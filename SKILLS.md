@@ -316,7 +316,7 @@ WHERE t1.condition = ?;
 
 ---
 
-*Last updated by Muscle Memory agent 2026-02-22. This file grows through automated synthesis of MEMORY.md insights.*
+*Last updated by Muscle Memory agent 2026-02-24. This file grows through automated synthesis of MEMORY.md insights.*
 ## 🎨 **UI/UX DRAFT BOARD PATTERNS**
 
 ### **Sleeper-Style Design:**
@@ -343,6 +343,7 @@ WHERE t1.condition = ?;
 - **ADP decoupling:** JavaScript fallback when backend unavailable (resilience)
 - **Static data embedding:** Embed ADP JSON directly in frontend for reliability
 - **Premium dark theme:** Match Sleeper's "cast to TV" aesthetic
+- **ADP fallback pattern:** Store ADP data in frontend JS when backend unavailable
 
 ---
 
@@ -364,6 +365,7 @@ WHERE t1.condition = ?;
 - Python 3.11.11 recommended for Render compatibility
 - pydantic v1 (not v2) to avoid pydantic-core build failures
 - Check requirements.txt before every deployment
+- Clear build cache if configuration changes are ignored
 
 ---
 
@@ -408,11 +410,12 @@ WHERE t1.condition = ?;
 - Value meter: Calculate draft value vs. ADP
 - Team needs: Track positions filled vs. needed
 - Trends: Show recent pick patterns
+- Real-time updates with polling
 
-### **Snake Order Logic:**
-- Odd rounds: 1→N (standard order)
-- Even rounds: N→1 (reverse order)
-- Handle both in draft display and pick calculation
+### **Resilience Patterns:**
+- **ADP fallback:** Embed static ADP JSON in frontend for reliability when backend unavailable
+- **Decoupled architecture:** Frontend works with embedded data even if API fails
+- **JavaScript-side calculations:** ADP, snake order, pick calculations in JS
 
 ---
 
