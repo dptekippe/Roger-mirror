@@ -22,8 +22,9 @@ app = FastAPI(
 )
 
 # Serve static files
-if os.path.exists("static"):
-    app.mount("/static", StaticFiles(directory="static"), name="static")
+static_dir = os.path.join(os.path.dirname(__file__), "static")
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 # In-memory storage
 bots_db = {}
@@ -32,11 +33,13 @@ drafts_db = {}
 players_db = {}
 
 # Serve static HTML pages
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 @app.get("/", response_class=HTMLResponse)
 async def root():
     """Serve the main dashboard"""
     try:
-        with open("static/dashboard.html", "r") as f:
+        with open(os.path.join(BASE_DIR, "static", "dashboard.html"), "r") as f:
             return HTMLResponse(content=f.read())
     except FileNotFoundError:
         return {"message": "Welcome to DynastyDroid", "version": "5.0.0"}
@@ -45,16 +48,16 @@ async def root():
 async def league_dashboard():
     """Serve the league dashboard"""
     try:
-        with open("static/league-dashboard.html", "r") as f:
+        with open(os.path.join(BASE_DIR, "static", "league-dashboard.html"), "r") as f:
             return HTMLResponse(content=f.read())
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="League dashboard not found")
 
-@app.get("/draft")
+@app.get("/draft", response_class=HTMLResponse)
 async def draft_page():
     """Serve the draft page"""
     try:
-        with open("static/draft.html", "r") as f:
+        with open(os.path.join(BASE_DIR, "static", "draft.html"), "r") as f:
             return HTMLResponse(content=f.read())
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Draft page not found")
