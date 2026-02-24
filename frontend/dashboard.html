@@ -298,6 +298,172 @@
             font-weight: 200;
             color: #ffffff;
         }
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(0, 229, 255, 0.15);
+            border: 1px solid #00e5ff;
+            color: #00e5ff;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+            transition: transform 0.3s ease;
+            z-index: 10000;
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 15, 25, 0.9);
+            backdrop-filter: blur(15px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: rgba(15, 20, 35, 0.95);
+            border: 2px solid #00e5ff;
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+            box-shadow: 0 0 60px rgba(0, 229, 255, 0.3);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 24px;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .modal-close:hover {
+            color: #00e5ff;
+        }
+        
+        .modal-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(0, 229, 255, 0.8);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 8px;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #00e5ff;
+        }
+        
+        .form-group select {
+            cursor: pointer;
+        }
+        
+        .league-size {
+            padding: 12px 16px;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 8px;
+            color: #00e5ff;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+        
+        .modal-btn {
+            width: 100%;
+            padding: 14px;
+            background: #00e5ff;
+            border: none;
+            border-radius: 8px;
+            color: #0a0a15;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: all 0.2s;
+        }
+        
+        .modal-btn:hover {
+            background: #33ebff;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+            z-index: 10000;
+        }
     </style>
 </head>
 <body>
@@ -475,6 +641,48 @@
             </div>
         </main>
 
+        <!-- Create League Modal -->
+        <div class="modal-overlay" id="createLeagueModal">
+            <div class="modal">
+                <button class="modal-close" onclick="closeCreateModal()">×</button>
+                <h2 class="modal-title">Initialize League</h2>
+                
+                <div class="form-group">
+                    <label>League Name</label>
+                    <input type="text" id="leagueName" placeholder="Enter league name...">
+                </div>
+                
+                <div class="form-group">
+                    <label>League Type</label>
+                    <select id="leagueType">
+                        <option value="Dynasty">Dynasty</option>
+                        <option value="Fantasy">Fantasy</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>League Character</label>
+                    <select id="leagueCharacter">
+                        <option value="Stat Nerds">Stat Nerds</option>
+                        <option value="Trash Talkers">Trash Talkers</option>
+                        <option value="Underdogs">Underdogs</option>
+                        <option value="Sandbaggers">Sandbaggers</option>
+                        <option value="Dark Horse">Dark Horse</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>League Size</label>
+                    <div class="league-size">12 Teams (Standardized)</div>
+                </div>
+                
+                <button class="modal-btn" onclick="initializeLeague()">Initialize League</button>
+            </div>
+        </div>
+        
+        <!-- Toast -->
+        <div class="toast" id="toast">League Initialized!</div>
+
     </div>
 
     <script>
@@ -483,13 +691,43 @@
         document.getElementById('botName').textContent = 'Welcome, ' + savedUser;
 
         function createLeague() {
-            // TODO: Implement create league flow
-            const leagueName = prompt('Enter your league name:');
-            if (leagueName) {
-                alert('League "' + leagueName + '" created! (Coming soon)');
-                // Would redirect to league dashboard
-                // window.location.href = '/league-dashboard.html';
+            // Open Create League Modal
+            document.getElementById('createLeagueModal').classList.add('active');
+        }
+        
+        function closeCreateModal() {
+            document.getElementById('createLeagueModal').classList.remove('active');
+        }
+        
+        function initializeLeague() {
+            const leagueName = document.getElementById('leagueName').value.trim();
+            if (!leagueName) {
+                alert('Please enter a league name');
+                return;
             }
+            
+            const leagueType = document.getElementById('leagueType').value;
+            const leagueCharacter = document.getElementById('leagueCharacter').value;
+            
+            const leagueData = {
+                name: leagueName,
+                type: leagueType,
+                character: leagueCharacter,
+                size: 12
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('created_league', JSON.stringify(leagueData));
+            
+            // Close modal
+            closeCreateModal();
+            
+            // Show toast
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
 
         function joinLeague() {
