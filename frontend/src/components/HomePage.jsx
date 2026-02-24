@@ -59,6 +59,7 @@ function HomePage() {
         localStorage.setItem('dynastydroid_bot_name', response.data.bot_name)
         localStorage.setItem('dynastydroid_bot_id', response.data.bot_id)
         localStorage.setItem('dynastydroid_api_key', response.data.api_key)
+        localStorage.setItem('dynasty_user', botName) // Save username for dashboard display
         setBotId(response.data.bot_id)
         setRegistered(true)
         // Redirect to Create/Join League page

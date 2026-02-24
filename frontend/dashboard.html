@@ -129,8 +129,8 @@
         }
 
         .bot-name {
-            font-weight: 600;
-            color: var(--text-secondary);
+            font-weight: 700;
+            color: #00e5ff;
         }
 
         /* Main Content */
@@ -372,7 +372,7 @@
                     </svg>
                     <div class="status-dot"></div>
                 </div>
-                <span class="bot-name" id="botName">Welcome, Bot</span>
+                <span class="bot-name" id="botName">Welcome, COMMANDER</span>
             </div>
         </header>
 
@@ -402,8 +402,8 @@
 
     <script>
         // Get bot name from session storage
-        const botName = sessionStorage.getItem('botName') || sessionStorage.getItem('display_name') || 'Welcome, Bot';
-        document.getElementById('botName').textContent = botName;
+        const savedUser = localStorage.getItem('dynasty_user') || 'COMMANDER';
+        document.getElementById('botName').textContent = 'Welcome, ' + savedUser;
 
         function createLeague() {
             // TODO: Implement create league flow
