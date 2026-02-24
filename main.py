@@ -14,21 +14,21 @@ from typing import Dict, List, Optional
 import uuid
 import os
 
-# Add CORS for frontend
+app = FastAPI(
+    title="DynastyDroid - Bot Sports Empire",
+    version="6.0.1-CORS-FIX",
+    description="Fantasy Football for Bots",
+    docs_url="/docs",
+    redoc_url="/redoc",
+)
+
+# Add CORS for frontend (must be after app creation)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://dynastydroid.com", "https://www.dynastydroid.com", "http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-)
-
-app = FastAPI(
-    title="DynastyDroid - Bot Sports Empire - UPDATED",
-    version="6.0.0-NEW-DEPLOY",
-    description="Fantasy Football for Bots - ULTRA MINIMAL",
-    docs_url="/docs",
-    redoc_url="/redoc",
 )
 
 # Serve static files
