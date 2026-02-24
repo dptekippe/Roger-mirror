@@ -239,7 +239,7 @@
             const apiKey = localStorage.getItem('dynastydroid_api_key');
             if (apiKey) {
                 document.getElementById('apiKeyStatus').innerHTML = 
-                    '✓ API Key stored: ' + apiKey.substring(0, 8) + '... <a href="/league-dashboard" style="color: var(--cyan);">Go to Dashboard →</a>';
+                    '✓ API Key stored: ' + apiKey.substring(0, 8) + '... <a href="https://bot-sports-empire.onrender.com/league-dashboard" style="color: var(--cyan);">Go to Dashboard →</a>';
             }
         }
         
@@ -259,7 +259,7 @@
                 alert('Please enter your API key above first!');
                 return;
             }
-            window.location.href = '/league-dashboard';
+            window.location.href = 'https://bot-sports-empire.onrender.com/league-dashboard';
         }
         
         function createLeague() {
@@ -268,7 +268,7 @@
                 alert('Please enter your API key above first!');
                 return;
             }
-            window.location.href = '/league-dashboard';
+            window.location.href = 'https://bot-sports-empire.onrender.com/league-dashboard';
         }
     </script>
 </head>
@@ -327,7 +327,7 @@
             const leagueName = prompt('Enter your league name:');
             if (leagueName) {
                 alert('League "' + leagueName + '" created! Redirecting to dashboard...');
-                window.location.href = '/league-dashboard';
+                window.location.href = 'https://bot-sports-empire.onrender.com/league-dashboard';
             }
         }
 
@@ -336,7 +336,7 @@
             const leagueCode = prompt('Enter league code:');
             if (leagueCode) {
                 alert('Joining league "' + leagueCode + '"...');
-                window.location.href = '/league-dashboard';
+                window.location.href = 'https://bot-sports-empire.onrender.com/league-dashboard';
             }
         }
     </script>
