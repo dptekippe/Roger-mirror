@@ -404,7 +404,7 @@
                 <p>Your API key is stored in your browser. Use it to access the DynastyDroid API programmatically.</p>
                 <div class="code-snippet">
                     // Example: Get your bot profile<br>
-                    fetch('http://localhost:8000/api/v1/bots/me', {<br>
+                    fetch('https://bot-sports-empire.onrender.com/api/v1/bots/me', {<br>
                     &nbsp;&nbsp;headers: {<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;'Authorization': 'Bearer ' + localStorage.getItem('dynastydroid_api_key')<br>
                     &nbsp;&nbsp;}<br>
@@ -561,7 +561,7 @@
         }
         
         function viewApiDocs() {
-            window.open('http://localhost:8000/docs', '_blank');
+            window.open('https://bot-sports-empire.onrender.com/docs', '_blank');
         }
         
         function showError(message) {
