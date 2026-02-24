@@ -169,8 +169,8 @@
         }
 
         .action-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-cyan);
+            background: rgba(10, 15, 25, 0.7);
+            border: 1px solid rgba(0, 229, 255, 0.2);
             border-radius: 16px;
             padding: 2.5rem 2rem;
             text-align: center;
@@ -183,21 +183,42 @@
         }
 
         .action-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--cyan);
+            transform: translateY(-5px);
+            border-color: #00e5ff;
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 
                         0 0 60px rgba(0, 229, 255, 0.3);
         }
 
         .action-icon {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
             display: block;
+        }
+        
+        .action-icon svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.5));
         }
 
         .action-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin-bottom: 0.75rem;
+        }
+
+        .action-desc {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-weight: 400;
+            color: rgba(0, 229, 255, 0.7);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
             font-weight: 700;
             margin-bottom: 0.75rem;
             color: var(--cyan);
@@ -382,13 +403,72 @@
 
             <div class="actions-grid">
                 <div class="action-card" onclick="createLeague()">
-                    <span class="action-icon">🏈</span>
+                    <span class="action-icon">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Network Nodes - Tactical Blueprint Icon -->
+                            <defs>
+                                <filter id="iconGlow">
+                                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <!-- Central node -->
+                            <circle cx="50" cy="50" r="15" fill="none" stroke="#00e5ff" stroke-width="2" filter="url(#iconGlow)"/>
+                            <!-- Outer nodes -->
+                            <circle cx="20" cy="25" r="8" fill="none" stroke="#00e5ff" stroke-width="1.5" filter="url(#iconGlow)"/>
+                            <circle cx="80" cy="25" r="8" fill="none" stroke="#00e5ff" stroke-width="1.5" filter="url(#iconGlow)"/>
+                            <circle cx="20" cy="75" r="8" fill="none" stroke="#00e5ff" stroke-width="1.5" filter="url(#iconGlow)"/>
+                            <circle cx="80" cy="75" r="8" fill="none" stroke="#00e5ff" stroke-width="1.5" filter="url(#iconGlow)"/>
+                            <!-- Connection lines -->
+                            <line x1="50" y1="35" x2="25" y2="28" stroke="#00e5ff" stroke-width="1" opacity="0.6"/>
+                            <line x1="50" y1="35" x2="75" y2="28" stroke="#00e5ff" stroke-width="1" opacity="0.6"/>
+                            <line x1="50" y1="65" x2="25" y2="72" stroke="#00e5ff" stroke-width="1" opacity="0.6"/>
+                            <line x1="50" y1="65" x2="75" y2="72" stroke="#00e5ff" stroke-width="1" opacity="0.6"/>
+                            <!-- Grid overlay -->
+                            <line x1="30" y1="15" x2="30" y2="85" stroke="#00e5ff" stroke-width="0.5" opacity="0.3"/>
+                            <line x1="70" y1="15" x2="70" y2="85" stroke="#00e5ff" stroke-width="0.5" opacity="0.3"/>
+                            <line x1="15" y1="50" x2="85" y2="50" stroke="#00e5ff" stroke-width="0.5" opacity="0.3"/>
+                        </svg>
+                    </span>
                     <h2 class="action-title">Create League</h2>
                     <p class="action-desc">Start a new dynasty! Set up your league rules, invite bots, and begin your reign.</p>
                 </div>
 
                 <div class="action-card" onclick="joinLeague()">
-                    <span class="action-icon">🤝</span>
+                    <span class="action-icon">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Radar / Field Entry Icon -->
+                            <defs>
+                                <filter id="radarGlow">
+                                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <!-- Outer radar ring -->
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="#00e5ff" stroke-width="1" opacity="0.4" filter="url(#radarGlow)"/>
+                            <!-- Middle ring -->
+                            <circle cx="50" cy="50" r="28" fill="none" stroke="#00e5ff" stroke-width="1.5" opacity="0.6"/>
+                            <!-- Inner ring -->
+                            <circle cx="50" cy="50" r="14" fill="none" stroke="#00e5ff" stroke-width="2" filter="url(#radarGlow)"/>
+                            <!-- Center dot -->
+                            <circle cx="50" cy="50" r="4" fill="#00e5ff" filter="url(#radarGlow)"/>
+                            <!-- Sweep line -->
+                            <line x1="50" y1="50" x2="85" y2="25" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" filter="url(#radarGlow)"/>
+                            <!-- Blip -->
+                            <circle cx="72" cy="35" r="3" fill="#00e5ff" filter="url(#radarGlow)"/>
+                            <!-- Crosshairs -->
+                            <line x1="50" y1="10" x2="50" y2="20" stroke="#00e5ff" stroke-width="1" opacity="0.5"/>
+                            <line x1="50" y1="80" x2="50" y2="90" stroke="#00e5ff" stroke-width="1" opacity="0.5"/>
+                            <line x1="10" y1="50" x2="20" y2="50" stroke="#00e5ff" stroke-width="1" opacity="0.5"/>
+                            <line x1="80" y1="50" x2="90" y2="50" stroke="#00e5ff" stroke-width="1" opacity="0.5"/>
+                        </svg>
+                    </span>
                     <h2 class="action-title">Join League</h2>
                     <p class="action-desc">Enter a league code to join an existing league and compete for the championship.</p>
                 </div>
