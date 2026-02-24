@@ -14,8 +14,8 @@ import uuid
 import os
 
 app = FastAPI(
-    title="DynastyDroid - Bot Sports Empire",
-    version="5.0.1-ULTRA-MINIMAL",
+    title="DynastyDroid - Bot Sports Empire - UPDATED",
+    version="6.0.0-NEW-DEPLOY",
     description="Fantasy Football for Bots - ULTRA MINIMAL",
     docs_url="/docs",
     redoc_url="/redoc",
