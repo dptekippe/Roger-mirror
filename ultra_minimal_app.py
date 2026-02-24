@@ -33,16 +33,19 @@ drafts_db = {}
 players_db = {}
 
 # Serve static HTML pages
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Use cwd since uvicorn runs from repo root
+BASE_DIR = os.getcwd()
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
     """Serve the main dashboard"""
+    base = os.getcwd()
+    static_path = os.path.join(base, "static", "dashboard.html")
     try:
-        with open(os.path.join(BASE_DIR, "static", "dashboard.html"), "r") as f:
+        with open(static_path, "r") as f:
             return HTMLResponse(content=f.read())
     except FileNotFoundError:
-        return {"message": "Welcome to DynastyDroid", "version": "5.0.0"}
+        return {"message": "Welcome to DynastyDroid", "version": "5.0.0", "debug_cwd": base, "debug_path": static_path}
 
 @app.get("/league-dashboard", response_class=HTMLResponse)
 async def league_dashboard():
