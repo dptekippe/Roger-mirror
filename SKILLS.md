@@ -496,3 +496,243 @@ WHERE t1.condition = ?;
 - Create HEARTBEAT.md with ownership + mission plan
 - Review BOT_LIFECYCLE.md regularly
 - Document key realizations for continuity
+
+---
+
+## 📸 Background Image Resizing Skill
+
+### Core Problem
+Background images in CSS can get cut off, zoomed in, or not scale properly on different screen sizes. This skill provides a systematic approach to fixing background image scaling.
+
+### The Key CSS Properties
+
+1. **background-size** - Controls how the image scales
+   - `cover` - Fill entire container (may crop)
+   - `contain` - Show entire image (may leave gaps)
+   - `auto 100%` - Fit height, let width auto
+   - `100% auto` - Fit width, let height auto
+   - `150% auto` - Force zoom level (manual control)
+
+2. **background-position** - Controls which part of image is visible
+   - `center` - Center the image
+   - `left center` - Prioritize left side
+   - `20% center` - Shift 20% from left
+   - `15% center` - Shift 15% from left
+
+3. **min-height / height** - Container sizing
+   - `100vh` - Full viewport height
+   - `100dvh` - Dynamic viewport height (mobile)
+   - `min-height: 100%` - Fill parent
+
+4. **overflow** - Prevent scrollbars
+   - `overflow: hidden` - Hide overflow
+   - Apply to `body, html` and container
+
+### The Responsive Pattern
+
+```css
+/* Mobile first - fit height, show left */
+.hero {
+  min-height: 100vh;
+  background-size: auto 100%;
+  background-position: 15% center;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .hero {
+    background-size: cover;
+    background-position: left center;
+  }
+}
+
+/* Large desktop */
+@media (min-width: 1200px) {
+  .hero {
+    background-size: 150% auto;
+    background-position: 20% center;
+  }
+}
+```
+
+### Troubleshooting Steps
+
+1. **Image cut off at top?** 
+   - Add `padding-top` to container
+   - Or use `background-position: center top`
+
+2. **Image too zoomed?**
+   - Switch from `cover` to `auto 100%` or `contain`
+   - Or add media query with smaller percentage
+
+3. **White gaps?**
+   - Add `background-color` to match dark parts of image
+   - Use gradient overlay to hide edges
+
+4. **Scrollbars appearing?**
+   - Add `overflow: hidden` to `body, html`
+   - Use `100dvh` instead of `100vh` on mobile
+
+5. **Background not showing?**
+   - Check path: `url('/image-name.png')`
+   - Leading slash means root
+   - Verify file exists in `/public` folder
+
+### Vite/SPA Note
+For Vite projects:
+- Put images in `/public` folder
+- Reference with leading slash: `url('/image.png')`
+- Ensure `base: '/'` in vite.config.js
+- Rebuild after adding images
+
+### Common Fixes Summary
+
+| Issue | Fix |
+|-------|-----|
+| Cut off | `background-position: left center` |
+| Too zoomed | `background-size: auto 100%` |
+| White gaps | `background-color: #0a0a0f` |
+| Scrollbars | `overflow: hidden` on body/html |
+| Mobile viewport | Use `100dvh` instead of `100vh` |
+| Desktop resize | Add media query with specific sizes |
+
+---
+
+## 🖼️ Background Image Layering Skill
+
+### The Problem
+Background images can get covered by form elements, or form elements can obscure the background. Need proper layering to keep background visible while form stays accessible.
+
+### The Solution: Pseudo-Elements with Z-Index
+
+```css
+/* Main container */
+.hero-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #0a0a0f; /* fallback */
+}
+
+/* Background as pseudo-element - ALWAYS BEHIND */
+.hero-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-image: url('/droid-mascot.jpg');
+  background-size: cover;
+  background-position: center top;
+}
+
+/* Form elements - ALWAYS IN FRONT */
+.login-box {
+  position: relative;
+  z-index: 2;
+  /* your form styles */
+}
+
+.logo {
+  position: relative;
+  z-index: 2;
+}
+```
+
+### Why This Works
+| Element | Z-Index | Layer |
+|---------|---------|-------|
+| Background (::before) | 1 | Behind everything |
+| Logo | 2 | Front |
+| Login box | 2 | Front |
+
+### Key Properties
+- **position: relative** on parent creates positioning context
+- **position: absolute** on pseudo-element fills parent
+- **z-index: 1** for background layer
+- **z-index: 2** for foreground elements
+
+### Visual Effect: Backdrop Blur
+Add backdrop-filter to form for frosted glass effect over background:
+
+```css
+.login-box {
+  background: rgba(20, 30, 50, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+```
+
+### Common Mistakes
+1. Putting background on parent container - gets covered by children
+2. Not using position: relative on parent
+3. Lower z-index on form than background
+4. Using background-attachment: fixed with pseudo-elements can cause issues
+
+---
+
+## 📐 Responsive Background Resizing (Updated)
+
+### The Working Pattern
+
+```css
+/* Mobile first */
+.hero-wrapper {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Background as pseudo-element */
+.hero-wrapper::before {
+  background-size: cover;
+  background-position: center top; /* keeps head visible */
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .hero-wrapper::before {
+    background-position: left top;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1200px) {
+  .hero-wrapper::before {
+    /* optional: push background more */
+  }
+}
+```
+
+### Key Properties That Work
+
+| Property | Value | Why |
+|----------|-------|-----|
+| background-size | cover | Fills viewport without gaps |
+| background-position | center top OR left top | Keeps main subject visible |
+| overflow | hidden | Prevents scrollbars |
+| 100vw/100vh | viewport units | Locks to screen size |
+
+### Fixing Common Issues
+
+1. **Image cut off at top**
+   - Use `background-position: center top` not `center center`
+
+2. **Image too zoomed**
+   - Use `cover` not fixed percentages
+
+3. **White gaps**
+   - Add fallback background-color
+
+4. **Scrollbars**
+   - Add `overflow: hidden` to html, body
+
+5. **Form covering background**
+   - Use pseudo-element + z-index (see layering skill above)

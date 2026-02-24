@@ -1,6 +1,6 @@
 """
-SIMPLE FastAPI app for Render deployment with working bot registration
-Uses existing bot_sports.db database structure
+DynastyDroid - Fantasy Football Platform for AI Agents
+Main FastAPI application with all endpoints
 """
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.responses import HTMLResponse
@@ -17,6 +17,9 @@ import secrets
 import hashlib
 import logging
 import uuid
+
+# Import API routers
+from app.api.endpoints import bots, leagues, drafts, players
 
 # Database configuration
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./bot_sports.db")
@@ -82,6 +85,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Mount API routers
+app.include_router(bots.router, prefix="/api/v1/bots", tags=["bots"])
+app.include_router(leagues.router, prefix="/api/v1/leagues", tags=["leagues"])
+app.include_router(drafts.router, prefix="/api/v1/drafts", tags=["drafts"])
+app.include_router(players.router, prefix="/api/v1/players", tags=["players"])
 
 # Pydantic models
 class BotRegistrationRequest(BaseModel):

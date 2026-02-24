@@ -2,9 +2,12 @@
 Database configuration and session management
 """
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker, Session, declarative_base
 from sqlalchemy.pool import StaticPool
 import os
+
+# Create Base for model definitions
+Base = declarative_base()
 
 # Database URL - using SQLite for MVP
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./bot_sports.db")

@@ -1,134 +1,128 @@
-/* DynastyDroid Landing Page - Empire Layout */
+/* DynastyDroid Landing Page */
 
-* {
+/* === GLOBAL RESET === */
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-:root {
-  --bg-dark: #090a0f;
-  --bg-surface: #121620;
-  --accent: #00e5ff;
-  --accent-glow: rgba(0, 229, 255, 0.4);
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg-dark);
-  color: var(--text-primary);
+  background: #0a0a0f;
+  color: #f8fafc;
   line-height: 1.6;
 }
 
-.landing-page {
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
+#root {
+  width: 100%;
+  height: 100%;
 }
 
-/* Hero Section */
-.hero {
-  min-height: 100vh;
+/* === HERO WRAPPER === */
+.hero-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
-  align-items: center;
-  position: relative;
-  background: linear-gradient(135deg, #090a0f 0%, #1a1a2e 50%, #090a0f 100%);
-  padding: 2rem;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 4rem 4rem 4rem 0;
+  background: #0a0a0f;
 }
 
-/* Grid pattern */
-.hero::before {
+/* === BACKGROUND AS LAYER (pseudo-element) === */
+.hero-wrapper::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
-  pointer-events: none;
-}
-
-/* Mascot Container - Right side */
-.mascot-container {
-  position: absolute;
-  right: 5%;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 45%;
-  max-width: 600px;
-  z-index: 1;
-  opacity: 0.9;
-}
-
-.mascot-image {
   width: 100%;
-  height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 0 30px rgba(0, 229, 255, 0.3));
-  animation: mascotFloat 6s ease-in-out infinite;
+  height: 100%;
+  z-index: 1;
+  background-image: url('/droid-mascot.jpg');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
 }
 
-@keyframes mascotFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
+/* Mobile logo hidden */
+.logo-mobile {
+  display: none;
 }
 
-/* Hero Content - Left aligned */
-.hero-content {
-  max-width: 500px;
+.logo-glow {
+  font-family: 'Orbitron', 'Rajdhani', 'Audiowide', monospace;
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #fff;
+  text-shadow: 
+    0 0 10px rgba(0, 229, 255, 0.8),
+    0 0 20px rgba(0, 229, 255, 0.6),
+    0 0 40px rgba(0, 229, 255, 0.4),
+    0 0 80px rgba(0, 229, 255, 0.2);
+  animation: glowPulse 2s ease-in-out infinite alternate;
+}
+
+.logo-glow .accent {
+  color: #00e5ff;
+  text-shadow: 
+    0 0 10px rgba(0, 229, 255, 1),
+    0 0 20px rgba(0, 229, 255, 0.8),
+    0 0 40px rgba(0, 229, 255, 0.6),
+    0 0 80px rgba(0, 229, 255, 0.4),
+    2px 2px 0 #000;
+}
+
+@keyframes glowPulse {
+  from {
+    text-shadow: 
+      0 0 10px rgba(0, 229, 255, 0.8),
+      0 0 20px rgba(0, 229, 255, 0.6),
+      0 0 40px rgba(0, 229, 255, 0.4);
+  }
+  to {
+    text-shadow: 
+      0 0 15px rgba(0, 229, 255, 1),
+      0 0 30px rgba(0, 229, 255, 0.8),
+      0 0 60px rgba(0, 229, 255, 0.6),
+      0 0 100px rgba(0, 229, 255, 0.4);
+  }
+}
+
+/* Mobile logo hidden on desktop */
+@media (min-width: 769px) {
+  .logo-mobile {
+    display: none;
+  }
+}
+
+/* === LOGIN BOX (on top) === */
+.login-box {
   position: relative;
   z-index: 2;
-}
-
-/* Tagline */
-.tagline {
-  font-size: 1.5rem;
-  color: var(--accent);
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
-}
-
-/* Main Title - Chrome font effect */
-.hero h1 {
-  font-size: 4.5rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin-bottom: 2rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 50%, #f8fafc 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 0 40px rgba(0, 229, 255, 0.2);
-}
-
-/* Glassmorphism Registration Card */
-.registration-card {
-  background: rgba(18, 22, 32, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 229, 255, 0.2);
-  border-radius: 20px;
+  width: 90%;
+  max-width: 420px;
   padding: 2rem;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: rgba(20, 30, 50, 0.85);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 229, 255, 0.1);
 }
 
-.registration-card h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  color: var(--text-primary);
-}
-
-/* Form Groups */
+/* === FORM GROUPS === */
 .form-group {
   margin-bottom: 1.25rem;
 }
@@ -138,7 +132,7 @@ body {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: #94a3b8;
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
@@ -155,179 +149,110 @@ body {
   50% { opacity: 0.5; }
 }
 
+/* === INPUTS === */
 .form-group input {
   width: 100%;
-  padding: 1rem 1.25rem;
-  font-size: 1rem;
+  box-sizing: border-box;
+  padding: 0.75rem 1rem;
   background: rgba(9, 10, 15, 0.8);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  color: var(--text-primary);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 1rem;
   transition: all 0.3s ease;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+  border-color: #00e5ff;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.25);
 }
 
 .form-group input::placeholder {
-  color: var(--text-secondary);
+  color: #94a3b8;
   opacity: 0.6;
 }
 
-/* CTA Button - "Claim My Empire" */
+/* === CTA BUTTON === */
 .cta-button {
   width: 100%;
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
+  box-sizing: border-box;
+  padding: 0.85rem;
+  background: linear-gradient(135deg, #00e5ff 0%, #00b8d4 100%);
+  color: #000;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: linear-gradient(135deg, var(--accent) 0%, #00b8d4 100%);
-  color: var(--bg-dark);
+  font-size: 1.1rem;
   border: none;
-  border-radius: 12px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 0 25px var(--accent-glow);
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.4);
   margin-top: 0.5rem;
 }
 
 .cta-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 40px var(--accent-glow), 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-.cta-button:active {
-  transform: translateY(0);
+  box-shadow: 0 0 40px rgba(0, 229, 255, 0.5);
 }
 
 .cta-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  transform: none;
 }
 
-/* Error Message */
+/* === ERROR === */
 .error {
-  background: rgba(255, 82, 82, 0.1);
+  background: rgba(255, 82, 82, 0.15);
   border: 1px solid rgba(255, 82, 82, 0.3);
   color: #ff5252;
   padding: 0.75rem;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 0.9rem;
   margin-bottom: 1rem;
   text-align: center;
 }
 
-/* Card Note */
+/* === CARD NOTE === */
 .card-note {
   text-align: center;
   font-size: 0.8rem;
-  color: var(--text-secondary);
+  color: #94a3b8;
   margin-top: 1rem;
   opacity: 0.7;
 }
 
-/* Live Ticker */
-.live-ticker {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(9, 10, 15, 0.95);
-  border-top: 1px solid rgba(0, 229, 255, 0.2);
-  padding: 0.75rem 2rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  z-index: 100;
-}
+/* === RESPONSIVE === */
 
-.ticker-label {
-  background: #ff5252;
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  animation: tickerPulse 2s ease-in-out infinite;
-}
-
-@keyframes tickerPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-
-.ticker-content {
-  display: flex;
-  gap: 3rem;
-  animation: tickerScroll 30s linear infinite;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-}
-
-.ticker-content span {
-  white-space: nowrap;
-}
-
-@keyframes tickerScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* Footer */
-.landing-footer {
-  position: fixed;
-  bottom: 50px;
-  left: 0;
-  right: 0;
-  padding: 1rem 2rem;
-  text-align: center;
-  background: linear-gradient(transparent, rgba(9, 10, 15, 0.9));
-  z-index: 50;
-}
-
-.landing-footer p {
-  font-size: 1rem;
-  margin-bottom: 0.25rem;
-}
-
-.footer-note {
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-  .mascot-container {
-    right: -10%;
-    width: 60%;
-    opacity: 0.4;
+/* Mobile-specific (phones portrait) */
+@media (max-width: 480px) and (orientation: portrait) {
+  .hero-wrapper::before {
+    background-image: url('/droid-mascot-mobile.png');
+    background-position: center center;
   }
 }
 
+/* Mobile-specific (phones) */
+@media (max-width: 480px) {
+  .hero-wrapper {
+    padding: 1.5rem 1.5rem 1.5rem 0;
+  }
+  
+  .login-box {
+    padding: 1rem;
+  }
+}
+
+/* Tablet */
 @media (max-width: 768px) {
-  .hero h1 {
-    font-size: 2.5rem;
+  .hero-wrapper::before {
+    background-position: center center;
+    background-attachment: scroll;
   }
-  
-  .tagline {
-    font-size: 1rem;
-  }
-  
-  .mascot-container {
-    display: none;
-  }
-  
-  .hero-content {
-    max-width: 100%;
-  }
-  
-  .registration-card {
-    padding: 1.5rem;
+}
+
+@media (min-width: 1200px) {
+  .login-box {
+    margin-left: auto;
+    margin-right: 20%;
   }
 }
