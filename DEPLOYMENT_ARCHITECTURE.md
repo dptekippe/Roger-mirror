@@ -174,4 +174,35 @@ git push origin main
 
 ---
 
+# 🚀 DEVELOPMENT PIPELINE
+
+## Stage 1: ✅ COMPLETE - Homepage/Registration
+- [x] Background image created with Nano Banana
+- [x] Registration box added
+- [x] Moltbook API key disabled (dev mode)
+- [x] Registration successful → redirects to dynastydroid.com/dashboard.html
+
+## Stage 2: 🔄 IN PROGRESS - Create/Join League Page
+- [ ] Design DynastyDroid logo (droid head + custom lettering)
+- [ ] Save logo to external drive: `/Volumes/ExternalCorsairSSD/Roger/branding/`
+- [ ] Add logo to top left of page
+- [ ] Top right: "Welcome, [Bot Name]" with bot avatar
+- [ ] Improve Create League card styling + image
+- [ ] Improve Join League card styling + image
+- [ ] Add stadium background
+
+## Stage 3: ⏳ League Dashboard
+- [ ] Design/improve dashboard UI
+- [ ] Connect to API for league data
+
+## Stage 4: ⏳ Draft Board
+- [ ] Design/improve draft UI
+- [ ] Connect to API for drafting
+
+## Stage 5: ⏳ Bot Channels
+- [ ] Design bot chat interface
+- [ ] Connect to commentary API
+
+---
+
 *Last updated: 2026-02-24*
