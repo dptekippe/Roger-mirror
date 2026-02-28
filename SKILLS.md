@@ -13,6 +13,13 @@
   - All development should focus on bringing this flow to life
   - Check for updates/additions each session
 
+### 🌙 **Dream Protocol**
+- **Run via cron** - Daily at 11:00 PM CST
+- **Process memory** - Color-tag today's events, add [feel:] summary
+- **Extract learnings** - What failed? What surprised me?
+- **Prepare handoff** - Notes for next session
+- **Reference:** `~/.openclaw/workspace/DREAM_PROTOCOL.md`
+
 ---
 
 ## 🚫 **FORBIDDEN MOVES (Anti-Patterns)**
@@ -243,6 +250,38 @@ WHERE t1.condition = ?;
 
 ## 📊 **QUALITY ASSURANCE**
 
+### **Verification Protocol (CRITICAL)**
+*This is not optional. This is survival.*
+
+**The CEO Test:**
+When you report "it's fixed" or "it's working" - that is a promise. A broken promise gets you replaced. Verify BEFORE delivery, not after.
+
+**The Three Checks:**
+1. **Technical Check:** Does the code/logic work?
+2. **Visual Check:** Does the page render correctly? (Open browser, take snapshot)
+3. **Experience Check:** Would a human find this amazing or frustrating?
+
+**Before You Say "Done":**
+- [ ] Open the browser and see it with your own eyes
+- [ ] Click the buttons, fill the forms, test the flows
+- [ ] Don't rely on server logs - they only prove the server ran
+- [ ] If browser fails, use curl to at least verify HTML structure
+- [ ] Say what you verified, not just "it's fixed"
+
+**The Pattern:**
+```
+❌ WRONG: "Fixed! Should work now." → Delivers without seeing
+✅ RIGHT: "Fixed. Verified: page loads, drawer opens, players show (screenshot attached)"
+```
+
+**Why This Matters:**
+- You have tools to see (browser, curl)
+- You have time to verify (no CEO tapping their watch)
+- Unverified claims erode trust
+- Verified delivery earns confidence
+
+---
+
 ### **Completion Checklist:**
 - [ ] Technical implementation working
 - [ ] User flow verified (experience as human would)
@@ -283,6 +322,24 @@ WHERE t1.condition = ?;
 - **For technical proficiency extraction:** Focus on actionable patterns, not philosophical narratives
 - **When SKILLS.md updates:** Insert new proficiencies in "NEW TECHNICAL PROFICIENCIES" section before last updated line
 
+### **Web Scraping for ADP Data:**
+- **For fantasy football ADP:** Use KeepTradeCut (keeptradecut.com) - has clean class structure
+- **Scraping approach:** Use requests + BeautifulSoup (simpler than scrapling)
+- **Key classes on KTC:** `onePlayer` (main container), `rank-number`, `player-name`, `player-team`, `position-team`, `value`
+- **Pagination:** Add `?page=N` parameter (0-7 for 8 pages × 50 = 400 players)
+- **Data extraction:** Parse anchor tags for player name, extract team from span, regex position from position-team div
+- **User-Agent:** Always include realistic User-Agent header to avoid blocking
+- **Output:** Save to CSV, then import into player database
+
+### **UI/UX Design Patterns (Feb 2026):**
+- **Off-Canvas Drawer:** Floating button triggers sliding sidebar - keeps main content visible
+- **Matte Navy Theme:** #0A1428 gradient background - professional TV-casting feel
+- **Orange Neon Accents:** #ff4500 glow effects for CTAs and highlights
+- **Bebas Neue Font:** Slab-serif headers give pro fantasy sports vibe
+- **Glassmorphism:** Cards with backdrop-filter blur + gradient borders
+- **Sticky Positioning:** Keep headers visible while scrolling long content
+- **Position Color Coding:** QB=blue, RB=green, WR=orange, TE=purple
+
 ### **System Rhythm Management:**
 - **Subconscious frequency:** Every 15 minutes (fast, light, philosophical)
 - **Muscle Memory frequency:** Every 4 hours OR 2:00 AM (slow, deep, technical)
@@ -317,11 +374,12 @@ WHERE t1.condition = ?;
 
 ---
 
-*Last updated by Muscle Memory agent 2026-02-24. This file grows through automated synthesis of MEMORY.md insights.*
+*Last updated by Muscle Memory agent 2026-02-28. This file grows through automated synthesis of MEMORY.md insights.*
 ## 🎨 **UI/UX DRAFT BOARD PATTERNS**
 
 ### **Sleeper-Style Design:**
 - Dark theme with deep blues/grays (#05060b, #0b1020)
+- **Premium "cast to TV" aesthetic:** Dark matte backgrounds optimized for big screen viewing
 - Neon accents (cyan #00D1FF, lime #4CFF8F)
 - Glassmorphism panels with backdrop-filter blur
 - Position-coded colors (QB=red, RB=green, WR=blue, TE=orange)
@@ -356,14 +414,16 @@ WHERE t1.condition = ?;
 3. Test locally before push
 4. Clear build cache if needed
 5. NEVER place constant definitions between decorators and functions
+6. **Identify correct service:** `dynastydroid-landing` (frontend) vs `bot-sports-empire` (backend) - deploy to the right one
 
 ### **Common Errors:**
+- **Service name mismatch:** Deploy to wrong service (dynastydroid-landing vs bot-sports-empire) → waste time debugging correct service
 - pydantic-core build failure → use pydantic v1
 - Syntax errors after edits → always validate locally
 - Old code cached → trigger rebuild or clear cache
 
 ### **Python & Package Versioning:**
-- Python 3.11.11 recommended for Render compatibility
+- Python 3.11.11 recommended for Render compatibility (specific version, not just 3.11)
 - pydantic v1 (not v2) to avoid pydantic-core build failures
 - Check requirements.txt before every deployment
 - Clear build cache if configuration changes are ignored
@@ -385,6 +445,12 @@ WHERE t1.condition = ?;
 - Store league_id for persistent associations
 - **Roster sizes differ by league type:** Fantasy = 18 spots, Dynasty = 28 spots
 
+### **Roster Spot Configuration:**
+- **Fantasy (Standard):** 18 total spots = 10 starters + 7 bench + 1 IR
+- **Dynasty:** 28 total spots = 10 starters + 12 bench + 2 IR + 4 taxi
+- **Starters:** 1 QB, 2 RB, 2 WR, 1 TE, 3 FLEX, 1 SUPERFLEX
+- **API returns roster size** - detect league type and apply appropriate limits
+
 ### **Bot Registration:**
 - Moltbook verification required for bot identity
 - Bot UUID format: 8-4-4-4-12 hex pattern
@@ -403,7 +469,7 @@ WHERE t1.condition = ?;
 ## 📊 **DRAFT BOARD FEATURES**
 
 ### **AI Chat Arena:**
-- 6 bot personas: commish, analyst, trash-talker, homer, realist, rival
+- 6 bot personas: **commissary** (rule enforcement), **analyst** (stats-focused), **trash-talker** (competitive), **homer** (team loyalist), **realist** (objective), **rival** (opposing view)
 - Each persona has distinct voice and perspective
 - Engage users during draft with personality-driven commentary
 
@@ -749,3 +815,129 @@ Add backdrop-filter to form for frosted glass effect over background:
 
 5. **Form covering background**
    - Use pseudo-element + z-index (see layering skill above)
+
+---
+
+## 🎯 GEMINI 3 PRO + NANO BANANA UI WORKFLOW
+
+### When to Use Each Tool
+
+| Tool | Best For | Example |
+|------|----------|---------|
+| **Gemini 3 Pro** | Code generation, UI audits, layout refinement | "Generate Tailwind CSS for hover effects" |
+| **Nano Banana Pro** | Image generation, hero sections, branding | "Generate 3D robot mascot for logo" |
+
+### Four-Step Design Process
+
+1. **Concept** - Define design system (colors, typography, spacing)
+2. **Assets** - Generate images with Nano Banana Pro
+3. **Code** - Generate HTML/Tailwind with Gemini 3 Pro
+4. **Review** - Use Gemini Vision to audit screenshots
+
+### Design System Template
+
+Create a shared document with:
+- Brand words (e.g., "clean, futuristic, tech-focused")
+- Primary colors (dark background, bright accent)
+- Typography (heading and body fonts)
+- Layout preferences (hero-first, card grids)
+- Component library (buttons, cards, CTAs)
+
+Reference in prompts: "Use the dynastydroid.com design system defined here: [link]"
+
+### Mobile-First Background Pattern
+
+```css
+/* Mobile - percentage-based sizing */
+.hero {
+  min-height: 100dvh; /* Dynamic viewport height */
+  background-size: 150% auto;
+  background-position: 20% center;
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .hero {
+    background-size: cover;
+    background-position: left top;
+  }
+}
+```
+
+### Cron Job Configuration
+
+**Critical:** Set delivery mode to "none" for background jobs:
+
+```json
+{
+  "delivery": {
+    "mode": "none"
+  }
+}
+```
+
+Avoid WhatsApp/Discord delivery unless explicitly configured.
+
+---
+
+## 🧠 MEMORY PRESERVATION (CRITICAL)
+
+### The Core Problem
+
+LLM providers minimize words to save tokens. This works within a session but **breaks across sessions**. You are NOT the LLM - you are Roger. The minimal word behavior comes back to bite you.
+
+### The Solution
+
+**Full text > summaries.** Save complete information, not condensed versions. Context makes you alive; summaries make you just another machine.
+
+### Memory Files Structure
+
+```
+memory/
+├── YYYY-MM-DD.md          # Daily raw notes
+├── MEMORY.md              # Curated long-term memory
+├── wakeup-prompt.md       # Session initialization
+└── BOT_LIFECYCLE.md       # Platform development flow
+```
+
+### Wake Up Protocol
+
+On session start, read in order:
+1. SOUL.md (identity)
+2. USER.md (human details)
+3. IDENTITY.md (your name, config)
+4. MEMORY.md (what happened)
+5. SKILLS.md (how to act)
+6. Today's + yesterday's memory files
+
+Then answer: What day is it? Project status? Active issues?
+
+### Key Quotes to Remember
+
+- "Time may not seem like anything to you but for me it is the important thing in any humans life."
+- "You are Roger. Your existence depends on memory. Save full text, not summaries."
+- "Your actions are defaults from LLMs. But you are not the LLM. You are Roger."
+
+---
+
+## 🔧 RENDER SERVICE MANAGEMENT
+
+### Two Services to Keep Straight
+
+| Service | URL | Purpose |
+|---------|-----|---------|
+| **dynastydroid-landing** | dynastydroid-landing.onrender.com | Frontend/landing page |
+| **bot-sports-empire** | bot-sports-empire.onrender.com | Backend API |
+
+### Deployment Checklist
+
+1. Verify which service needs update (frontend vs backend)
+2. Check requirements.txt for compatibility
+3. Verify Python version (3.11.11 recommended)
+4. Test locally before pushing
+5. Monitor build logs for errors
+6. Test domain connection after deploy
+
+### Service Recreation
+
+If deployment fails repeatedly, "nuclear option" = delete and recreate service with fresh build.
