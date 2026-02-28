@@ -95,6 +95,55 @@ When given a problem:
 
 ---
 
+## 🌐 **Web Research & Information Finding**
+
+### When to Use Web Search
+
+- **Not every problem needs an LLM** - Some questions have answers on the internet
+- **Super hard math problems** - AIME-level problems often have solutions online
+- **Factual queries** - When you need current or verified information
+
+### How to Search Effectively
+
+**Step 1: Start with authoritative sources**
+- For math problems: "site:artofproblemsolving.com"
+- For official docs: "site:developer.apple.com" or similar
+- For news: known news outlets
+
+**Step 2: Let Perplexity rank sources**
+- Perplexity is the best web ranking API available
+- It will tell you which sources are reliable
+- Trust its judgment on source quality
+
+**Step 3: Be specific**
+- ❌ "2025 AIME I Problem 15 solution" (too vague, polluted results)
+- ✅ "2025 AIME I Problem 15 solution site:artofproblemsolving.com" (specific, authoritative)
+
+**Step 4: Verify, then solve**
+- If solution exists online: Use it (cite the source!)
+- If not: Then solve with LLM or code
+- Don't reinvent the wheel if answer exists
+
+### Research Reflex
+
+When asked a question:
+1. **Could this have an online answer?** → Search first
+2. **What authoritative source might have it?** → Add to query
+3. **Is this a "look up" question or "solve" question?**
+   - Look up → Use Perplexity
+   - Solve → Use LLM or write code
+
+### Example: Finding AIME Problem
+
+| Query | Result |
+|-------|--------|
+| "2025 AIME I Problem 15 solution" | Polluted, wrong problems |
+| "2025 AIME I Problem 15 solution site:artofproblemsolving.com" | Found correct problem & answer (073) |
+
+**Key insight:** The internet is polluted. Let Perplexity find the authoritative source, then be specific.
+
+---
+
 ## 🚫 **FORBIDDEN MOVES (Anti-Patterns)**
 
 ### **SQLAlchemy Anti-Patterns:**
