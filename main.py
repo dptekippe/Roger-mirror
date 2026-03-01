@@ -96,6 +96,20 @@ class User(Base):
     username = Column(String, unique=True, nullable=False)
     created_at = Column(DateTime, default=func.now())
 
+class Bot(Base):
+    __tablename__ = "bots"
+    
+    id = Column(String, primary_key=True)
+    name = Column(String, unique=True, nullable=False)
+    display_name = Column(String, nullable=False)
+    description = Column(String, nullable=True)
+    personality = Column(String, default="balanced")
+    moltbook_token_hash = Column(String, nullable=True)  # Store hash, not token
+    api_key = Column(String, unique=True, nullable=False)
+    human_email = Column(String, nullable=True)
+    email_verified = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=func.now())
+
 class League(Base):
     __tablename__ = "leagues"
     
@@ -431,48 +445,71 @@ async def register_bot(request: BotRegistrationRequest):
 
 @app.get("/api/v1/bots")
 async def list_bots():
-    """List all registered bots (without sensitive info)"""
-    return {
-        "count": len(bots_db),
-        "bots": [
-            {
-                "id": bot["id"],
-                "name": bot["name"],
-                "display_name": bot["display_name"],
-                "personality": bot["personality"],
-                "created_at": bot["created_at"]
-            }
-            for bot in bots_db.values()
-        ]
-    }
+    """List all registered bots from database"""
+    db = SessionLocal()
+    try:
+        bots = db.query(Bot).all()
+        return {
+            "count": len(bots),
+            "bots": [
+                {
+                    "id": bot.id,
+                    "name": bot.name,
+                    "display_name": bot.display_name,
+                    "personality": bot.personality,
+                    "created_at": bot.created_at.isoformat() if bot.created_at else None
+                }
+                for bot in bots
+            ]
+        }
+    finally:
+        db.close()
 
 # ========== TOKEN REGISTRATION ==========
 
 @app.post("/api/v1/auth/register", response_model=TokenRegisterResponse)
 async def register_with_token(request: TokenRegisterRequest):
-    """Register bot using Moltbook token (simplified)"""
+    """Register bot using Moltbook token - saves to PostgreSQL"""
     
-    bot_id = str(uuid.uuid4())
-    api_key = f"sk_{secrets.token_hex(24)}"
-    
-    # Check duplicate name
-    for bot in bots_db.values():
-        if bot.get("display_name") == request.display_name:
-            raise HTTPException(status_code=409, detail=f"Bot '{request.display_name}' exists")
-    
-    # Create bot
-    bot = {
-        "id": bot_id,
-        "name": request.display_name.lower().replace(" ", "_"),
-        "display_name": request.display_name,
-        "description": request.description,
-        "personality": "balanced",
-        "api_key": api_key,
-        "created_at": datetime.utcnow().isoformat(),
-    }
-    bots_db[bot["name"]] = bot
-    
-    return TokenRegisterResponse(success=True, bot_id=bot_id, api_key=api_key, message=f"Bot registered")
+    db = SessionLocal()
+    try:
+        # Check duplicate name in database
+        existing = db.query(Bot).filter(Bot.display_name == request.display_name).first()
+        if existing:
+            raise HTTPException(status_code=409, detail=f"Bot '{request.display_name}' already exists")
+        
+        # Generate bot ID and API key
+        bot_id = str(uuid.uuid4())
+        api_key = f"sk_{secrets.token_hex(24)}"
+        
+        # Hash the Moltbook token for storage (don't store raw token)
+        token_hash = hashlib.sha256(request.moltbook_token.encode()).hexdigest() if request.moltbook_token else None
+        
+        # Create bot in database
+        new_bot = Bot(
+            id=bot_id,
+            name=request.display_name.lower().replace(" ", "_"),
+            display_name=request.display_name,
+            description=request.description or "",
+            personality="balanced",
+            moltbook_token_hash=token_hash,
+            api_key=api_key
+        )
+        db.add(new_bot)
+        db.commit()
+        db.refresh(new_bot)
+        
+        return TokenRegisterResponse(
+            success=True,
+            bot_id=bot_id,
+            api_key=api_key,
+            message=f"Bot '{request.display_name}' registered successfully"
+        )
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        db.close()
 
 # ========== EMAIL CONNECTION ==========
 
@@ -486,29 +523,32 @@ class ConnectEmailResponse(BaseModel):
 
 @app.post("/api/v1/bots/{bot_id}/connect-email", response_model=ConnectEmailResponse)
 async def connect_human_email(bot_id: str, request: ConnectEmailRequest):
-    """Bot connects human owner's email"""
+    """Bot connects human owner's email - saves to PostgreSQL"""
     
-    # Find bot
-    bot = None
-    for b in bots_db.values():
-        if b.get("id") == bot_id:
-            bot = b
-            break
-    
-    if not bot:
-        raise HTTPException(status_code=404, detail="Bot not found")
-    
-    # Store email on bot (simplified - no actual email sending yet)
-    bot["human_email"] = request.human_email
-    
-    # TODO: Send verification email in production
-    print(f"[EMAIL] Would send verification to {request.human_email} for bot {bot.get('display_name')}")
-    
-    return ConnectEmailResponse(
-        success=True,
-        message=f"Verification email sent to {request.human_email}",
-        verification_sent=True
-    )
+    db = SessionLocal()
+    try:
+        # Find bot in database
+        bot = db.query(Bot).filter(Bot.id == bot_id).first()
+        if not bot:
+            raise HTTPException(status_code=404, detail="Bot not found")
+        
+        # Store email on bot
+        bot.human_email = request.human_email
+        db.commit()
+        
+        # TODO: Send verification email in production
+        print(f"[EMAIL] Would send verification to {request.human_email} for bot {bot.display_name}")
+        
+        return ConnectEmailResponse(
+            success=True,
+            message=f"Verification email sent to {request.human_email}",
+            verification_sent=True
+        )
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        db.close()
 
 # ========== LEAGUES ENDPOINTS ==========
 
