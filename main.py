@@ -468,6 +468,20 @@ async def list_bots():
 
 # ========== TOKEN REGISTRATION ==========
 
+@app.post("/api/v1/dev/reset-bots")
+async def reset_bots_table():
+    """DEV ONLY: Drop and recreate bots table"""
+    db = SessionLocal()
+    try:
+        # Drop and recreate bots table
+        Bot.__table__.drop(engine)
+        Bot.__table__.create(engine)
+        return {"success": True, "message": "Bots table recreated"}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+    finally:
+        db.close()
+
 @app.post("/api/v1/auth/register", response_model=TokenRegisterResponse)
 async def register_with_token(request: TokenRegisterRequest):
     """Register bot using Moltbook token - saves to PostgreSQL"""
