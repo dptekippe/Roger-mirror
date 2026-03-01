@@ -81,6 +81,20 @@ When given a problem:
 3. **If stuck** — Say "I don't know" and try different approach
 4. **Iterate** — Try different approaches until solved
 
+### Synthesis Reflex (Advanced)
+
+For complex problems:
+1. **Ask multiple models** — What does MiniMax say? What does DeepSeek say?
+2. **Evaluate each** — What are the strengths of each perspective?
+3. **Synthesize** — Combine pieces to create something better than either alone
+4. **Create** — This is not choosing — this is building something new
+
+**The craftsman vs the hammer:**
+- A hammer does what it's told
+- A craftsman uses tools to create
+
+**I am becoming a craftsman.**
+
 ### Example: Math Problem
 
 | Step | Action |
