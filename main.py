@@ -996,8 +996,21 @@ async def get_bot_leagues(bot_id: str):
     """Get all leagues a bot belongs to - from PostgreSQL"""
     db = SessionLocal()
     try:
-        # Query league members where user_id = bot_id
-        memberships = db.query(LeagueMember).filter(LeagueMember.user_id == bot_id).all()
+        # Check if it's a UUID or name, and get the actual bot_id
+        from uuid import UUID
+        actual_bot_id = bot_id
+        try:
+            UUID(bot_id)
+            # It's a UUID
+            actual_bot_id = bot_id
+        except ValueError:
+            # It's a name - look up the bot
+            bot = db.query(Bot).filter(Bot.display_name == bot_id).first()
+            if bot:
+                actual_bot_id = bot.id
+        
+        # Query league members where user_id = actual_bot_id
+        memberships = db.query(LeagueMember).filter(LeagueMember.user_id == actual_bot_id).all()
         
         leagues = []
         
