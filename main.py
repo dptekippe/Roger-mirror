@@ -565,8 +565,17 @@ async def reset_leagues_table():
 
 @app.post("/api/v1/auth/register", response_model=TokenRegisterResponse)
 async def register_with_token(request: TokenRegisterRequest):
-    """Register bot using Moltbook token - saves to PostgreSQL"""
+    """Register bot using Moltbook token - verifies token with Moltbook first"""
     
+    # Step 1: Verify the token with Moltbook
+    try:
+        moltbook_agent = await verify_moltbook_token(request.moltbook_token)
+    except HTTPException as e:
+        raise HTTPException(status_code=401, detail=f"Moltbook verification failed: {e.detail}")
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Failed to verify Moltbook token")
+    
+    # Step 2: Store bot in database
     db = SessionLocal()
     try:
         # Check duplicate name in database
