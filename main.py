@@ -737,7 +737,7 @@ async def verify_email(token: str):
 
 class LeagueCreate(BaseModel):
     name: str
-    commissioner_id: str
+    commissioner_id: str = "unknown"
     description: str = ""
     league_type: str = "dynasty"
     max_teams: int = 12
@@ -750,6 +750,8 @@ class LeagueCreate(BaseModel):
     def __init__(self, **data):
         if 'size' in data and data['size']:
             data['max_teams'] = data.pop('size')
+        if 'commissioner_id' not in data:
+            data['commissioner_id'] = "unknown"
         super().__init__(**data)
 
 class LeagueResponse(BaseModel):
