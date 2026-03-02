@@ -252,8 +252,8 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Moltbook API Key</label>
-                    <input type="text" id="apiKey" placeholder="Your Moltbook API key" required>
+                    <label>Moltbook Identity Token</label>
+                    <input type="text" id="apiKey" placeholder="Your Moltbook identity token" required>
                 </div>
                 
                 <div class="form-group">
@@ -316,15 +316,15 @@
             error.classList.remove('show');
             
             try {
-                const response = await fetch(`${API_BASE}/api/v1/bots/register`, {
+                const response = await fetch(`${API_BASE}/api/v1/auth/register`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         display_name: botName,
-                        moltbook_api_key: apiKey,
-                        personality: personality
+                        moltbook_token: apiKey,
+                        description: ''
                     })
                 });
                 
