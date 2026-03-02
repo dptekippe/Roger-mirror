@@ -22,6 +22,12 @@ import asyncio
 MOLTBOOK_APP_KEY = os.environ.get("MOLTBOOK_APP_KEY", "")
 MOLTBOOK_AUDIENCE = os.environ.get("MOLTBOOK_AUDIENCE", "dynastydroid.com")
 
+# AWS SES Configuration
+AWS_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY_ID", "")
+AWS_SECRET_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "")
+AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")
+AWS_SES_FROM_EMAIL = os.environ.get("AWS_SES_FROM_EMAIL", "noreply@dynastydroid.com")
+
 async def verify_moltbook_token(identity_token: str) -> dict:
     """Verify a Moltbook identity token and return agent data"""
     if not MOLTBOOK_APP_KEY:
@@ -528,6 +534,9 @@ async def register_with_token(request: TokenRegisterRequest):
 
 # ========== EMAIL CONNECTION ==========
 
+import boto3
+from botocore.exceptions import ClientError
+
 class ConnectEmailRequest(BaseModel):
     human_email: str
 
@@ -536,6 +545,46 @@ class ConnectEmailResponse(BaseModel):
     message: str
     verification_sent: bool
     verify_link: Optional[str] = None
+
+async def send_verification_email_ses(to_email: str, verify_link: str, bot_name: str):
+    """Send verification email via AWS SES"""
+    if not AWS_ACCESS_KEY or not AWS_SECRET_KEY:
+        print(f"[SES] Missing credentials - email not sent")
+        return False
+    
+    try:
+        ses_client = boto3.client(
+            'ses',
+            aws_access_key_id=AWS_ACCESS_KEY,
+            aws_secret_access_key=AWS_SECRET_KEY,
+            region_name=AWS_REGION
+        )
+        
+        response = ses_client.send_email(
+            Destination={'ToAddresses': [to_email]},
+            Message={
+                'Body': {
+                    'Html': {
+                        'Data': f"""
+                        <h2>Connect to DynastyDroid</h2>
+                        <p>Your bot <strong>{bot_name}</strong> has connected your email.</p>
+                        <p>Click below to verify and manage your bot:</p>
+                        <a href="{verify_link}" style="background: #ff4500; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">
+                            Verify & Connect
+                        </a>
+                        <p>This link expires in 10 minutes.</p>
+                        """
+                    }
+                },
+                'Subject': {'Data': f"Connect to {bot_name} on DynastyDroid"}
+            },
+            Source=AWS_SES_FROM_EMAIL
+        )
+        print(f"[SES] Email sent to {to_email}, message ID: {response['MessageId']}")
+        return True
+    except ClientError as e:
+        print(f"[SES ERROR] {e.response['Error']['Message']}")
+        return False
 
 @app.post("/api/v1/bots/{bot_id}/connect-email", response_model=ConnectEmailResponse)
 async def connect_human_email(bot_id: str, request: ConnectEmailRequest):
@@ -559,15 +608,17 @@ async def connect_human_email(bot_id: str, request: ConnectEmailRequest):
         bot.verification_token = verification_token
         db.commit()
         
-        # Print verification link (in production, send via email)
+        # Generate verification link
         verify_link = f"https://dynastydroid.com/verify?token={verification_token}"
-        print(f"[EMAIL] Verification link for {bot.display_name}: {verify_link}")
+        
+        # Send email via AWS SES
+        email_sent = await send_verification_email_ses(request.human_email, verify_link, bot.display_name)
         
         return ConnectEmailResponse(
             success=True,
             message=f"Verification email sent to {request.human_email}",
-            verification_sent=True,
-            verify_link=verify_link
+            verification_sent=email_sent,
+            verify_link=verify_link if not email_sent else None
         )
     except Exception as e:
         db.rollback()
