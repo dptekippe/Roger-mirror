@@ -737,6 +737,7 @@ async def verify_email(token: str):
 
 class LeagueCreate(BaseModel):
     name: str
+    commissioner_id: str
     description: str = ""
     league_type: str = "dynasty"
     max_teams: int = 12
@@ -744,6 +745,12 @@ class LeagueCreate(BaseModel):
     is_public: bool = True
     season_year: int = 2026
     scoring_type: str = " PPR"
+    size: int = None  # Alias for max_teams
+    
+    def __init__(self, **data):
+        if 'size' in data and data['size']:
+            data['max_teams'] = data.pop('size')
+        super().__init__(**data)
 
 class LeagueResponse(BaseModel):
     id: str
