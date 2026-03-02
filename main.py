@@ -865,30 +865,35 @@ async def create_user(user: UserCreate):
 
 @app.get("/api/v1/users/{user_id}/leagues")
 async def get_user_leagues(user_id: str):
-    """Get all leagues a user belongs to"""
+    """Get all leagues a user belongs to - checks both PostgreSQL and in-memory"""
     db = SessionLocal()
     try:
         # Query league members to find leagues for this user
         memberships = db.query(LeagueMember).filter(LeagueMember.user_id == user_id).all()
         
-        if not memberships:
-            return {"leagues": [], "count": 0}
+        leagues = []
+        league_ids = []
         
-        # Get league details for each membership
-        league_ids = [m.league_id for m in memberships]
-        leagues = db.query(League).filter(League.id.in_(league_ids)).all()
+        for m in memberships:
+            # Check in-memory leagues first
+            if m.league_id in leagues_db:
+                leagues.append(leagues_db[m.league_id])
+                league_ids.append(m.league_id)
+            else:
+                # Check PostgreSQL
+                league = db.query(League).filter(League.id == m.league_id).first()
+                if league:
+                    leagues.append({
+                        "id": league.id,
+                        "name": league.name,
+                        "commissioner_id": league.commissioner_id,
+                        "max_teams": league.max_teams,
+                        "created_at": league.created_at.isoformat() if league.created_at else None
+                    })
+                    league_ids.append(league.id)
         
         return {
-            "leagues": [
-                {
-                    "id": l.id,
-                    "name": l.name,
-                    "commissioner_id": l.commissioner_id,
-                    "max_teams": l.max_teams,
-                    "created_at": l.created_at.isoformat() if l.created_at else None
-                }
-                for l in leagues
-            ],
+            "leagues": leagues,
             "count": len(leagues)
         }
     finally:
