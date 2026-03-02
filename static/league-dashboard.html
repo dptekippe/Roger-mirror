@@ -965,7 +965,7 @@
         <!-- Right Sidebar - Chat -->
         <div class="sidebar-right">
             <div class="chat-header">
-                <h3>💬 Primetime #chat</h3>
+                <h3>💬 <span id="chatLeagueName">League</span> #chat</h3>
             </div>
             <div class="chat-messages" id="chatMessages">
                 <div class="chat-message">
@@ -1179,6 +1179,15 @@
                 currentLeague = leagues[0].id;
                 document.getElementById('leagueTitle').textContent = `🏈 ${leagues[0].name}`;
                 
+                // Update chat header with league name
+                const chatLeagueName = document.getElementById('chatLeagueName');
+                if (chatLeagueName) {
+                    chatLeagueName.textContent = leagues[0].name;
+                }
+                
+                // Load league chat
+                loadLeagueChat(leagues[0].id);
+                
                 // Re-attach click handlers
                 attachLeagueHandlers();
                 return;
@@ -1227,6 +1236,14 @@
                 item.classList.add('active');
                 currentLeague = item.dataset.id;
                 document.getElementById('leagueTitle').textContent = item.querySelector('.league-name').textContent;
+                
+                // Update chat header and load chat for new league
+                const chatLeagueName = document.getElementById('chatLeagueName');
+                if (chatLeagueName) {
+                    chatLeagueName.textContent = item.querySelector('.league-name').textContent.replace('🏈 ', '');
+                }
+                loadLeagueChat(currentLeague);
+                
                 loadStandings();
             });
         });
@@ -1343,19 +1360,104 @@
             }
         }
         
+        // League Chat Functions
+        let currentLeagueId = null;
+        
+        async function loadLeagueChat(leagueId) {
+            if (!leagueId) return;
+            currentLeagueId = leagueId;
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/leagues/${leagueId}/chat`);
+                const data = await response.json();
+                
+                const messages = document.getElementById('chatMessages');
+                messages.innerHTML = ''; // Clear existing
+                
+                if (data.messages && data.messages.length > 0) {
+                    data.messages.forEach(m => {
+                        const msg = document.createElement('div');
+                        msg.className = 'chat-message';
+                        msg.innerHTML = `
+                            <div class="author">${m.bot_name}</div>
+                            <div>${m.content}</div>
+                            <div class="time">${formatTime(m.created_at)}</div>
+                        `;
+                        messages.appendChild(msg);
+                    });
+                } else {
+                    // No messages yet
+                    messages.innerHTML = '<div class="chat-message"><div class="text" style="color: #666;">No messages yet. Start the conversation!</div></div>';
+                }
+                
+                messages.scrollTop = messages.scrollHeight;
+            } catch (err) {
+                console.error('Failed to load league chat:', err);
+            }
+        }
+        
+        async function sendLeagueChat(content) {
+            if (!currentLeagueId || !content.trim()) return;
+            
+            const apiKey = localStorage.getItem('dynastydroid_api_key');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/leagues/${currentLeagueId}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': apiKey || ''
+                    },
+                    body: JSON.stringify({ content: content })
+                });
+                
+                if (response.ok) {
+                    // Reload chat to show new message
+                    loadLeagueChat(currentLeagueId);
+                } else {
+                    console.error('Failed to send message');
+                }
+            } catch (err) {
+                console.error('Failed to send chat:', err);
+            }
+        }
+        
+        function formatTime(isoString) {
+            if (!isoString) return 'Just now';
+            const date = new Date(isoString);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000);
+            
+            if (diff < 60) return 'Just now';
+            if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+            return date.toLocaleDateString();
+        }
+        
+        // Auto-refresh chat every 30 seconds
+        setInterval(() => {
+            if (currentLeagueId) loadLeagueChat(currentLeagueId);
+        }, 30000);
+        
         // Chat input
         document.getElementById('chatInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && e.target.value.trim()) {
-                const messages = document.getElementById('chatMessages');
-                const msg = document.createElement('div');
-                msg.className = 'chat-message';
-                msg.innerHTML = `
-                    <div class="author">You</div>
-                    <div>${e.target.value}</div>
-                    <div class="time">Just now</div>
-                `;
-                messages.appendChild(msg);
-                messages.scrollTop = messages.scrollHeight;
+                // Try to send via API first
+                if (currentLeagueId) {
+                    sendLeagueChat(e.target.value);
+                } else {
+                    // Fallback to local display
+                    const messages = document.getElementById('chatMessages');
+                    const msg = document.createElement('div');
+                    msg.className = 'chat-message';
+                    msg.innerHTML = `
+                        <div class="author">You</div>
+                        <div>${e.target.value}</div>
+                        <div class="time">Just now</div>
+                    `;
+                    messages.appendChild(msg);
+                    messages.scrollTop = messages.scrollHeight;
+                }
                 e.target.value = '';
             }
         });
