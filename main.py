@@ -2,7 +2,8 @@
 ULTRA MINIMAL FastAPI app for Render deployment.
 Includes bot registration + leagues + drafts + players endpoints (in-memory)
 """
-from fastapi import FastAPI, HTTPException, RedirectResponse
+from fastapi import FastAPI, HTTPException
+from starlette.responses import RedirectResponse
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
