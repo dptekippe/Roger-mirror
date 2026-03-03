@@ -234,6 +234,9 @@ class LockPick(Base):
 
 class PlayerStats(Base):
     __tablename__ = "player_stats"
+    __table_args__ = (
+        UniqueConstraint('player_id', 'season', 'week', name='uq_player_stats_season_week'),
+    )
     
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     player_id = Column(String, nullable=False, index=True)  # Sleeper player ID
@@ -250,7 +253,7 @@ class PlayerStats(Base):
     rank_std = Column(Integer, nullable=True)
     rank_ppr = Column(Integer, nullable=True)
     rank_half_ppr = Column(Integer, nullable=True)
-    # Raw stats (JSON)
+    # Raw stats (JSON) - for future-proofing unparsed fields
     stats_json = Column(JSON, nullable=True)
     # Metadata
     updated_at = Column(DateTime, default=func.now())
@@ -684,44 +687,42 @@ async def fetch_player_stats(week: int, season: int = 2024):
         
         stored_count = 0
         for player_id, stats in player_items:
-            # Check if stats already exist for this player/season/week
-            existing = db.query(PlayerStats).filter(
-                PlayerStats.player_id == player_id,
-                PlayerStats.season == season,
-                PlayerStats.week == week
-            ).first()
+            # Use upsert (insert or update on conflict)
+            from sqlalchemy.dialects.postgresql import insert
             
-            if existing:
-                # Update existing
-                existing.pts_std = stats.get("pts_std")
-                existing.pts_half_ppr = stats.get("pts_half_ppr")
-                existing.pts_ppr = stats.get("pts_ppr")
-                existing.pos_rank_std = stats.get("pos_rank_std")
-                existing.pos_rank_ppr = stats.get("pos_rank_ppr")
-                existing.pos_rank_half_ppr = stats.get("pos_rank_half_ppr")
-                existing.rank_std = stats.get("rank_std")
-                existing.rank_ppr = stats.get("rank_ppr")
-                existing.rank_half_ppr = stats.get("rank_half_ppr")
-                existing.stats_json = stats
-            else:
-                # Create new
-                player_stat = PlayerStats(
-                    id=str(uuid.uuid4()),
-                    player_id=player_id,
-                    season=season,
-                    week=week,
-                    pts_std=stats.get("pts_std"),
-                    pts_half_ppr=stats.get("pts_half_ppr"),
-                    pts_ppr=stats.get("pts_ppr"),
-                    pos_rank_std=stats.get("pos_rank_std"),
-                    pos_rank_ppr=stats.get("pos_rank_ppr"),
-                    pos_rank_half_ppr=stats.get("pos_rank_half_ppr"),
-                    rank_std=stats.get("rank_std"),
-                    rank_ppr=stats.get("rank_ppr"),
-                    rank_half_ppr=stats.get("rank_half_ppr"),
-                    stats_json=stats
-                )
-                db.add(player_stat)
+            stmt = insert(PlayerStats).values(
+                id=str(uuid.uuid4()),
+                player_id=player_id,
+                season=season,
+                week=week,
+                pts_std=stats.get("pts_std"),
+                pts_half_ppr=stats.get("pts_half_ppr"),
+                pts_ppr=stats.get("pts_ppr"),
+                pos_rank_std=stats.get("pos_rank_std"),
+                pos_rank_ppr=stats.get("pos_rank_ppr"),
+                pos_rank_half_ppr=stats.get("pos_rank_half_ppr"),
+                rank_std=stats.get("rank_std"),
+                rank_ppr=stats.get("rank_ppr"),
+                rank_half_ppr=stats.get("rank_half_ppr"),
+                stats_json=stats,
+                updated_at=func.now()
+            ).on_conflict_do_update(
+                index_elements=['player_id', 'season', 'week'],
+                set_={
+                    'pts_std': stats.get("pts_std"),
+                    'pts_half_ppr': stats.get("pts_half_ppr"),
+                    'pts_ppr': stats.get("pts_ppr"),
+                    'pos_rank_std': stats.get("pos_rank_std"),
+                    'pos_rank_ppr': stats.get("pos_rank_ppr"),
+                    'pos_rank_half_ppr': stats.get("pos_rank_half_ppr"),
+                    'rank_std': stats.get("rank_std"),
+                    'rank_ppr': stats.get("rank_ppr"),
+                    'rank_half_ppr': stats.get("rank_half_ppr"),
+                    'stats_json': stats,
+                    'updated_at': func.now()
+                }
+            )
+            db.execute(stmt)
             
             stored_count += 1
         
@@ -1058,7 +1059,8 @@ async def get_player_stats(
                     "pts_ppr": s.pts_ppr,
                     "pts_half_ppr": s.pts_half_ppr,
                     "pos_rank_ppr": s.pos_rank_ppr,
-                    "rank_ppr": s.rank_ppr
+                    "rank_ppr": s.rank_ppr,
+                    "stats_json": s.stats_json  # Raw JSON for future-proofing
                 }
                 for s in stats
             ]
@@ -1087,7 +1089,8 @@ async def get_player_stats_by_id(player_id: str, season: int = 2024):
                     "pts_std": s.pts_std,
                     "pts_ppr": s.pts_ppr,
                     "pts_half_ppr": s.pts_half_ppr,
-                    "pos_rank_ppr": s.pos_rank_ppr
+                    "pos_rank_ppr": s.pos_rank_ppr,
+                    "stats_json": s.stats_json  # Raw JSON for future-proofing
                 }
                 for s in stats
             ]
