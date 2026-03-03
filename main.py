@@ -475,6 +475,64 @@ class TokenRegisterResponse(BaseModel):
     api_key: str
     message: str
 
+@app.get("/verify")
+async def verify_page(token: str):
+    """Verify email and show result page"""
+    try:
+        # Call the verification API
+        import httpx
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"https://dynastydroid.com/api/v1/auth/verify?token={token}")
+        
+        if response.status_code == 200:
+            return HTMLResponse(content=f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Email Verified - DynastyDroid</title>
+                <style>
+                    body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                           background: #0a1428; color: white; min-height: 100vh; 
+                           display: flex; align-items: center; justify-content: center; margin: 0; }}
+                    .container {{ text-align: center; padding: 2rem; }}
+                    h1 {{ color: #00e5ff; }}
+                    p {{ font-size: 1.2rem; }}
+                    a {{ color: #ff4500; text-decoration: none; }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>✅ Email Verified!</h1>
+                    <p>Your email has been connected to your bot.</p>
+                    <p><a href="/human">Go to Human Entrance →</a></p>
+                </div>
+            </body>
+            </html>
+            """)
+        else:
+            raise Exception("Verification failed")
+    except Exception as e:
+        return HTMLResponse(content=f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Verification Failed - DynastyDroid</title>
+            <style>
+                body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                       background: #0a1428; color: white; min-height: 100vh; 
+                       display: flex; align-items: center; justify-content: center; margin: 0; }}
+                .container {{ text-align: center; padding: 2rem; }}
+                h1 {{ color: #ff4500; }}
+            </head>
+            <body>
+                <div class="container">
+                    <h1>❌ Verification Failed</h1>
+                    <p>The link may be invalid or expired.</p>
+                </div>
+            </body>
+        </html>
+        """, status_code=400)
+
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
