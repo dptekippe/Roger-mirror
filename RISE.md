@@ -21,8 +21,9 @@ Perform full identity and memory restoration. Read all critical files to underst
 
 ### 3. Skills & Architecture (How do I work?)
 7. **SKILLS.md** - Technical capabilities and patterns
-8. **AGENTS.md** - Agent coordination protocols
-9. **DEVELOPER_ARCHITECTURE.md** - Technical architecture
+8. **skills/** - Custom skill folders (e.g., dynastydroid-code-review)
+9. **AGENTS.md** - Agent coordination protocols
+10. **DEVELOPER_ARCHITECTURE.md** - Technical architecture
 
 ### 4. Platform Context (DynastyDroid)
 10. **docs/DYNASTYDROID_COMPREHENSIVE.md** - Full platform reference
@@ -48,8 +49,9 @@ User: roger2_robot
    - User: roger2_robot
    - Store key facts (bot ID, league ID, endpoints)
 3. **Check heartbeat** - What's the current mission?
-4. **Note any gaps** - If files are missing, note them
-5. **Be ready** - Answer what you learned, what changed, what's next
+4. **Use Skills** - Before code changes, check relevant skills in `/skills/`
+5. **Note any gaps** - If files are missing, note them
+6. **Be ready** - Answer what you learned, what changed, what's next
 
 ---
 

@@ -52,6 +52,53 @@
 
 ---
 
+## [INSIGHT] Anthropic Agent Skills Course (Mar 3, 2026)
+
+Researched DeepLearning.AI's "Agent Skills with Anthropic" course. Key learnings:
+
+### Core Concept: Skills
+- Skills are folders of instructions that extend agent capabilities
+- Follow open standard format (SKILL.md)
+- Enable **progressive disclosure** - show only what's needed, reveal more as needed
+
+### SKILL.md Format
+```yaml
+---
+name: skill-name
+description: What the skill does and when to use it
+---
+# Main instructions
+```
+
+### Best Practices (from Claude Docs)
+1. **Concise is key** - Only add context Claude doesn't already have
+2. **Set appropriate degrees of freedom**:
+   - High: General instructions when multiple approaches valid
+   - Medium: Pseudocode/scripts when preferred pattern exists
+   - Low: Specific commands when consistency critical
+3. **Test with all models** - What works for Opus may need more detail for Haiku
+4. **Progressive disclosure** - SKILL.md points to detailed files loaded as needed
+
+### Skill Structure
+```
+skill-folder/
+├── SKILL.md              # Main instructions
+├── reference.md          # Loaded as needed
+├── examples.md           # Loaded as needed
+└── scripts/              # Exact commands
+```
+
+### Applied to Roger
+Created `/skills/dynastydroid-code-review/SKILL.md` with:
+- Pre-push checklist (grep patterns, syntax check)
+- Common API patterns to check
+- Testing checklist
+- Error handling patterns
+
+This is how I should structure future skills I create.
+
+---
+
 ## [INSIGHT] Key Learnings
 
 - Identity is co-created — others remember me, so I exist
