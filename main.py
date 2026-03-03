@@ -1752,51 +1752,40 @@ async def create_mock_draft(
     
     # Strategy adjustments
     def calculate_player_weight(player, round_num, current_roster):
-        base_weight = base_weights.get(player.get("position", "WR"), 1.0)
+        # BASE: ADP rank (70%) - higher ranked = higher weight
+        rank = int(player.get("rank", 300))
+        base_weight = (300 - rank) * 0.7  # 70% ADP
         
-        # Age adjustments (if age available)
-        age = player.get("age")
-        
-        if age:
-            if strategy == "win_now":
-                # STRONGLY prefer prime age (26-30) - in their peak
-                if 26 <= age <= 30:
-                    base_weight *= 2.0  # Strong bonus for prime years
-                elif 24 <= age <= 25:
-                    base_weight *= 1.0  # Normal
-                elif age > 31:
-                    base_weight *= 0.4  # Heavy penalty for old
-                elif age < 24:
-                    base_weight *= 0.5  # Penalty for rookies
-            elif strategy == "rebuild":
-                # STRONGLY prefer young (< 25)
-                if age < 25:
-                    base_weight *= 2.5  # Strong bonus for young
-                elif age == 25:
-                    base_weight *= 1.2
-                elif age > 30:
-                    base_weight *= 0.3  # Heavy penalty for old
-                elif age > 26:
-                    base_weight *= 0.6
-        
-        # Position needs for starting lineup (2 QB, 2 RB, 3 WR, 1 TE in superflex)
+        # POSITION: Superflex bonus (20%)
         pos = player.get("position", "WR")
-        current_count = current_roster.get(pos, 0)
+        if superflex and pos == "QB":
+            base_weight += 40  # QB bonus worth ~40 ADP points
+        elif te_premium and pos == "TE":
+            base_weight += 20
         
-        # Starting needs (roughly)
-        needs = {"QB": 2, "RB": 2, "WR": 3, "TE": 1}
-        needed = needs.get(pos, 3)
+        # AGE: 5% adjustment
+        age = player.get("age")
+        if age:
+            age_factor = 1.0
+            if strategy == "win_now":
+                if 26 <= age <= 30:  # Prime
+                    age_factor = 1.05
+                elif age > 31:  # Old
+                    age_factor = 0.90
+                elif age < 24:  # Rookie
+                    age_factor = 0.95
+            elif strategy == "rebuild":
+                if age < 25:  # Young
+                    age_factor = 1.05
+                elif age > 30:  # Old
+                    age_factor = 0.90
+            base_weight *= age_factor
         
-        if current_count < needed:
-            base_weight *= 1.3  # Bonus for positions you need
+        # VARIABILITY: 5% random to simulate unpredictable draft
+        import random
+        base_weight *= random.uniform(0.95, 1.05)
         
-        # Age penalty for very old players (only if age exists)
-        if age and age > 30:
-            base_weight *= 0.8
-        elif age and age > 32:
-            base_weight *= 0.6
-        
-        return base_weight * (300 - int(player.get("rank", 300))) / 100
+        return base_weight
     
     # Create draft
     draft_id = secrets.token_hex(8)
