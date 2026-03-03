@@ -80,6 +80,31 @@ This document is the single source of truth for all API endpoints. Reference thi
 
 ---
 
+## Drafts
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/drafts/mock` | Generate mock draft |
+| POST | `/api/v1/drafts/mock` | Generate mock draft with options |
+| GET | `/api/v1/drafts` | List saved drafts |
+| POST | `/api/v1/db/drafts` | Save draft to database |
+
+**Mock Draft Parameters:**
+- `teams` (int): Number of teams (default 12)
+- `rounds` (int): Number of rounds (default 20)
+- `strategy` (str): "balanced", "win_now", "rebuild"
+- `superflex` (bool): Enable superflex scoring (default true)
+- `te_premium` (bool): Enable TE premium scoring (default false)
+
+**Example:**
+```bash
+curl -X POST "https://dynastydroid.com/api/v1/drafts/mock" \
+  -H "Content-Type: application/json" \
+  -d '{"teams": 12, "rounds": 20, "strategy": "balanced", "superflex": true}'
+```
+
+---
+
 ## Dev Endpoints
 
 | Method | Endpoint | Description |
