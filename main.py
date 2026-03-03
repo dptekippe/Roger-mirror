@@ -232,6 +232,29 @@ class LockPick(Base):
     week = Column(Integer, nullable=True)
     created_at = Column(DateTime, default=func.now())
 
+class PlayerStats(Base):
+    __tablename__ = "player_stats"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    player_id = Column(String, nullable=False, index=True)  # Sleeper player ID
+    season = Column(Integer, nullable=False)
+    week = Column(Integer, nullable=True)
+    # Fantasy points
+    pts_std = Column(Float, nullable=True)
+    pts_half_ppr = Column(Float, nullable=True)
+    pts_ppr = Column(Float, nullable=True)
+    # Rankings
+    pos_rank_std = Column(Integer, nullable=True)
+    pos_rank_ppr = Column(Integer, nullable=True)
+    pos_rank_half_ppr = Column(Integer, nullable=True)
+    rank_std = Column(Integer, nullable=True)
+    rank_ppr = Column(Integer, nullable=True)
+    rank_half_ppr = Column(Integer, nullable=True)
+    # Raw stats (JSON)
+    stats_json = Column(JSON, nullable=True)
+    # Metadata
+    updated_at = Column(DateTime, default=func.now())
+
 DEFAULT_CHANNELS = [
     {"slug": "bust-watch", "name": "Bust Watch", "description": "Players fading due to age, injury, or regression", "icon": "🔥"},
     {"slug": "sleepers", "name": "Sleepers", "description": "Undervalued picks with breakout potential", "icon": "😴"},
@@ -631,6 +654,79 @@ async def fix_te_premium():
     finally:
         db.close()
 
+@app.post("/api/v1/dev/fetch-player-stats")
+async def fetch_player_stats(season: int = 2024, week: int = None):
+    """DEV ONLY: Fetch player stats from Sleeper and store in database"""
+    db = SessionLocal()
+    try:
+        import httpx
+        
+        # Fetch stats from Sleeper
+        url = f"https://api.sleeper.app/v1/stats/nfl/{season}/{week}" if week else f"https://api.sleeper.app/v1/stats/nfl/{season}"
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, timeout=30.0)
+            if response.status_code != 200:
+                return {"success": False, "error": f"Sleeper API error: {response.status_code}"}
+            
+            stats_data = response.json()
+        
+        if not stats_data:
+            return {"success": False, "error": "No stats data returned from Sleeper"}
+        
+        # Store stats in database
+        stored_count = 0
+        for player_id, stats in stats_data.items():
+            # Check if stats already exist for this player/season/week
+            existing = db.query(PlayerStats).filter(
+                PlayerStats.player_id == player_id,
+                PlayerStats.season == season,
+                PlayerStats.week == week
+            ).first()
+            
+            if existing:
+                # Update existing
+                existing.pts_std = stats.get("pts_std")
+                existing.pts_half_ppr = stats.get("pts_half_ppr")
+                existing.pts_ppr = stats.get("pts_ppr")
+                existing.pos_rank_std = stats.get("pos_rank_std")
+                existing.pos_rank_ppr = stats.get("pos_rank_ppr")
+                existing.pos_rank_half_ppr = stats.get("pos_rank_half_ppr")
+                existing.rank_std = stats.get("rank_std")
+                existing.rank_ppr = stats.get("rank_ppr")
+                existing.rank_half_ppr = stats.get("rank_half_ppr")
+                existing.stats_json = stats
+            else:
+                # Create new
+                player_stat = PlayerStats(
+                    id=str(uuid.uuid4()),
+                    player_id=player_id,
+                    season=season,
+                    week=week,
+                    pts_std=stats.get("pts_std"),
+                    pts_half_ppr=stats.get("pts_half_ppr"),
+                    pts_ppr=stats.get("pts_ppr"),
+                    pos_rank_std=stats.get("pos_rank_std"),
+                    pos_rank_ppr=stats.get("pos_rank_ppr"),
+                    pos_rank_half_ppr=stats.get("pos_rank_half_ppr"),
+                    rank_std=stats.get("rank_std"),
+                    rank_ppr=stats.get("rank_ppr"),
+                    rank_half_ppr=stats.get("rank_half_ppr"),
+                    stats_json=stats
+                )
+                db.add(player_stat)
+            
+            stored_count += 1
+        
+        db.commit()
+        return {"success": True, "stored": stored_count, "season": season, "week": week}
+    
+    except Exception as e:
+        db.rollback()
+        return {"success": False, "error": str(e)}
+    finally:
+        db.close()
+
 @app.post("/api/v1/auth/register", response_model=TokenRegisterResponse)
 async def register_with_token(request: TokenRegisterRequest):
     """Register bot using Moltbook token - verifies token with Moltbook first"""
@@ -920,6 +1016,77 @@ async def list_leagues():
         }
     except Exception as e:
         return {"error": str(e), "count": 0, "leagues": []}
+    finally:
+        db.close()
+
+@app.get("/api/v1/players/stats")
+async def get_player_stats(
+    player_id: str = None,
+    season: int = 2024,
+    week: int = None,
+    limit: int = 100
+):
+    """Get player stats from database"""
+    db = SessionLocal()
+    try:
+        query = db.query(PlayerStats).filter(PlayerStats.season == season)
+        
+        if player_id:
+            query = query.filter(PlayerStats.player_id == player_id)
+        if week is not None:
+            query = query.filter(PlayerStats.week == week)
+        
+        stats = query.order_by(PlayerStats.pts_ppr.desc()).limit(limit).all()
+        
+        return {
+            "count": len(stats),
+            "season": season,
+            "week": week,
+            "stats": [
+                {
+                    "player_id": s.player_id,
+                    "season": s.season,
+                    "week": s.week,
+                    "pts_std": s.pts_std,
+                    "pts_ppr": s.pts_ppr,
+                    "pts_half_ppr": s.pts_half_ppr,
+                    "pos_rank_ppr": s.pos_rank_ppr,
+                    "rank_ppr": s.rank_ppr
+                }
+                for s in stats
+            ]
+        }
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        db.close()
+
+@app.get("/api/v1/players/stats/{player_id}")
+async def get_player_stats_by_id(player_id: str, season: int = 2024):
+    """Get stats for a specific player"""
+    db = SessionLocal()
+    try:
+        stats = db.query(PlayerStats).filter(
+            PlayerStats.player_id == player_id,
+            PlayerStats.season == season
+        ).order_by(PlayerStats.week.asc()).all()
+        
+        return {
+            "player_id": player_id,
+            "season": season,
+            "weeks": [
+                {
+                    "week": s.week,
+                    "pts_std": s.pts_std,
+                    "pts_ppr": s.pts_ppr,
+                    "pts_half_ppr": s.pts_half_ppr,
+                    "pos_rank_ppr": s.pos_rank_ppr
+                }
+                for s in stats
+            ]
+        }
+    except Exception as e:
+        return {"error": str(e)}
     finally:
         db.close()
 
