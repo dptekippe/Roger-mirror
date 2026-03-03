@@ -870,6 +870,10 @@
                                 🔥 Live Draft
                             </button>
                         </div>
+                        <button id="saveDraftBtn" onclick="saveMockDraftToLeague()" style="width:100%;padding:12px;margin-top:12px;background:var(--success);color:#000;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">
+                            💾 Save Mock Draft to League
+                        </button>
+                        <p id="saveDraftStatus" style="margin-top:8px;font-size:12px;color:var(--text-secondary)"></p>
                         <p id="liveDraftStatus" style="margin-top:12px;font-size:12px;color:var(--text-secondary)"></p>
                     </div>
                     <div class="draft-card">
@@ -1530,6 +1534,55 @@
         // Start Mock Draft - opens full draft board immediately
         function startMockDraft() {
             window.open('/draft', '_blank');
+        }
+        
+        // Save Mock Draft to League - generates and saves to database
+        async function saveMockDraftToLeague() {
+            const statusEl = document.getElementById('saveDraftStatus');
+            const btn = document.getElementById('saveDraftBtn');
+            
+            statusEl.textContent = 'Generating mock draft...';
+            btn.disabled = true;
+            
+            try {
+                // First, generate a mock draft
+                const draftResponse = await fetch(`${API_BASE}/api/v1/drafts/mock?teams=12&rounds=20`);
+                const draftData = await draftResponse.json();
+                
+                if (!draftData.id) {
+                    statusEl.textContent = 'Error: Failed to generate draft';
+                    btn.disabled = false;
+                    return;
+                }
+                
+                // Now save it to the database with the current league
+                const saveResponse = await fetch(`${API_BASE}/api/v1/db/drafts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id: draftData.id,
+                        league_id: currentLeague,
+                        teams: draftData.teams,
+                        picks: draftData.rounds,
+                        current_pick: draftData.rounds.length * 12 + 1,
+                        status: "COMPLETED"
+                    })
+                });
+                
+                const saveResult = await saveResponse.json();
+                
+                if (saveResult.draft_id || saveResult.status === 'created' || saveResult.status === 'updated') {
+                    statusEl.textContent = `✅ Draft saved! ID: ${draftData.id}`;
+                    // Refresh draft history
+                    loadDraftHistory();
+                } else {
+                    statusEl.textContent = 'Error: ' + JSON.stringify(saveResult);
+                }
+            } catch (err) {
+                statusEl.textContent = 'Error: ' + err.message;
+            }
+            
+            btn.disabled = false;
         }
         
         // Check Live Draft - verifies date/time before opening
