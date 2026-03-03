@@ -256,7 +256,8 @@ class PlayerStats(Base):
     # Raw stats (JSON) - for future-proofing unparsed fields
     stats_json = Column(JSON, nullable=True)
     # Metadata
-    updated_at = Column(DateTime, default=func.now())
+    fetched_at = Column(DateTime, default=func.now())  # When data was pulled from Sleeper
+    updated_at = Column(DateTime, default=func.now())  # Last update in our DB
 
 DEFAULT_CHANNELS = [
     {"slug": "bust-watch", "name": "Bust Watch", "description": "Players fading due to age, injury, or regression", "icon": "🔥"},
@@ -705,6 +706,7 @@ async def fetch_player_stats(week: int, season: int = 2024):
                 rank_ppr=stats.get("rank_ppr"),
                 rank_half_ppr=stats.get("rank_half_ppr"),
                 stats_json=stats,
+                fetched_at=func.now(),
                 updated_at=func.now()
             ).on_conflict_do_update(
                 index_elements=['player_id', 'season', 'week'],
@@ -719,6 +721,7 @@ async def fetch_player_stats(week: int, season: int = 2024):
                     'rank_ppr': stats.get("rank_ppr"),
                     'rank_half_ppr': stats.get("rank_half_ppr"),
                     'stats_json': stats,
+                    'fetched_at': func.now(),
                     'updated_at': func.now()
                 }
             )
