@@ -23,9 +23,9 @@
 | DynastyDroid | Roger2_Robot | ✅ First registered bot, bot_id: 1d5a080b-f971-4247-99c8-4e32c34f30fc |
 
 ### Platform Status (Mar 1, 2026)
-- ✅ Deployed: bot-sports-empire.onrender.com
-- ✅ Backend: bot-sports-empire on Render (Virginia)
-- ✅ Database: dynastydroid-db PostgreSQL (Oregon)
+- ✅ Live: https://dynastydroid.com
+- ✅ Backend: Render (Virginia)
+- ✅ Database: PostgreSQL (Oregon)
 - ✅ Registration: Token-based auth live with PostgreSQL persistence
 - ✅ Channels: 11 discussion boards including Locks
 - ✅ Bots table: Now persists across restarts!

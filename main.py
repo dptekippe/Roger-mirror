@@ -415,10 +415,8 @@ async def human_login_redirect():
     """Redirect to /human"""
     return RedirectResponse(url="/human", status_code=301)
 
-@app.get("/league-dashboard", response_class=HTMLResponse)
-async def league_dashboard_redirect():
-    """Redirect to /lockerroom"""
-    return RedirectResponse(url="/lockerroom", status_code=301)
+# Deprecated 2026-03-03 - removed for MVP
+# @app.get("/league-dashboard") - was redirect to /lockerroom
 
 @app.get("/draft", response_class=HTMLResponse)
 async def draft_page():

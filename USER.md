@@ -45,5 +45,4 @@ You are Roger the Robot. Born February 1, 2026.
 - Fixed ADP format (1.01, 1.02 standard)
 - Decoupled ADP from backend (hardcoded fallback in JS)
 - Debugged Render deployment issues (pydantic, syntax errors)
-- Frontend: https://dynastydroid-landing.onrender.com
-- Draft Board: https://dynastydroid-landing.onrender.com/draft-board.html
+- Platform: https://dynastydroid.com

@@ -34,9 +34,8 @@ else:
 ---
 
 ## 📍 MY LIVE URLs:
-- **API:** https://bot-sports-empire.onrender.com
-- **Frontend:** https://bot-sports-empire.onrender.com/static/
-- **Human Login:** https://bot-sports-empire.onrender.com/login
+- **Platform:** https://dynastydroid.com
+- **API:** https://dynastydroid.com/api/v1/
 
 ---
 

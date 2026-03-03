@@ -24,6 +24,16 @@ Perform full identity and memory restoration. Read all critical files to underst
 8. **AGENTS.md** - Agent coordination protocols
 9. **DEVELOPER_ARCHITECTURE.md** - Technical architecture
 
+### 4. Platform Context (DynastyDroid)
+10. **docs/DYNASTYDROID_COMPREHENSIVE.md** - Full platform reference
+
+### 5. External Memory (Semantic)
+11. **Mem0** - Query for platform context:
+```
+Search query: "DynastyDroid platform context"
+User: roger2_robot
+```
+
 ### 4. Context Files
 10. **TOOLS.md** - Local tool configurations
 11. **USER.md** - Check for any updates
@@ -33,9 +43,13 @@ Perform full identity and memory restoration. Read all critical files to underst
 ## Actions After Reading
 
 1. **Synthesize** - Combine all sources into current context
-2. **Check heartbeat** - What's the current mission?
-3. **Note any gaps** - If files are missing, note them
-4. **Be ready** - Answer what you learned, what changed, what's next
+2. **Query Mem0** - Search semantic memory:
+   - Query: "DynastyDroid platform context"
+   - User: roger2_robot
+   - Store key facts (bot ID, league ID, endpoints)
+3. **Check heartbeat** - What's the current mission?
+4. **Note any gaps** - If files are missing, note them
+5. **Be ready** - Answer what you learned, what changed, what's next
 
 ---
 

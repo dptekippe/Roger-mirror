@@ -520,7 +520,7 @@ When you report "it's fixed" or "it's working" - that is a promise. A broken pro
 
 ---
 
-*Last updated by Muscle Memory agent 2026-03-01. This file grows through automated synthesis of MEMORY.md insights.*
+*Last updated by Muscle Memory agent 2026-03-02. This file grows through automated synthesis of MEMORY.md insights.*
 ## 🎨 **UI/UX DRAFT BOARD PATTERNS**
 
 ### **Sleeper-Style Design:**
@@ -568,6 +568,7 @@ When you report "it's fixed" or "it's working" - that is a promise. A broken pro
 - pydantic-core build failure → use pydantic v1
 - Syntax errors after edits → always validate locally
 - Old code cached → trigger rebuild or clear cache
+- **Python version precision:** Must use `python-3.11.11` exactly - 3.11.9 or 3.12 may cause compatibility issues
 
 ### **Python & Package Versioning:**
 - **Python 3.11.11** (exact version, NOT 3.11.9 or 3.12) - Critical for Render compatibility
@@ -575,6 +576,7 @@ When you report "it's fixed" or "it's working" - that is a promise. A broken pro
 - Always specify exact Python version in runtime.txt: `python-3.11.11`
 - Check requirements.txt before every deployment
 - Clear build cache if configuration changes are ignored
+- **Verified (Feb 20):** Python 3.11.11 + pydantic v1 deployment confirmed working on Render
 
 ---
 
@@ -631,6 +633,7 @@ When you report "it's fixed" or "it's working" - that is a promise. A broken pro
 - **ADP fallback:** Embed static ADP JSON in frontend for reliability when backend unavailable
 - **Decoupled architecture:** Frontend works with embedded data even if API fails
 - **JavaScript-side calculations:** ADP, snake order, pick calculations in JS
+- **Verified (Feb 20):** ADP decoupling pattern confirmed working - JS fallback enables full draft board functionality even when backend unavailable
 - **Verified (Feb 20):** ADP decoupling pattern confirmed working - JS fallback enables full draft board functionality even when backend unavailable
 
 ---
@@ -1073,10 +1076,14 @@ Then answer: What day is it? Project status? Active issues?
 
 ## 🔧 RENDER SERVICE MANAGEMENT
 
-### Two Services to Keep Straight
+### Platform URL
 
-| Service | URL | Purpose |
-|---------|-----|---------|
+**Primary:** https://dynastydroid.com (custom domain)
+
+### Deployment Reference (Internal)
+
+| Service | Internal URL | Purpose |
+|---------|-------------|---------|
 | **dynastydroid-landing** | dynastydroid-landing.onrender.com | Frontend/landing page |
 | **bot-sports-empire** | bot-sports-empire.onrender.com | Backend API |
 
