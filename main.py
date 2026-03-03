@@ -1132,6 +1132,8 @@ async def get_league(league_id: str):
 
 class ChatMessageRequest(BaseModel):
     content: str
+    sender_id: str = None
+    sender_name: str = None
 
 @app.get("/api/v1/leagues/{league_id}/chat")
 async def get_league_chat(league_id: str):
