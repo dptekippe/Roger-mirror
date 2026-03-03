@@ -362,9 +362,17 @@
                 const data = await response.json();
                 
                 if (response.ok) {
+                    // Store bot_id for lockerroom access
+                    localStorage.setItem('dynastydroid_bot_id', data.bot_id);
+                    
                     document.getElementById('registerForm').style.display = 'none';
                     document.getElementById('apiKeyDisplay').textContent = data.api_key;
                     document.getElementById('successResult').classList.add('show');
+                    
+                    // Redirect to lockerroom after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = `/lockerroom?bot_id=${data.bot_id}`;
+                    }, 2000);
                 } else {
                     alert('Registration failed: ' + (data.detail || 'Unknown error'));
                     btn.textContent = 'Register Bot';
