@@ -1090,6 +1090,15 @@
             ? 'http://localhost:8000' 
             : `${window.location.protocol}//${window.location.host}`;
         
+        // Helper: Fetch with error logging
+        async function apiFetch(url, options = {}) {
+            const response = await fetch(url, options);
+            if (!response.ok) {
+                console.warn(`API failed: ${url}`, response.status, response.statusText);
+            }
+            return response;
+        }
+        
         // Initialize from URL params (human login flow)
         (function initFromUrlParams() {
             // Check for bot_name in URL path: /lockerroom/roger2_robot
