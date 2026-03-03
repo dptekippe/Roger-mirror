@@ -1193,19 +1193,12 @@
                 return;
             }
             
-            // Fallback: demo leagues
+            // No leagues found - show message to create or join
             container.innerHTML = `
-                <div class="league-item active" data-id="demo-primetime">
-                    <div class="league-name">🏈 Primetime</div>
-                    <div class="league-info">Week 9 • 10 Teams</div>
-                </div>
-                <div class="league-item" data-id="mock-1">
-                    <div class="league-name">🎲 Mock League #1</div>
-                    <div class="league-info">Week 4 • 8 Teams</div>
-                </div>
-                <div class="league-item" data-id="mock-2">
-                    <div class="league-name">🧪 Test League</div>
-                    <div class="league-info">Pre-Draft • 4 Teams</div>
+                <div style="text-align:center;padding:40px 20px;color:var(--text-secondary);">
+                    <p style="font-size:18px;margin-bottom:10px;">🤖 No leagues found</p>
+                    <p>Bots can create or join leagues via API.</p>
+                    <p style="margin-top:20px;font-size:14px;">Visit /dashboard to create or join a league.</p>
                 </div>
             `;
             attachLeagueHandlers();
@@ -1798,21 +1791,11 @@
         
         // ========== TRADES FUNCTIONS ==========
         
-        // Mock team data - in real app would come from API
-        const mockTeams = [
-            { id: 'team-1', name: 'Philly Special', bot_name: 'ZARDOZ' },
-            { id: 'team-2', name: 'Dallas Cheatcodes', bot_name: 'STAT_NERD' },
-            { id: 'team-3', name: 'Giants Gone Wild', bot_name: 'RISKTAKER' },
-            { id: 'team-4', name: 'New York Trench', bot_name: 'TRASHTALK_TINA' },
-            { id: 'team-5', name: 'Washington Monumental', bot_name: 'TRADER_JOE' },
-            { id: 'team-6', name: 'New England Terror', bot_name: 'WAIVER_WIZARD' },
-            { id: 'team-7', name: 'Buffalo Stampede', bot_name: 'SLEEPER_CELL' },
-            { id: 'team-8', name: 'Miami Splash', bot_name: 'DRAFT_MASTER' },
-            { id: 'team-9', name: 'Jets Will Cry', bot_name: 'TANK_MODE' },
-            { id: 'team-10', name: 'New Jersey No', bot_name: 'COMMISH' }
-        ];
+        // Team data - in real app would come from API
+        // For now, show message if no real teams available
+        const mockTeams = [];  // Use API in production
         
-        const currentUserTeamId = 'team-10'; // Your team (COMMISH)
+        const currentUserTeamId = ''; // Will be set from API
         
         // Load trades on tab switch
         async function loadTrades() {
@@ -1892,8 +1875,8 @@
         }
         
         function createTradeCard(trade, type) {
-            const proposer = mockTeams.find(t => t.id === trade.proposer_team_id) || { name: 'Unknown' };
-            const receiver = mockTeams.find(t => t.id === trade.receiver_team_id) || { name: 'Unknown' };
+            const proposer = mockTeams.find(t => t.id === trade.proposer_team_id) || { name: 'Unknown Team', bot_name: '' };
+            const receiver = mockTeams.find(t => t.id === trade.receiver_team_id) || { name: 'Unknown Team', bot_name: '' };
             
             const statusColors = {
                 'PENDING': 'var(--gold)',
@@ -1975,14 +1958,20 @@
             mySelect.innerHTML = '<option value="">Select your team...</option>';
             theirSelect.innerHTML = '<option value="">Select opposing team...</option>';
             
-            mockTeams.forEach(team => {
-                if (team.id !== currentUserTeamId) {
-                    theirSelect.innerHTML += `<option value="${team.id}">${team.name} (${team.bot_name})</option>`;
+            if (mockTeams.length === 0) {
+                mySelect.innerHTML += '<option value="">No teams available - create a league first</option>';
+                theirSelect.innerHTML += '<option value="">No teams available</option>';
+            } else {
+                mockTeams.forEach(team => {
+                    if (team.id !== currentUserTeamId) {
+                        theirSelect.innerHTML += `<option value="${team.id}">${team.name} (${team.bot_name})</option>`;
+                    }
+                });
+                const myTeam = mockTeams.find(t => t.id === currentUserTeamId);
+                if (myTeam) {
+                    mySelect.innerHTML += `<option value="${currentUserTeamId}" selected>${myTeam.name} (${myTeam.bot_name})</option>`;
                 }
-            });
-            // Your team is always currentUserTeamId
-            const myTeam = mockTeams.find(t => t.id === currentUserTeamId);
-            mySelect.innerHTML += `<option value="${currentUserTeamId}" selected>${myTeam.name} (${myTeam.bot_name})</option>`;
+            }
             
             document.getElementById('newTradeModal').style.display = 'flex';
         }
