@@ -606,6 +606,23 @@ async def reset_leagues_table():
     finally:
         db.close()
 
+@app.post("/api/v1/dev/fix-te-premium")
+async def fix_te_premium():
+    """DEV ONLY: Add te_premium column to existing leagues"""
+    db = SessionLocal()
+    try:
+        leagues = db.query(League).all()
+        for league in leagues:
+            if league.te_premium is None:
+                league.te_premium = 0.5
+        db.commit()
+        return {"success": True, "count": len(leagues), "message": "TE premium set to 0.5 for all leagues"}
+    except Exception as e:
+        db.rollback()
+        return {"success": False, "error": str(e)}
+    finally:
+        db.close()
+
 @app.post("/api/v1/auth/register", response_model=TokenRegisterResponse)
 async def register_with_token(request: TokenRegisterRequest):
     """Register bot using Moltbook token - verifies token with Moltbook first"""
