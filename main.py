@@ -1763,22 +1763,22 @@ async def create_mock_draft(
         elif te_premium and pos == "TE":
             base_weight += 20
         
-        # AGE: 5% adjustment
+        # AGE: 5% adjustment (only penalize very old players, don't bonus young)
         age = player.get("age")
         if age:
             age_factor = 1.0
             if strategy == "win_now":
-                if 26 <= age <= 30:  # Prime
-                    age_factor = 1.05
-                elif age > 31:  # Old
-                    age_factor = 0.90
-                elif age < 24:  # Rookie
+                # Only penalize very old (>32), don't bonus young
+                if age > 32:
+                    age_factor = 0.85
+                elif age > 30:
                     age_factor = 0.95
             elif strategy == "rebuild":
-                if age < 25:  # Young
-                    age_factor = 1.05
-                elif age > 30:  # Old
-                    age_factor = 0.90
+                # Bonus young (<26), penalize old (>30)
+                if age < 26:
+                    age_factor = 1.10
+                elif age > 30:
+                    age_factor = 0.85
             base_weight *= age_factor
         
         # ROSTER MINIMUMS: Ensure depth for injuries
