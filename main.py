@@ -67,7 +67,7 @@ DATABASE_URL = os.environ.get("DATABASE_URL",
 )
 
 # SQLAlchemy setup
-from sqlalchemy import create_engine, Column, Integer, String, JSON, DateTime, Boolean, ForeignKey, Text, Float, func
+from sqlalchemy import create_engine, Column, Integer, String, JSON, DateTime, Boolean, ForeignKey, Text, Float, func, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
