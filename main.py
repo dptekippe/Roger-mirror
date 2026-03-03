@@ -1755,20 +1755,29 @@ async def create_mock_draft(
         base_weight = base_weights.get(player.get("position", "WR"), 1.0)
         
         # Age adjustments (if age available)
-        age = player.get("age", 25)
+        age = player.get("age")
         
-        if strategy == "win_now":
-            # Prefer established players (age 25-30)
-            if 25 <= age <= 30:
-                base_weight *= 1.2
-            elif age > 32:
-                base_weight *= 0.7
-        elif strategy == "rebuild":
-            # Prefer young players (age < 26)
-            if age < 26:
-                base_weight *= 1.5
-            elif age > 30:
-                base_weight *= 0.5
+        if age:
+            if strategy == "win_now":
+                # STRONGLY prefer prime age (26-30) - in their peak
+                if 26 <= age <= 30:
+                    base_weight *= 2.0  # Strong bonus for prime years
+                elif 24 <= age <= 25:
+                    base_weight *= 1.0  # Normal
+                elif age > 31:
+                    base_weight *= 0.4  # Heavy penalty for old
+                elif age < 24:
+                    base_weight *= 0.5  # Penalty for rookies
+            elif strategy == "rebuild":
+                # STRONGLY prefer young (< 25)
+                if age < 25:
+                    base_weight *= 2.5  # Strong bonus for young
+                elif age == 25:
+                    base_weight *= 1.2
+                elif age > 30:
+                    base_weight *= 0.3  # Heavy penalty for old
+                elif age > 26:
+                    base_weight *= 0.6
         
         # Position needs for starting lineup (2 QB, 2 RB, 3 WR, 1 TE in superflex)
         pos = player.get("position", "WR")
