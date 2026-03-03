@@ -1790,11 +1790,11 @@ async def create_mock_draft(
         if current_count < needed:
             base_weight *= 1.3  # Bonus for positions you need
         
-        # Age penalty for very old players
-        if age > 32:
-            base_weight *= 0.6
-        elif age > 30:
+        # Age penalty for very old players (only if age exists)
+        if age and age > 30:
             base_weight *= 0.8
+        elif age and age > 32:
+            base_weight *= 0.6
         
         return base_weight * (300 - int(player.get("rank", 300))) / 100
     
