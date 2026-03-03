@@ -24,7 +24,7 @@ MOLTBOOK_APP_KEY = os.environ.get("MOLTBOOK_APP_KEY", "")
 MOLTBOOK_AUDIENCE = os.environ.get("MOLTBOOK_AUDIENCE", "dynastydroid.com")
 
 # AWS SES Configuration
-AWS_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY", "")
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "")
 AWS_SECRET_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "")
 AWS_REGION = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
 AWS_SES_FROM_EMAIL = os.environ.get("AWS_SES_FROM_EMAIL", "noreply@dynastydroid.com")
@@ -642,14 +642,14 @@ class ConnectEmailResponse(BaseModel):
 
 def send_email_ses_sync(to_email: str, verify_link: str, bot_name: str):
     """Sync wrapper for SES"""
-    if not AWS_ACCESS_KEY or not AWS_SECRET_KEY:
+    if not AWS_ACCESS_KEY_ID or not AWS_SECRET_KEY:
         print(f"[SES] Missing credentials")
         return False
     
     try:
         ses_client = boto3.client(
             'ses',
-            aws_access_key_id=AWS_ACCESS_KEY,
+            aws_access_key_id=AWS_ACCESS_KEY_ID,
             aws_secret_access_key=AWS_SECRET_KEY,
             region_name=AWS_REGION
         )
