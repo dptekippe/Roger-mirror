@@ -68,10 +68,11 @@ DATABASE_URL = os.environ.get("DATABASE_URL",
 )
 
 # SQLAlchemy setup
-from sqlalchemy import create_engine, Column, Integer, String, JSON, DateTime, Boolean, ForeignKey, Text, Float
+from sqlalchemy import create_engine, Column, Integer, String, JSON, DateTime, Boolean, ForeignKey, Text, Float, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
+from sqlalchemy import text
 
 # Create engine (convert postgres:// to postgresql:// for SQLAlchemy)
 db_url = DATABASE_URL.replace("postgres://", "postgresql://")
@@ -611,20 +612,23 @@ async def fix_te_premium():
     """DEV ONLY: Add te_premium column to existing leagues"""
     db = SessionLocal()
     try:
-        # First try to add the column if it doesn't exist
+        # First add the column directly using raw SQL
         try:
-            db.execute("ALTER TABLE leagues ADD COLUMN te_premium FLOAT DEFAULT 0.5")
+            db.execute(text("ALTER TABLE leagues ADD COLUMN te_premium FLOAT DEFAULT 0.5"))
+            db.commit()
         except Exception as e:
-            if "duplicate" not in str(e).lower():
-                pass  # Column might already exist
+            if "duplicate" not in str(e).lower() and "already" not in str(e).lower():
+                return {"success": False, "error": str(e)}
         
-        # Now update all leagues
+        # Now update all leagues that don't have te_premium
         leagues = db.query(League).all()
+        updated = 0
         for league in leagues:
             if league.te_premium is None:
                 league.te_premium = 0.5
+                updated += 1
         db.commit()
-        return {"success": True, "count": len(leagues), "message": "TE premium set to 0.5 for all leagues"}
+        return {"success": True, "count": len(leagues), "updated": updated, "message": "TE premium set to 0.5"}
     except Exception as e:
         db.rollback()
         return {"success": False, "error": str(e)}
