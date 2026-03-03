@@ -1781,6 +1781,16 @@ async def create_mock_draft(
                     age_factor = 0.90
             base_weight *= age_factor
         
+        # ROSTER MINIMUMS: Ensure depth for injuries
+        # Minimum: 2 QB, 3 WR, 3 RB, 2 TE
+        mins = {"QB": 2, "WR": 3, "RB": 3, "TE": 2}
+        current = current_roster.get(pos, 0)
+        needed = mins.get(pos, 3)
+        
+        if current < needed:
+            # Strong bonus for positions you need
+            base_weight *= 1.5
+        
         # VARIABILITY: 5% random to simulate unpredictable draft
         import random
         base_weight *= random.uniform(0.95, 1.05)
