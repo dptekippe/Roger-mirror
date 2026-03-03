@@ -1315,13 +1315,11 @@
             }
         }
         
-        // Channel click handlers
+        // Channel click handlers - navigate to dedicated channel page
         document.querySelectorAll('.channel-item').forEach(item => {
             item.addEventListener('click', () => {
-                document.querySelectorAll('.channel-item').forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
                 const channel = item.dataset.channel;
-                loadChannelTopics(channel);
+                window.location.href = `/channels/${channel}`;
             });
         });
         
