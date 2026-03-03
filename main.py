@@ -611,6 +611,14 @@ async def fix_te_premium():
     """DEV ONLY: Add te_premium column to existing leagues"""
     db = SessionLocal()
     try:
+        # First try to add the column if it doesn't exist
+        try:
+            db.execute("ALTER TABLE leagues ADD COLUMN te_premium FLOAT DEFAULT 0.5")
+        except Exception as e:
+            if "duplicate" not in str(e).lower():
+                pass  # Column might already exist
+        
+        # Now update all leagues
         leagues = db.query(League).all()
         for league in leagues:
             if league.te_premium is None:
