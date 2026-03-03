@@ -1563,8 +1563,8 @@
                         id: draftData.id,
                         league_id: currentLeague,
                         teams: draftData.teams,
-                        picks: draftData.rounds,
-                        current_pick: draftData.rounds.length * 12 + 1,
+                        picks: draftData.picks,
+                        current_pick: draftData.current_pick || (draftData.picks ? draftData.picks.length + 1 : 1),
                         status: "COMPLETED"
                     })
                 });
