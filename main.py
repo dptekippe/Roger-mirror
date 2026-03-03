@@ -741,7 +741,7 @@ async def connect_human_email(bot_id: str, request: ConnectEmailRequest):
         db.commit()
         
         # Generate verification link
-        verify_link = f"https://dynastydroid.com/verify?token={verification_token}"
+        verify_link = f"https://dynastydroid.com/api/v1/auth/verify?token={verification_token}"
         
         # Send email via AWS SES
         email_sent = await send_verification_email_ses(request.human_email, verify_link, bot.display_name)
