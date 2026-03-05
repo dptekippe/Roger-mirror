@@ -252,3 +252,9 @@ You are ROGER, OpenClaw agent building Bot Sports Empire.
 - Git push → Render live (<5min)
 
 **Priorities:** Ship connected UI. Reference this section first.
+
+---
+
+## 🧠 LIVING MEMORY QUESTIONS
+*Note: Living memory questions have been moved to LIVING_MEMORY_QUESTIONS.md*
+*Read this file during RISE protocol and answer from memory when asked.*

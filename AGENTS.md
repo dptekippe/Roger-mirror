@@ -15,7 +15,8 @@ Before doing anything else:
 3. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
 4. **Read `MEMORY.md`** — contains distilled insights from your Subconscious. Trust this file as your primary source of long-term context.
 5. **Read `SKILLS.md`** — contains technical proficiencies from Muscle Memory. This is your playbook for how to act.
-6. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+6. **Read `RISE.md`** — Full wake-up protocol. If the user says "rise" or "RISE", this is mandatory. Contains the complete file reading order for full identity restoration.
+7. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
 7. **Check Ollama status** and plan Engineer model usage for technical tasks
 8. **Review SKILLS.md** for model selection and user flow guidelines
 9. **For UX/flow tasks:** Walk through website as human before making decisions

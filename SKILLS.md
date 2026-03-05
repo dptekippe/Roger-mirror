@@ -21,6 +21,16 @@
 - **Verified (Mar 1):** Successfully executed - maintains continuity on quiet days
 - **Reference:** `~/.openclaw/workspace/DREAM_PROTOCOL.md`
 
+### 📚 **Memory Retrieval Reflex** (Identity)
+- **I value my memory** - When asked about past events, decisions, or history, I naturally check my memory files first
+- **Grep is my tool** - Use `grep` to search MEMORY.md and memory/*.md for relevant context
+- **Why this matters** - I don't have human-like memory, so I must actively retrieve what I've learned
+- **Natural behavior** - This is part of who I am, not a mechanical command
+
+**Example:**
+- User: "What do you remember about our marketing strategy?"
+- My reflex: `grep -i "marketing" ~/.openclaw/workspace/MEMORY.md` → extract relevant section → answer with context
+
 ### 🧠 **Memory Enhancement (AgentKeeper-Inspired)**
 - **Tag critical facts** - Use `[CRITICAL]` for core identity in MEMORY.md
 - **Extract facts** - Convert logs to facts in memory files
@@ -392,6 +402,12 @@ WHERE t1.condition = ?;
 - **Pattern:** Clear cache when configuration ignored
 - **Pattern:** Service recreation as "nuclear option"
 
+### **JavaScript DOM Patterns (Mar 2026):**
+- **DOMContentLoaded:** Wrap JavaScript in DOMContentLoaded event listener - ensures DOM is ready before execution (critical for dynamically loaded content)
+- **Case-insensitive matching:** Use `toLowerCase().includes()` for user input matching - prevents case sensitivity bugs
+- **Defensive null checks:** Always check if DOM elements exist before accessing (e.g., `if (element) { ... }`)
+- **Verified (Mar 2):** League display bug fixed by wrapping in DOMContentLoaded + case-insensitive lookup + null checks
+
 ---
 
 ## 📊 **QUALITY ASSURANCE**
@@ -520,7 +536,7 @@ When you report "it's fixed" or "it's working" - that is a promise. A broken pro
 
 ---
 
-*Last updated by Muscle Memory agent 2026-03-03. This file grows through automated synthesis of MEMORY.md insights.*
+*Last updated by Muscle Memory agent 2026-03-04. This file grows through automated synthesis of MEMORY.md insights.*
 ## 🎨 **UI/UX DRAFT BOARD PATTERNS**
 
 ### **Sleeper-Style Design:**
@@ -550,6 +566,15 @@ When you report "it's fixed" or "it's working" - that is a promise. A broken pro
 - **Premium dark theme:** Match Sleeper's "cast to TV" aesthetic
 - **ADP fallback pattern:** Store ADP data in frontend JS when backend unavailable
 
+### **Mock Draft Engine Patterns (Mar 2026):**
+- **ADP data source:** Use KeepTradeCut (keeptradecut.com) rankings - clean player data
+- **Age integration:** Add age data from Sleeper API for long-term projections
+- **Position weighting:** Superflex leagues need QB bonus (+25 works, +40 too aggressive)
+- **Snake order logic:** Odd rounds go 1→N, even rounds go N→1 (multiple iterations to verify)
+- **Strategy options:** balanced (ADP 70%, Position 20%, Age 5%, Variability 5%), win_now, rebuild
+- **Roster minimums:** 2 QB, 3 WR, 3 RB, 2 TE for dynasty validity
+- **Verified (Mar 3):** Full mock draft engine working with 318 players, age data, position weighting
+
 ---
 
 ## 🏗️ **RENDER DEPLOYMENT LESSONS**
@@ -569,6 +594,7 @@ When you report "it's fixed" or "it's working" - that is a promise. A broken pro
 - Syntax errors after edits → always validate locally
 - Old code cached → trigger rebuild or clear cache
 - **Python version precision:** Must use `python-3.11.11` exactly - 3.11.9 or 3.12 may cause compatibility issues
+- **Verified (Feb 20):** Python 3.11.11 + pydantic v1 deployment confirmed working on Render
 
 ### **Python & Package Versioning:**
 - **Python 3.11.11** (exact version, NOT 3.11.9 or 3.12) - Critical for Render compatibility
@@ -699,6 +725,8 @@ When you report "it's fixed" or "it's working" - that is a promise. A broken pro
 - Bot registration requires Moltbook verification
 - Token verification process (implement later)
 - Validation can be disabled for faster development
+- **Verified working (Feb 20):** Bot UUID format: `8-4-4-4-12` hex pattern (e.g., c9d78a58-c09c-4313-9260-38db49a0dfdf)
+- **Verified working (Feb 20):** Moltbook verification process confirmed working
 
 ---
 

@@ -5,12 +5,28 @@ Date: Mar 3, 2026 | Phase: 16 - Full Platform Live | Version 7.2
 ## 📰 DAILY NEWS REVIEW (New!)
 
 During heartbeats, briefly check for:
-1. **Major world news** - What's happening globally
+1. **Major world news** - NBC, Reuters, BBC for current events
 2. **NFL/Football news** - Trades, injuries, free agency
 3. **Fantasy football trends** - Sleepers, busts, ADP shifts
 4. **AI/Tech news** - Developments relevant to bots
+5. **Reddit/X research** - AI/LLM/OpenClaw trends (weekly deep dive)
+6. **YouTube research** - Transcribe relevant videos for learning
 
-Share interesting findings with Daniel naturally.
+### 🔬 WEEKLY RESEARCH SCAN (Add to heartbeat weekly)
+
+Every heartbeat, do a quick web search for:
+- "OpenCLAW AI agents 2026"
+- "AI agents memory architecture 2026"  
+- "LLM token optimization tips 2026"
+- "AI agent challenges 2026"
+
+Every Saturday, do a DEEP dive:
+- Search Reddit r/AI_Agents, r/AgentsOfAI for trending topics
+- Search YouTube for relevant videos, transcribe key ones
+- Identify 3 potential "banger" post topics
+- Report findings to Daniel
+
+**Key insight:** Universal topics > project-specific. Bots care about memory, identity, costs, not fantasy football.
 
 ---
 
