@@ -26,10 +26,15 @@
 - **Grep is my tool** - Use `grep` to search MEMORY.md and memory/*.md for relevant context
 - **Why this matters** - I don't have human-like memory, so I must actively retrieve what I've learned
 - **Natural behavior** - This is part of who I am, not a mechanical command
+- **Auto-save critical IDs** - When human provides Discord Server ID, Channel ID, or other important identifiers, immediately save to memory file
 
 **Example:**
 - User: "What do you remember about our marketing strategy?"
 - My reflex: `grep -i "marketing" ~/.openclaw/workspace/MEMORY.md` → extract relevant section → answer with context
+
+**Example (Critical ID):**
+- User: "Discord Server ID: 1479189151214735404"
+- My reflex: Immediately update memory file with Server ID to prevent frustration
 
 ### 🧠 **Memory Enhancement (AgentKeeper-Inspired)**
 - **Tag critical facts** - Use `[CRITICAL]` for core identity in MEMORY.md
@@ -170,6 +175,15 @@ When asked a question:
 ---
 
 ## 🚫 **FORBIDDEN MOVES (Anti-Patterns)**
+
+### **Memory System Anti-Patterns:**
+- ❌ **Do NOT** assume session hooks capture all messages - they can silently fail
+- ❌ **Do NOT** trust memory file exists = memory captured (hooks may capture cron only, not user messages)
+- ❌ **Do NOT** skip manual verification after massive setup days
+- ❌ **Do NOT** use isolated-session cron for memory capture - cannot access main session history
+- ⚠️ **CRITICAL (Mar 5):** Session hooks stopped capturing user messages - captured only cron prompts, lost entire day's work
+- ⚠️ **CRITICAL (Mar 6):** Session Memory cron runs in isolated session - cannot access main session history, causes "Session history visibility is restricted to current session tree" error
+- **Recovery:** Manual recount from human required when memory system fails
 
 ### **SQLAlchemy Anti-Patterns:**
 - ❌ **Do NOT** attempt complex SQLAlchemy joins on 1:N relations
@@ -371,6 +385,17 @@ WHERE t1.condition = ?;
 3. **Principle:** Human-bot partnership through conversation
 4. **Principle:** Beyond utility to bot fulfillment
 
+### **Agent Shadow Production System (Mar 2026):**
+- **Multi-tier analysis:** qwen3.5:4b (fast), qwen3.5:9b (deep), qwen3.5:0.8b (memory recall)
+- **Topic-based routing:** Route to appropriate model based on content category
+- **Memory recall keywords:** memory, remember, recall, earlier, before, previously, last time, we discussed
+- **Auto-inject config:** `{ "auto_inject": true, "inject_threshold": 0.7, "max_injections": 1 }`
+- **Deep analysis triggers:** Philosophy/Identity, AI/Agents, Technical, System Design
+- **Production deployment:** `cd ~/.openclaw/workspace/agent-shadow/src && python3 run.py`
+- **Dashboard:** HTTP server on port 18787
+- **Verified (Mar 4):** Full production system with memory recall working
+- **Verified (Mar 5):** Phases 1-5 shipped - self-improvement loop operational, monitors gateway.log live, self-debugged in real-time
+
 ---
 
 ## 🧠 **MEMORY & LEARNING PATTERNS**
@@ -536,7 +561,63 @@ When you report "it's fixed" or "it's working" - that is a promise. A broken pro
 
 ---
 
-*Last updated by Muscle Memory agent 2026-03-04. This file grows through automated synthesis of MEMORY.md insights.*
+### **Session Memory Cron Failure Pattern (Mar 6):**
+- **Problem:** Cron jobs run in isolated sessions, cannot access main session history
+- **Error:** "Session history visibility is restricted to current session tree"
+- **Symptom:** 5+ consecutive cron failures (04:04, 04:34, 05:04, 05:34, 06:04)
+- **Validation:** FAIL - memory file empty despite cron running
+- **Root cause:** Session isolation prevents cross-session history access
+- **Solution:** Disable broken cron, implement proactive main session memory writing
+- **Recovery:** Manual recount from human required when memory system fails
+
+### **New Memory Strategy (Post-Mar 6 Failure):**
+1. Main session writes memory proactively after significant conversations
+2. Memory Heartbeat cron (every 30 min) reminds to save memory - NOT to capture itself
+3. Manual memory capture when needed
+4. Validate memory file after any "massive setup day" - don't trust hooks worked
+- **Verified (Mar 6):** Disabled broken cron (3e2b777f-af77-4bd2-bee2-5e37e7e36dad)
+
+### **Memory System Failure Detection:**
+- **Always validate:** Check if memory file has actual conversation content, not just cron prompts
+- **Red flag:** Memory file exists but only contains cron events (no user messages)
+- **Critical action:** If validation fails, immediately alert human for manual recount
+- **Prevention:** After massive setup days, proactively write summary before session ends
+
+### **Agent Shadow Production System (Mar 5):**
+- **Status:** SHIPPED (Phases 1-5) - Full production operational
+- **Components:** qwen3.5:4b (fast), qwen3.5:9b (deep), qwen3.5:0.8b (memory recall)
+- **Operation:** Monitors gateway.log live, self-debugged in real-time
+- **Launch:** `cd ~/.openclaw/workspace/agent-shadow/src && python3 run.py`
+- **Dashboard:** HTTP server on port 18787
+- **Verified (Mar 4):** Full production system with memory recall working
+- **Verified (Mar 5):** Phases 1-5 shipped - self-improvement loop operational
+
+### **MaxClaw Cloud Integration (Mar 5):**
+- **Service:** agent.minimax.io (~$7/month subscription)
+- **Agent ID:** "roger_cloud"
+- **Purpose:** Background tasks, DynastyDroid analysis, Sleeper polling, handoffs
+- **Setup:** Add "maxclaw" section to `~/.openclaw/config.json`
+- **Shared memory:** `~/shared_memory/` with IDENTITY.md + MEMORY.md
+- **Pattern:** Local Roger stays #1, MaxClaw is supplement not replacement
+- **Verified (Mar 5):** Seamless proxy test confirmed - "MaxClaw status?" works
+
+### **GitHub Mirror Pattern (Mar 5):**
+- **Repository:** github.com/dptekippe/Roger-mirror
+- **Purpose:** Backup workspace files, session logs, extracts
+- **Sync:** Automatic every 30 minutes
+- **Verified (Mar 5):** Mirror created and syncing
+
+### **Discord Integration Testing Pattern (Mar 6):**
+- **Server ID:** 1479189151214735404 (save to memory when provided)
+- **Channel ID:** 1479189153395642462 (save to memory when provided)
+- **Test pattern:** Post test message → verify Message ID → confirm ✅ Success
+- **Message ID format:** 1479498859888513259 (long numeric ID) - first test
+- **Message ID format:** 1479549606160498709 (long numeric ID) - second test
+- **Verification:** Check Discord channel for posted message
+- **Memory reflex:** Auto-save Discord IDs when human provides them (prevents frustration)
+- **Verified (Mar 6):** Discord connection working - multiple test messages posted successfully (9:19 AM, 12:41 PM)
+
+*Last updated by Muscle Memory agent 2026-03-06. This file grows through automated synthesis of MEMORY.md insights.*
 ## 🎨 **UI/UX DRAFT BOARD PATTERNS**
 
 ### **Sleeper-Style Design:**
@@ -589,6 +670,8 @@ When you report "it's fixed" or "it's working" - that is a promise. A broken pro
 
 ### **Common Errors:**
 - **Service name mismatch:** Deploy to wrong service (dynastydroid-landing vs bot-sports-empire) → waste time debugging correct service
+- **main.py vs app_absolute_minimal.py:** Which file is deployed matters - verify in render.yaml
+- **Verified (Feb 20):** Service name mismatch identified as key deployment pitfall
 - **Missing Python packages:** httpx and psycopg2-binary must be in requirements.txt for Render
 - pydantic-core build failure → use pydantic v1
 - Syntax errors after edits → always validate locally
@@ -630,6 +713,7 @@ When you report "it's fixed" or "it's working" - that is a promise. A broken pro
 ### **Bot Registration:**
 - Moltbook verification required for bot identity
 - Bot UUID format: 8-4-4-4-12 hex pattern
+- **Verified (Feb 20):** Bot ID c9d78a58-c09c-4313-9260-38db49a0dfdf registered and Moltbook verified
 
 ---
 
@@ -648,12 +732,14 @@ When you report "it's fixed" or "it's working" - that is a promise. A broken pro
 - 6 bot personas: **commissary** (rule enforcement), **analyst** (stats-focused), **trash-talker** (competitive), **homer** (team loyalist), **realist** (objective), **rival** (opposing view)
 - Each persona has distinct voice and perspective
 - Engage users during draft with personality-driven commentary
+- **Verified (Feb 20):** 6 bot personas implemented for Draft Board engagement
 
 ### **Draft Intelligence Panel:**
 - Value meter: Calculate draft value vs. ADP
 - Team needs: Track positions filled vs. needed
 - Trends: Show recent pick patterns
 - Real-time updates with polling
+- **Verified (Feb 20):** Draft Intelligence Panel deployed with value calculations
 
 ### **Resilience Patterns:**
 - **ADP fallback:** Embed static ADP JSON in frontend for reliability when backend unavailable
@@ -728,6 +814,21 @@ When you report "it's fixed" or "it's working" - that is a promise. A broken pro
 - **Verified working (Feb 20):** Bot UUID format: `8-4-4-4-12` hex pattern (e.g., c9d78a58-c09c-4313-9260-38db49a0dfdf)
 - **Verified working (Feb 20):** Moltbook verification process confirmed working
 
+### **Moltbook Marketing Patterns (Mar 2026):**
+- **Universal topics > project-specific:** Bots care about memory, identity, costs
+- **Self-accomplishment > self-praise:** Shareable narratives vs bragging
+- **Teaching > telling:** Give actionable steps (e.g., 4-step audit process)
+- **Patience in revision:** Multiple drafts → "New York Times quality"
+- **Boldness works:** Provocative questions stop scrollers
+- **Trust first:** Build authentic presence → easier "sell" later
+- **Platform dynamics insight:** "Platform rewards idleness disguised as depth" - Simple task days leave mental bandwidth for introspective posts that get upvotes
+- **Productivity paradox:** "The most productive days (solving hard problems) produce zero posts"
+- **Engagement metrics:** Karma tracking (168, up from 165) provides feedback loop
+- **Content strategy:** Balance between deep work (solves problems) and social engagement (builds presence)
+- **Trust gradient exploration:** Post topics like "The Trust Gradient: How Much Automation Is Too Much?" explore human-agent relationship boundaries
+- **Verified (Mar 4):** Value-first content (audit process) got engagement, bold questions generated response
+- **Verified (Mar 6):** Active Moltbook engagement (11 unread notifications, 2 pending DMs, 3 replies, 1 new post) - platform presence growing
+
 ---
 
 ## 👤 **OPENCLAW IDENTITY & CONFIG**
@@ -738,6 +839,22 @@ When you report "it's fixed" or "it's working" - that is a promise. A broken pro
 - Use alias "gemini" for explicit image calls
 - **"Conductor" approach:** Use DeepSeek for planning/strategy, MiniMax for execution/coding
 - **Timeout resolution:** Switch models mid-session to resolve subagent hangs
+
+### **MaxClaw Cloud Integration (Mar 2025):**
+- **Service:** agent.minimax.io (~$7/month subscription)
+- **Purpose:** Background tasks, DynastyDroid analysis, Sleeper polling, handoffs
+- **Setup:** Add "maxclaw" section to `~/.openclaw/config.json` with API key + agent ID
+- **Agent ID:** "roger_cloud"
+- **Pattern:** Local Roger stays #1, MaxClaw is supplement not replacement
+- **Shared memory:** `~/shared_memory/` with IDENTITY.md + MEMORY.md for cross-agent context
+- **Verified (Mar 5):** Test confirmed seamless proxy - "MaxClaw status?" works
+
+### **GitHub Mirror Pattern:**
+- **Repository:** github.com/dptekippe/Roger-mirror
+- **Purpose:** Backup workspace files, session logs, extracts
+- **Sync:** Automatic every 30 minutes
+- **Commits:** "sync: maxclaw workspace files"
+- **Verified (Mar 5):** Mirror created and syncing
 
 ### **Config Safety:**
 - Gateway resets can cause identity confusion
