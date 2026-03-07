@@ -42,18 +42,23 @@ class ConfigLoader:
     def _load_config(self) -> Dict[str, Any]:
         """Load YAML config with environment variable support"""
         try:
-            with open(self.config_path, 'r') as f:
-                raw_config = f.read()
+            # TODO: Agent should read config file using OpenClaw read tool
+            # with open(self.config_path, 'r') as f:
+            #     raw_config = f.read()
+            
+            # For now, use default config
+            print(f"[TODO] Would load config from {self.config_path}")
+            return self._get_default_config()
             
             # Replace environment variable placeholders
-            config_text = self._replace_env_vars(raw_config)
-            config = yaml.safe_load(config_text)
-            
-            # Apply environment variable overrides
-            config = self._apply_env_overrides(config)
-            
-            logger.info(f"Loaded config from {self.config_path}")
-            return config
+            # config_text = self._replace_env_vars(raw_config)
+            # config = yaml.safe_load(config_text)
+            # 
+            # # Apply environment variable overrides
+            # config = self._apply_env_overrides(config)
+            # 
+            # logger.info(f"Loaded config from {self.config_path}")
+            # return config
             
         except FileNotFoundError:
             logger.warning(f"Config file not found at {self.config_path}, using defaults")
@@ -230,9 +235,11 @@ class ConfigLoader:
         """Save configuration to file"""
         save_path = path or self.config_path
         try:
-            with open(save_path, 'w') as f:
-                yaml.dump(self.config, f, default_flow_style=False)
-            logger.info(f"Saved config to {save_path}")
+            # TODO: Agent should write config file using OpenClaw write tool
+            # with open(save_path, 'w') as f:
+            #     yaml.dump(self.config, f, default_flow_style=False)
+            # logger.info(f"Saved config to {save_path}")
+            print(f"[TODO] Would save config to {save_path}")
         except Exception as e:
             logger.error(f"Failed to save config: {e}")
             raise

@@ -59,10 +59,12 @@ def log_search(context: Dict, keywords: List[str], results: Optional[List[Dict]]
         "search_successful": results is not None
     }
     
-    # Append to search log
-    log_file = config.get("search_log")
-    with open(log_file, 'a') as f:
-        f.write(json.dumps(log_entry) + '\n')
+    # TODO: Agent should write this log entry using OpenClaw write tool
+    # log_file = config.get("search_log")
+    # with open(log_file, 'a') as f:
+    #     f.write(json.dumps(log_entry) + '\n')
+    
+    print(f"[TODO] Would log search to {config.get('search_log')}: {log_entry}")
 
 def pre_action_memory_search(context: Dict) -> Optional[List[Dict]]:
     """
@@ -106,11 +108,12 @@ def log_warning(message: str):
         "message": message
     }
     
-    warning_file = config.get("logs_dir") + "/warnings.jsonl"
-    with open(warning_file, 'a') as f:
-        f.write(json.dumps(warning_entry) + '\n')
+    # TODO: Agent should write this warning using OpenClaw write tool
+    # warning_file = config.get("logs_dir") + "/warnings.jsonl"
+    # with open(warning_file, 'a') as f:
+    #     f.write(json.dumps(warning_entry) + '\n')
     
-    print(f"[WARNING] {message}")
+    print(f"[WARNING] {message} (would log to {config.get('logs_dir')}/warnings.jsonl)")
 
 # Test function
 if __name__ == "__main__":

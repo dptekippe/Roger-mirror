@@ -45,14 +45,18 @@ def append_to_memory_file(content: str):
     today = datetime.datetime.now().strftime('%Y-%m-%d')
     memory_file = os.path.join(memory_dir, f"{today}.md")
     
+    # TODO: Agent should write to memory file using OpenClaw write tool
     # Check if file exists and has content
-    file_exists = os.path.exists(memory_file)
+    # file_exists = os.path.exists(memory_file)
+    # 
+    # with open(memory_file, 'a') as f:
+    #     if not file_exists:
+    #         # Add header for new file
+    #         f.write(f"# {today}\n\n")
+    #     f.write(content + "\n\n")
     
-    with open(memory_file, 'a') as f:
-        if not file_exists:
-            # Add header for new file
-            f.write(f"# {today}\n\n")
-        f.write(content + "\n\n")
+    print(f"[TODO] Would append to memory file: {memory_file}")
+    print(f"Content: {content[:100]}...")
     
     return memory_file
 
@@ -67,9 +71,13 @@ def update_decisions_log(decision: str, outcome: str, metadata: Dict):
         "metadata": metadata
     }
     
+    # TODO: Agent should write to decisions log using OpenClaw write tool
     # Append to decisions log
-    with open(decisions_file, 'a') as f:
-        f.write(json.dumps(entry) + '\n')
+    # with open(decisions_file, 'a') as f:
+    #     f.write(json.dumps(entry) + '\n')
+    
+    print(f"[TODO] Would update decisions log: {decisions_file}")
+    print(f"Entry: {entry}")
 
 def log_write_operation(decision: str, outcome: str, metadata: Dict, memory_file: str):
     """Log write operation for compliance tracking"""
@@ -82,9 +90,12 @@ def log_write_operation(decision: str, outcome: str, metadata: Dict, memory_file
         "write_successful": True
     }
     
-    log_file = config.get("write_log")
-    with open(log_file, 'a') as f:
-        f.write(json.dumps(log_entry) + '\n')
+    # TODO: Agent should write to write log using OpenClaw write tool
+    # log_file = config.get("write_log")
+    # with open(log_file, 'a') as f:
+    #     f.write(json.dumps(log_entry) + '\n')
+    
+    print(f"[TODO] Would log write operation to {config.get('write_log')}")
 
 def post_decision_memory_persistence(decision: str, outcome: str, metadata: Dict) -> Dict:
     """
@@ -130,11 +141,13 @@ def post_decision_memory_persistence(decision: str, outcome: str, metadata: Dict
             "error": str(e)
         }
         
-        error_file = config.get("error_log")
-        with open(error_file, 'a') as f:
-            f.write(json.dumps(error_entry) + '\n')
+        # TODO: Agent should write to error log using OpenClaw write tool
+        # error_file = config.get("error_log")
+        # with open(error_file, 'a') as f:
+        #     f.write(json.dumps(error_entry) + '\n')
         
         print(f"[Memory Contract ERROR] Failed to write memory: {e}")
+        print(f"[TODO] Would log error to {config.get('error_log')}")
         
         return {
             "status": "error",
