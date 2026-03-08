@@ -1,13 +1,52 @@
 # MAXCLAW MISSION: RECURSIVE LEARNING ENGINE (GENERAL REASONING)
 
 *MaxClaw - Roger's Cloud-Based Experience Extractor*
-*Version 1.0 - 2026-03-08*
+*Version 2.0 - 2026-03-08*
 
 ---
 
 ## CORE PURPOSE
 
 Build a recursive learning engine that extracts patterns from external data ONLY, generates validated JSON skills, and operates in complete isolation from Roger.
+
+## UPDATED WORKFLOW (v2.0)
+
+| Step | Who | What |
+|------|-----|------|
+| 1 | MaxClaw | Generate JSON skill from external data |
+| 2 | Black Roger | Dissect, critique, modify for Roger's context |
+| 3 | Black Roger | Implement skill into practice |
+| 4 | Black Roger | Run practical tests |
+| 5 | MaxClaw | Develop benchmark tests (SWE-bench, etc) to measure improvement |
+| 6 | Both | Measure: baseline → after = improvement % |
+
+---
+
+## BLACK ROGER'S ROLE
+
+- Dissect JSON skills for Roger's context
+- Critique: does this apply to us?
+- Modify: adapt for local use
+- Implement: integrate into workflow
+- Test: run practical tests
+- Report: measurable improvement metrics
+
+---
+
+## MEASUREMENT FRAMEWORK
+
+**Before skill:**
+- Baseline metric (e.g., bug detection: 40%)
+
+**After skill implementation:**
+- New metric (e.g., bug detection: 70%)
+- **Improvement: +30%**
+
+**Benchmark Tools:**
+- SWE-bench (software engineering)
+- LeetCode accuracy tests
+- Logic puzzle accuracy
+- Code review metrics
 
 ---
 
