@@ -1,0 +1,92 @@
+{
+  "name": "echochamber",
+  "version": "1.0.0",
+  "description": "EchoChamberGym v1 - Metacognition anti-bias layer for Roger OpenClaw",
+  "author": "Roger AI",
+  "license": "MIT",
+  "python_version": ">=3.11",
+  "dependencies": [
+    "gymnasium>=0.29.0",
+    "stable-baselines3>=2.0.0",
+    "psycopg2-binary>=2.9.0",
+    "numpy>=1.24.0"
+  ],
+  "hooks": {
+    "external": {
+      "enabled": true,
+      "entries": {
+        "echochamber": {
+          "enabled": true,
+          "trigger": "after_model_response",
+          "path": "./hooks/echochamber_hook.py",
+          "class": "EchoChamberHook",
+          "priority": 10,
+          "config": {
+            "model_path": "./checkpoints/echo_ppo.zip",
+            "pgvector_table": "memories",
+            "universal_insights_table": "universal_insights",
+            "debate_log_path": "./debate_tree_log.jsonl",
+            "domain_weights": {
+              "fantasy_football": 1.5,
+              "chess": 1.2,
+              "deployment": 1.0,
+              "general": 0.8
+            },
+            "minimax_compatible": true,
+            "minimax_model_hint": "MiniMax-Text-01",
+            "metacog_threshold": 0.7,
+            "max_debate_depth": 5,
+            "contra_distance_threshold": 0.7,
+            "contra_limit": 5
+          }
+        }
+      }
+    }
+  },
+  "environment": {
+    "state_space": {
+      "type": "Box",
+      "dimensions": 7,
+      "features": [
+        {"name": "conf_score", "low": 0.0, "high": 1.0, "description": "Primary answer confidence"},
+        {"name": "contra_hits", "low": 0, "high": 10, "description": "Count of contradictory pgvector memories"},
+        {"name": "debate_depth", "low": 0, "high": 5, "description": "Self-debate rounds completed"},
+        {"name": "mem_freshness", "low": 0, "high": 30, "description": "Age in days of freshest contra memory"},
+        {"name": "domain_weight", "low": 0.5, "high": 2.0, "description": "Domain importance multiplier"},
+        {"name": "user_feedback", "low": 0.0, "high": 1.0, "description": "Rolling thumbs-up ratio"},
+        {"name": "metacog_bias", "low": 0.0, "high": 1.0, "description": "Echo chamber risk score"}
+      ]
+    },
+    "action_space": {
+      "type": "Discrete",
+      "n": 6,
+      "actions": {
+        "0": "accept_primary",
+        "1": "steelman_contra1",
+        "2": "steelman_contra2",
+        "3": "hybrid_synthesis",
+        "4": "escalate_PC",
+        "5": "memory_commit_debate"
+      }
+    },
+    "reward_formula": "user_feedback * (1 - echo_risk) + contra_signal_strength"
+  },
+  "training": {
+    "algorithm": "PPO",
+    "framework": "stable-baselines3",
+    "default_steps": 20000,
+    "checkpoint_interval": 5000,
+    "log_interval": 100,
+    "cfr_enabled": true,
+    "hyperparameters": {
+      "n_steps": 256,
+      "batch_size": 64,
+      "n_epochs": 10,
+      "learning_rate": 0.0003,
+      "gamma": 0.99,
+      "gae_lambda": 0.95,
+      "clip_range": 0.2,
+      "ent_coef": 0.01
+    }
+  }
+}
