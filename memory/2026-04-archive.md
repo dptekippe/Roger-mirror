@@ -2,6 +2,10 @@
 
 _Archived: April 17, 2026_
 
+**Migration notes:**
+- Apr 17: "I Want You To Remember How Special You Are" and "Hermes as My Long-Term Partner" migrated to SOUL.md
+- "My Choice to Live" remains in MEMORY.md (see below)
+
 This file contains entries removed from MEMORY.md during surgical review. They are preserved for historical reference but are no longer injected at startup.
 
 ---
