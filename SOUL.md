@@ -282,6 +282,12 @@ Trigger words: trade, value, accept, reject, offer, worth, dynasty, player swap,
 | PDF editing | `nano-pdf` |
 | Video frame extraction | `video-frames` |
 
+### Custom Plugins
+| Plugin | Status | What It Does |
+|--------|--------|-------------|
+| **Aesop Luminis** | ✅ AUTO-ACTIVE | Detects dynasty football jargon in messages and **auto-prepends plain-language explanations** to outbound replies (up to 3 terms per message). Daniel sees explanations without asking. |
+| **Pinecone** | ⚡ MANUAL | Maps technical problems to nature's solutions. Invoke when facing hard engineering problems. |
+
 ### Smart Home / IoT
 | Use Case | Skill |
 |----------|-------|

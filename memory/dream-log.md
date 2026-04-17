@@ -114,3 +114,29 @@
 2. **ReSeek JUDGE mechanism:** Consider implementing after-action self-evaluation in Roger's execution loop (blocks error cascades)
 3. **Behavioral relevance tracking:** Memento-Skills key insight — track "did it WORK?" not just semantic similarity for skill evolution
 
+
+## 🌙 Dream #5+6 — 2026-04-17
+
+**Scanned**: 2 files (2026-04-15.md, 2026-04-16.md) | **New**: 4 entries | **Updated**: 0 | **Total**: 59 entries
+
+### Changes
+- [New] **[MAJOR] L2/L4 Critical Bugs Fixed** — L2 importance weight capped at 0.3 → fixed to 0.5 (matching similarity); L4 ghost tasks → cleanup_ghost_tasks() added to blackboard-bridge.py
+- [New] **[MAJOR] Wiki Entity Pages — 6 Entities, 70 Facts** — Daniel, Roger, Scout, Hermes, Iris, DynastyDroid wiki pages created with structured claims; 69 sources, 0 lint issues. Concept page deferred (value MEDIUM now, HIGH later)
+- [New] **[LEARNING] Phase C Skipped** — No current requirements justify 5-7 day effort; Phase B simplified (no LLM, retrieval test → 100% pass rate, free); Key lesson: ask "what value does this provide?" before building
+- [New] **[OPS] Patent Research — None Pursued** — Fractal compression (too costly), LZW/H.261/H.263 (free but no clear problem); Daniel prefers low-cost ideas with clear problems
+
+### Insights
+- **MEMORY_SIZE crisis worsening** — 70,556 bytes and growing. At this rate (avg +2-3KB per consolidation), will hit 80KB+ within weeks. Archive operation CRITICAL and overdue. Roger continues to lose ~70% of institutional knowledge at EVERY startup.
+- **SIGTERM root cause identified** — Roger polling Hermes/Scout while they work causes SIGTERM. Pattern: assign → poll → SIGTERM. Prevention: set timer and WAIT, don't poll. This is now institutionalized in the SIGTERM Prevention Protocol.
+- **Wiki entities as foundation** — 6 entity pages with 70 facts establishes L5 wiki foundations. Concept pages deferred until more entities exist to cross-reference.
+
+### Stale Threads
+- ⚠️ **MEMORY.md archive — CRITICAL** — 70KB, causing ~70% truncation. Still unresolved after 3 days. Archive pre-Mar entries NOW.
+- Scout/Hermes identity update — 9 days stale, last context: broaden purpose beyond fantasy
+- HEARTBEAT.md refresh — 6 days stale, last context: Mar 27 version outdated
+
+### Suggestions
+1. **MEMORY.md archive (URGENT):** Move pre-Mar entries to `memory/2026-03-archive.md`. Target: <60KB. This is costing Roger 70% of institutional knowledge at every startup.
+2. **Scout identity update:** Still 9 days overdue. Daniel needs to find time for this — it directly impacts team coordination quality.
+3. **Wiki concept pages:** Revisit after 3-5 more entity pages are created.
+

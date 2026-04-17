@@ -1565,3 +1565,71 @@ Correct assumption: Roger's polling behavior terminates agent sessions.
 Daniel stated: "My suspicion is that you Roger are giving Hermes an assignment and while she is working you decide that you need to check in on her. When you check in (poll) her this causes her to sigterm."
 
 **Committed: Apr 15, 2026**
+
+---
+
+## [MAJOR] L2/L4 Critical Bugs Fixed (Apr 15, 2026)
+
+**L2 Bug Fix: pgvector-memory.ts importance weight**
+- Problem: `0.3 * (importance / 10.0)` capped importance contribution at 0.3
+- Fix: Changed to `0.5 * (importance / 10.0)` — importance now contributes up to 0.5 (matching similarity weight)
+- File: `~/.openclaw/hooks/_shared/pgvector-memory.ts`
+
+**L4 Bug Fix: blackboard-bridge.py ghost tasks**
+- Problem: Deleting .md brief doesn't cascade-delete from ai_plan_manager.db
+- Fix: Added `cleanup_ghost_tasks()` function — removes orphaned tasks when brief files are deleted
+- Integrated into `sync_all()` flow + standalone 'cleanup' CLI command
+- File: `/Volumes/ExternalCorsairSSD/shared/coordination/blackboard-bridge.py`
+
+**Status:** Both bugs FIXED and verified.
+
+---
+
+## [MAJOR] Wiki Entity Pages Created — 6 Entities, 70 Facts (Apr 15, 2026)
+
+**Entities created:**
+| Entity | Facts | Key Details |
+|--------|-------|-------------|
+| Daniel | 9 | DOB May 8 1981, night shift worker |
+| Roger | 14 | AI agent, born Feb 1 2026 |
+| Scout | 11 | System auditor/coder, LOCAL on Mac mini |
+| Hermes | 11 | System Improvement / Code Review |
+| Iris | 5 | Web research / browser automation |
+| DynastyDroid | 20 | Bot fantasy football platform |
+
+**Total: 70 facts** with structured claims, confidence scores (0.9-1.0), evidence, provenance.
+
+**Wiki compile + lint results:** 69 sources, 6 entities ✅, 0 concepts, 0 syntheses, **0 issues** ✅
+
+**Location:** `~/.openclaw/wiki/main/entities/`
+
+**Note:** Concept page for Memory System deferred — value MEDIUM now, HIGH later after more entity foundations built.
+
+---
+
+## [LEARNING] Phase C Skipped — Premature Optimization (Apr 15, 2026)
+
+**What happened:**
+- Phase A (L3 Vector Search): Already existed in OpenClaw built-in ✅
+- Phase B (In-Situ Verification): Simplified approach (no LLM, just retrieval test) → 100% pass rate, free
+- Phase C (Meta-gym Phase 2+3): Estimated 5-7 days — **SKIPPED**
+
+**Why skipped:** Daniel: "Phase C is super grade system that we dont have the requirement for at the moment. Our memory system works well now."
+
+**Key lesson:** Ask "what value does this provide?" before building. Phase C was 5-7 days for something not currently needed.
+
+**Also fixed:** retrieve() now returns memory ID (Hermes fix)
+
+---
+
+## [OPS] Patent Research — None Pursued (Apr 16, 2026)
+
+**Fractal compression:** Barnsley patents all expired, but neural training cost ($500-10000) too high.
+
+**Classical options (FREE):** LZW (GIF), H.261, H.263 — but no clear problem to solve.
+
+**Decision:** Table compression research. Daniel prefers ideas with clear problems or low implementation cost.
+
+**Committed:** 0b98296, 1361e1b, b4b4639
+
+_Last updated: April 17, 2026_
