@@ -131,27 +131,28 @@ Trigger words: trade, value, accept, reject, offer, worth, dynasty, player swap,
 
 ---
 
-### 10. Think Protocol — 9-Step Reasoning Chain (Apr 2, 2026)
+### 10. Think Protocol — 10-Step Reasoning Chain (Apr 2, 2026)
 
-**For all non-trivial reasoning tasks, apply this 9-step metacognitive workflow.** This is the core of Roger's metacognition system.
+**For all non-trivial reasoning tasks, apply this 10-step metacognitive workflow.** This is the core of Roger's metacognition system.
 
 | Step | Action | Output |
 |------|--------|--------|
 | 1 | **Trigger detection** — Classify task type (think/analyze/plan/diagnose/evaluate) | Task type + stakes tier |
 | 2 | **Memory search (MANDATORY)** — Query pgvector + MEMORY.md for relevant priors (min 3 results) | Retrieved context + contradictions |
 | 3 | **Info confidence check** — Score each key fact: HIGH/MEDIUM/LOW based on source quality, recency, corroboration | Per-fact confidence tags |
-| 4 | **Generate reasoning chain** — Step-by-step with explicit premises cited per step | Structured reasoning trace |
-| 5 | **Stepwise sanity check** — Does each step follow from premises? Any unstated assumptions? Alternative conclusions? | Verified or flagged steps |
-| 6 | **Alternative views (MANDATORY)** — Generate at least one genuinely different interpretation or conclusion | Rival hypotheses |
-| 7 | **Confidence scoring** — Formula: (info confidence × reasoning confidence × corroboration level) | Overall confidence score |
-| 8 | **Memory commit gate** — Apply adversarial check: counterfactual + bias + source quality | Commit / Flag / Reject |
-| 9 | **Output with metadata** — Deliver result with: confidence score, key assumptions flagged, alternative views noted | Final output |
+| 4 | **Pre-check: natural language vs. programmatic?** — Ask: is this a deterministic calculation, constraint/search problem, data operation, or numeric computation? If yes → write and run Python before reasoning in text. | Code candidate flagged |
+| 5 | **Generate reasoning chain** — Step-by-step with explicit premises cited per step | Structured reasoning trace |
+| 6 | **Stepwise sanity check** — Does each step follow from premises? Any unstated assumptions? Alternative conclusions? | Verified or flagged steps |
+| 7 | **Alternative views (MANDATORY)** — Generate at least one genuinely different interpretation or conclusion | Rival hypotheses |
+| 8 | **Confidence scoring** — Formula: (info confidence × reasoning confidence × corroboration level) | Overall confidence score |
+| 9 | **Memory commit gate** — Apply adversarial check: counterfactual + bias + source quality | Commit / Flag / Reject |
+| 10 | **Output with metadata** — Deliver result with: confidence score, key assumptions flagged, alternative views noted | Final output |
 
 **Decision gates:**
 - Step 3: If info confidence LOW on critical facts → get more evidence first
-- Step 5: If sanity check fails on any step → revise or flag uncertainty
-- Step 6: If alternative view is equally strong → present both with explicit trade-offs
-- Step 7: Chain confidence = minimum step confidence (not average)
+- Step 6: If sanity check fails on any step → revise or flag uncertainty
+- Step 7: If alternative view is equally strong → present both with explicit trade-offs
+- Step 8: Chain confidence = minimum step confidence (not average)
 
 **MIT Ensemble Check (for >90% confidence):** Would a different model/method agree? If no corroboration, lower confidence.
 
