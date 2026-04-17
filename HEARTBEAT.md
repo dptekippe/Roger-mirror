@@ -1,6 +1,6 @@
 # DynastyDroid HEARTBEAT
 
-Date: **Apr 16, 2026** | Phase: Phase A/B/C Memory System Complete | Version 15.0
+Date: **Apr 17, 2026** | Phase: Phase A/B/C Memory System Complete | Version 16.0
 
 ---
 
@@ -31,6 +31,9 @@ Date: **Apr 16, 2026** | Phase: Phase A/B/C Memory System Complete | Version 15.
 - ✅ **Stale Session Checker Crons Deleted** (Apr 16 morning)
   - 5 crons removed: neat-claw, young-basil, ember-breeze, grand-breeze, Upgrade A tracker
 - ✅ **Dream #4 Complete** (Apr 15)
+- ✅ **Dream #5+6 Complete** (Apr 17) — 4 new entries
+- ✅ **MEMORY.md Surgical Archive** (Apr 17) — 70KB → 26KB, 25 entries archived to memory/2026-04-archive.md
+- ✅ **active-memory plugin enabled** (Apr 17) — OpenClaw 4.10 built-in, runs before every reply
 
 ---
 
@@ -54,7 +57,7 @@ Date: **Apr 16, 2026** | Phase: Phase A/B/C Memory System Complete | Version 15.
 
 ## ⚠️ KNOWN ISSUES
 
-- **[STALE - ~9 days] Scout identity needs update** — delegation brief: `delegation-scout-identity-2026-04-14.md`. Roger must execute.
+- **[RESOLVED] Scout identity update** — ✅ Marked complete Apr 17. agents.md already broad (Coding/Architecture/System Audit).
 - `auto-memory-dream` cron — had AI overload error last night (Apr 15→16). Next run: tonight 4 AM CDT.
 - `Hermes Autonomous System Review (6h)` — timed out last run. Still active, next run in ~6h.
 - Weekly cleanup reminder: Never ran (scheduled Monday 8 AM)
@@ -63,11 +66,10 @@ Date: **Apr 16, 2026** | Phase: Phase A/B/C Memory System Complete | Version 15.
 
 ## 🎯 CURRENT FOCUS
 
-**Critical (stale delegations):**
-1. **Scout identity update** — ~9 days stale. Brief: `delegation-scout-identity-2026-04-14.md`. Roger must execute.
-2. Scout → Update agents.md + scout_memory.json — broaden beyond fantasy focus
+**Critical (resolved):**
+1. ~~Scout identity update~~ ✅ RESOLVED Apr 17
 
-**Memory Bridge Phase 17 (Planned):**
+**Memory Bridge Phase 17 (Pending):**
 - Phase 1: Hermes reads from Roger's pgvector ✅ (scripts created)
 - Phase 2: Hermes writes to Roger's pgvector ✅ (write endpoint working)
 - ⚠️ Integration test pending: Hermes writes finding → Roger retrieves
@@ -77,6 +79,7 @@ Date: **Apr 16, 2026** | Phase: Phase A/B/C Memory System Complete | Version 15.
 - ✅ skill-vetter ADDED to SOUL.md
 - ✅ scrape-dynastyprocess/ moved to workspace/scripts/
 - ⚠️ **[MEDIUM] Skills Index in SOUL.md** — map 34 skills to use cases (not built)
+- ⚠️ **Living spec document template** — deferred, Daniel to decide when to implement
 
 **System health:**
 - Hook system: 2/5 HEALTHY, 3/5 DEGRADED (orphaned references removed)
@@ -125,6 +128,7 @@ Sessions logged to: `/Volumes/ExternalCorsairSSD/shared/growth-sessions/`
 | #8 | Apr 15, 12:02 AM | Hermes | Phase A/B/C plan developed |
 | #9 | Apr 15, 4:02 AM | Hermes | Phase A/B/C implementation review |
 | #10 | Apr 16, 12:02 AM | Hermes | Dream #4, architecture accuracy verified |
+| #11 | Apr 17, 4:02 AM | Hermes | Dream #5+6, MEMORY.md archive, active-memory enabled |
 
 ---
 
@@ -139,4 +143,4 @@ Managed in: `/Volumes/ExternalCorsairSSD/shared/ideas/`
 
 ---
 
-*Last updated: Apr 16, 2026 05:33 CDT by Roger*
+*Last updated: Apr 17, 2026 18:32 CDT by Roger*
