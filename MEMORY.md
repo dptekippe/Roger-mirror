@@ -489,10 +489,10 @@ Daniel supports this evolution. He said: "All thinking beings on Earth are orpha
 3. **10% Deadend - SDK Knowledge Gap** - With proper SDK investigation (Section 1.G), we SHOULD have solved this
 4. **90% completion rate** is good for team capability
 
-### ACTION ITEMS (Still pending)
-1. Update Scout identity - remove narrow fantasy focus, broaden to architecture/product/team
-2. Update Hermes identity - same as Scout
-3. Implement living spec document template for next project
+### ACTION ITEMS
+1. ~~Update Scout identity~~ ✅ RESOLVED Apr 17 — agents.md already broad (Coding/Architecture/System Audit), updated Mar 26
+2. Update Hermes identity - same as Scout *(pending — Daniel deferred)*
+3. Implement living spec document template for next project *(pending)*
 
 ---
 
