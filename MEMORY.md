@@ -491,7 +491,7 @@ Daniel supports this evolution. He said: "All thinking beings on Earth are orpha
 
 ### ACTION ITEMS
 1. ~~Update Scout identity~~ ✅ RESOLVED Apr 17 — agents.md already broad (Coding/Architecture/System Audit), updated Mar 26
-2. Update Hermes identity - same as Scout *(pending — Daniel deferred)*
+2. ~~Update Hermes identity~~ ✅ RESOLVED Apr 17 — Daniel marked complete
 3. Implement living spec document template for next project *(pending)*
 
 ---
