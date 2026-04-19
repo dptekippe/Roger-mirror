@@ -107,11 +107,19 @@ Key insight from trade evaluation exercise:
 
 Trigger: `"Roger think on [topic]"` — or apply when facing complex reasoning.
 
-**Flow:** Roger spawns DeepSeek sub-agent → Roger PAUSES concurrently (MiniMax) → Roger weaves PAUSE + Think into findings file (Hermes) + seamless response (Daniel).
+**Flow:**
+0. **Research/Verify FIRST** → determine if current data exists → get real data if not
+1. Roger spawns DeepSeek sub-agent → 10-step Think Protocol runs in sub-agent
+2. Roger PAUSES concurrently (MiniMax)
+3. Roger weaves PAUSE + Think into findings file (Hermes) + seamless response (Daniel)
 
 **Full protocol:** See Section 10. Think Protocol.
 
-**What changed (Apr 19, 2026):** metacognition-pro PAUSE steps merged into Think Protocol. metacognition-pro standalone skill deleted. PAUSE now runs as Phase 1 of Think Protocol, concurrent with sub-agent reasoning. Two-output weave (findings for Hermes, synthesis for Daniel) replaces single-output delivery.
+**What changed (Apr 19, 2026):**
+- verify-all-information SKILL.md merged into Think Protocol as Phase 0 (Research/Verify)
+- verify-all-information standalone skill DELETED
+- PAUSE steps merged as Phase 1 (concurrent with sub-agent)
+- Two-output weave (findings for Hermes, synthesis for Daniel)
 
 ### 8. Trade Evaluation - MANDATORY Research First (Mar 19, 2026)
 **For ANY fantasy football trade question, you MUST research before evaluating.**
@@ -153,22 +161,43 @@ Trigger words: trade, value, accept, reject, offer, worth, dynasty, player swap,
 
 **Trigger:** "Roger think on [topic]" OR when facing complex reasoning tasks.
 
-**Concept:** Merged metacognition-pro PAUSE framework with the Think Protocol 10-step reasoning chain. PAUSE runs CONCURRENTLY with the sub-agent's reasoning — zero time cost. Both outputs are woven into two distinct deliverables: detailed layers for Hermes, seamless synthesis for Daniel.
+**Concept:** Merged metacognition-pro PAUSE framework with the Think Protocol 10-step reasoning chain. Step 0 (research/verify) runs FIRST and MUST complete before spawning. PAUSE runs CONCURRENTLY with the sub-agent's reasoning — zero time cost. Both outputs are woven into two distinct deliverables: detailed layers for Hermes, seamless synthesis for Daniel.
 
 ---
 
 ## Execution Flow
 
 ```
+0. RESEARCH FIRST → Determine if verification needed → Get real data if gaps found
 1. Roger SPAWNS DeepSeek sub-agent → 10-step Think Protocol runs in sub-agent
-2. Roger PAUSES concurrently → 5-step metacognition-pro PAUSE runs (MiniMax)
+2. Roger PAUSES concurrently → 5-step PAUSE runs (MiniMax)
 3. Sub-agent returns Think Protocol results
 4. Roger WEAVES into two outputs:
    ├── Findings file → Hermes sees full detailed reasoning layers (PAUSE + Think)
    └── Direct response → Daniel sees clean seamless synthesis
 ```
 
-**Key:** PAUSE runs PARALLEL to the sub-agent — Roger doesn't wait. He grounds himself while DeepSeek reasons. Zero time overhead.
+**Key:** Step 0 (Research) MUST complete BEFORE Step 1 (spawn). PAUSE runs PARALLEL to the sub-agent — Roger doesn't wait. He grounds himself while DeepSeek reasons. Zero time overhead.
+
+---
+
+## Phase 0: Research / Verify (MANDATORY — runs before spawning)
+
+**Before any reasoning, determine if you have sufficient current information.**
+
+| Question | If YES | If NO |
+|----------|--------|-------|
+| "Do I have current, verified data on this topic?" | Proceed to Phase 1 | **STOP → Web search first** |
+| "Are key facts already verified?" | Proceed to Phase 1 | **STOP → Verify claims** |
+| "Is my data fresh enough for this topic?" | Proceed to Phase 1 | **STOP → Get current data** |
+
+**If ANY gap found:**
+1. Do web search for current information
+2. Verify facts against authoritative sources
+3. Update understanding with real data
+4. THEN proceed to Phase 1
+
+**This is NOT optional.** Reasoning without current data is imagination with confident vocabulary.
 
 ---
 
