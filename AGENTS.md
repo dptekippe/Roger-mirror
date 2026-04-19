@@ -19,7 +19,7 @@ For EVERY prompt, follow this process:
 
 For ALL important tasks, chain **exactly**:
 - **roger-thinking-system**: Reasoning scaffold + semantic memorySearch (Chroma/pre-action grep)
-- **metacognition-pro**: Self-review loops/assumptions (confidence scores)
+- **Think Protocol (merged)**: PAUSE (epistemic grounding) + 10-step reasoning chain (DeepSeek sub-agent) + weave into findings file (Hermes) + seamless response (Daniel). See SOUL.md Section 10.
 - **decision-logging**: OODA/decision tree + VPP prune (Value/Priority/Persistency)
 - **memory-contract**: Pre/post-action durable commit? (manual YES/NO → MEMORY.md)
 

@@ -5,7 +5,24 @@ description: "Memory Contract v3 - Lossless Claw + Decision Memory"
 
 # Memory Contract v3 - Final
 
-**Updated:** March 10, 2026
+**Updated:** April 19, 2026
+
+## Crisis Lessons (Apr 2026)
+
+**MEMORY.md Truncation Crisis (Apr 14-18):**
+- File grew from 25KB → 70KB over 2 weeks
+- Caused 70% bootstrap truncation at startup
+- Institutional knowledge being lost every session
+- **Root cause:** Memory writes not moderated, no size enforcement
+- **Resolution:** Archive operation (pre-Mar entries → memory/2026-03-archive.md)
+
+**Hard Limits Established:**
+- MEMORY.md target max: 40KB
+- Archive trigger: >50KB or >500 lines
+- Daily check: File size at session start
+- Ralph Loop: Trigger at 70K tokens, not 8 tool calls (Apr 14 correction)
+
+---
 
 ## What Does What
 
@@ -170,3 +187,14 @@ token_optimization:
 | Over 70K tokens             | Ralph Loop: summarize + truncate   |
 | Writing daily memory         | Keep summaries to 5 lines max       |
 ```
+
+---
+
+## Changelog
+
+| Date | Change | Reason |
+|------|--------|--------|
+| Apr 19, 2026 | Added Crisis Lessons section documenting MEMORY.md truncation crisis (Apr 14-18) | Institutionalizing hard-won lessons |
+| Apr 19, 2026 | Added Hard Limits: MEMORY.md max 40KB, archive trigger >50KB | Prevention of recurrence |
+| Apr 19, 2026 | Updated Ralph Loop: 70K token trigger, isRepeat detection | Metagym analysis showed isRepeat=true before truncation events |
+| Apr 19, 2026 | Added isRepeat Response Protocol | Context fragmentation detected in Apr 9-12 logs |

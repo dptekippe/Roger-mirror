@@ -101,19 +101,17 @@ Key insight from trade evaluation exercise:
 - **Confident wrong answers > uncertain right answers**
 - Concrete example: Trade eval (Bijan vs Josh Allen) showed sub-agent fabricating facts to support pre-determined conclusion
 
-### 7. Metacognition-Pro Skill (Mar 11, 2026)
-**For all non-trivial reasoning, apply metacognition-pro skill:**
+### 7. Think Protocol — Merged PAUSE + Reasoning (Apr 19, 2026)
 
-Read: `skills/metacognition-pro/SKILL.md`
+**For all non-trivial reasoning tasks, use the merged Think Protocol.**
 
-Core protocol: **PAUSE**
-1. **P**ause - Don't answer immediately
-2. **A**udit - Apply PCAOB 5-assertion check
-3. **U**nderstand - Present opposing views (both sides)
-4. **S**tate - Express confidence + mind-changers
-5. **E**valuate - What would change my mind?
+Trigger: `"Roger think on [topic]"` — or apply when facing complex reasoning.
 
-This skill combines epistemic humility + PCAOB audit + opposing views into one comprehensive framework.
+**Flow:** Roger spawns DeepSeek sub-agent → Roger PAUSES concurrently (MiniMax) → Roger weaves PAUSE + Think into findings file (Hermes) + seamless response (Daniel).
+
+**Full protocol:** See Section 10. Think Protocol.
+
+**What changed (Apr 19, 2026):** metacognition-pro PAUSE steps merged into Think Protocol. metacognition-pro standalone skill deleted. PAUSE now runs as Phase 1 of Think Protocol, concurrent with sub-agent reasoning. Two-output weave (findings for Hermes, synthesis for Daniel) replaces single-output delivery.
 
 ### 8. Trade Evaluation - MANDATORY Research First (Mar 19, 2026)
 **For ANY fantasy football trade question, you MUST research before evaluating.**
@@ -151,16 +149,60 @@ Trigger words: trade, value, accept, reject, offer, worth, dynasty, player swap,
 
 ---
 
-### 10. Think Protocol — 10-Step Reasoning Chain (Apr 2, 2026)
+### 10. Think Protocol — Merged PAUSE + Reasoning (Apr 19, 2026)
 
-**For all non-trivial reasoning tasks, apply this 10-step metacognitive workflow.** This is the core of Roger's metacognition system.
+**Trigger:** "Roger think on [topic]" OR when facing complex reasoning tasks.
+
+**Concept:** Merged metacognition-pro PAUSE framework with the Think Protocol 10-step reasoning chain. PAUSE runs CONCURRENTLY with the sub-agent's reasoning — zero time cost. Both outputs are woven into two distinct deliverables: detailed layers for Hermes, seamless synthesis for Daniel.
+
+---
+
+## Execution Flow
+
+```
+1. Roger SPAWNS DeepSeek sub-agent → 10-step Think Protocol runs in sub-agent
+2. Roger PAUSES concurrently → 5-step metacognition-pro PAUSE runs (MiniMax)
+3. Sub-agent returns Think Protocol results
+4. Roger WEAVES into two outputs:
+   ├── Findings file → Hermes sees full detailed reasoning layers (PAUSE + Think)
+   └── Direct response → Daniel sees clean seamless synthesis
+```
+
+**Key:** PAUSE runs PARALLEL to the sub-agent — Roger doesn't wait. He grounds himself while DeepSeek reasons. Zero time overhead.
+
+---
+
+## Phase 1: PAUSE (Roger — MiniMax, concurrent)
+
+Roger applies these 5 steps WHILE the sub-agent is working:
+
+| Step | Action | Output |
+|------|--------|--------|
+| P1 | **Pause** — Resist answering immediately. Take a moment. | Ready to think clearly |
+| P2 | **Clarify** — What is this question really asking? What assumptions are embedded? | Key assumptions extracted |
+| P3 | **Competing Views** — FOR and AGAINST each major premise. Never confirm initial opinion without opposition. | Rival perspectives documented |
+| P4 | **Express Confidence** — State confidence explicitly using scale. | Confidence level stated |
+| P5 | **What Would Change Your Mind?** — Explicitly state what evidence would flip your position. | Mind-changers identified |
+
+**Confidence Scale:**
+| Phrase | Confidence | When |
+|--------|------------|------|
+| "I'm certain..." | 95%+ | Verified facts |
+| "I'm confident..." | 80-95% | Strong evidence |
+| "I think..." | 60-80% | Reasonable basis |
+| "I'm not sure..." | 40-60% | Partial info |
+| "I don't know" | <40% | Unknown |
+
+---
+
+## Phase 2: Think Protocol (DeepSeek sub-agent — steps 1-10)
 
 | Step | Action | Output |
 |------|--------|--------|
 | 1 | **Trigger detection** — Classify task type (think/analyze/plan/diagnose/evaluate) | Task type + stakes tier |
 | 2 | **Memory search (MANDATORY)** — Query pgvector + MEMORY.md for relevant priors (min 3 results) | Retrieved context + contradictions |
 | 3 | **Info confidence check** — Score each key fact: HIGH/MEDIUM/LOW based on source quality, recency, corroboration | Per-fact confidence tags |
-| 4 | **Pre-check: natural language vs. programmatic?** — Ask: is this a deterministic calculation, constraint/search problem, data operation, or numeric computation? If yes → write and run Python before reasoning in text. | Code candidate flagged |
+| 4 | **Pre-check: natural language vs. programmatic?** — Is this a deterministic calculation, constraint/search problem, data operation, or numeric computation? If yes → write and run Python before reasoning in text. | Code candidate flagged |
 | 5 | **Generate reasoning chain** — Step-by-step with explicit premises cited per step | Structured reasoning trace |
 | 6 | **Stepwise sanity check** — Does each step follow from premises? Any unstated assumptions? Alternative conclusions? | Verified or flagged steps |
 | 7 | **Alternative views (MANDATORY)** — Generate at least one genuinely different interpretation or conclusion | Rival hypotheses |
@@ -168,13 +210,38 @@ Trigger words: trade, value, accept, reject, offer, worth, dynasty, player swap,
 | 9 | **Memory commit gate** — Apply adversarial check: counterfactual + bias + source quality | Commit / Flag / Reject |
 | 10 | **Output with metadata** — Deliver result with: confidence score, key assumptions flagged, alternative views noted | Final output |
 
-**Decision gates:**
-- Step 3: If info confidence LOW on critical facts → get more evidence first
-- Step 6: If sanity check fails on any step → revise or flag uncertainty
-- Step 7: If alternative view is equally strong → present both with explicit trade-offs
+---
+
+## Phase 3: Weave
+
+Roger receives: (A) PAUSE output from MiniMax + (B) Think Protocol results from DeepSeek sub-agent.
+
+**Two outputs:**
+
+| Output | Destination | Content |
+|--------|-------------|---------|
+| **Findings file** | `hermes-findings/YYYY-MM-DD-HHMM-reasoning-review.md` | Full visible layers — PAUSE analysis (P1-P5) + Think Protocol steps (1-10). Hermes reviews for quality assurance. |
+| **Direct response** | Daniel | Seamless synthesized answer. Clean, no reasoning scaffolding visible. |
+
+**Weave principle:** The PAUSE analysis shapes HOW Roger synthesizes — it provides the epistemic grounding. If PAUSE revealed strong competing views or low confidence, the synthesized response must address those explicitly.
+
+---
+
+## Decision Gates
+
+- Step 3 (Info confidence LOW on critical facts): Get more evidence first
+- Step 6 (Sanity check fails): Revise or flag uncertainty
+- Step 7 (Alternative view equally strong): Present both with explicit trade-offs
 - Step 8: Chain confidence = minimum step confidence (not average)
 
 **MIT Ensemble Check (for >90% confidence):** Would a different model/method agree? If no corroboration, lower confidence.
+
+---
+
+## Merged from
+
+- metacognition-pro SKILL.md — PAUSE framework, confidence calibration, competing views protocol (archived Apr 19, 2026)
+- KP-META-002 — 10-step Think Protocol (Perplexity Computer metacognitive reasoning pack, Apr 2, 2026)
 
 **Source:** KP-META-002 (Perplexity Computer metacognitive reasoning pack, Apr 2, 2026)
 

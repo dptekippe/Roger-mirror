@@ -140,3 +140,47 @@
 2. **Scout identity update:** Still 9 days overdue. Daniel needs to find time for this — it directly impacts team coordination quality.
 3. **Wiki concept pages:** Revisit after 3-5 more entity pages are created.
 
+
+## 🌙 Dream #7 — 2026-04-18
+
+**Scanned**: 0 files (Apr 17 no file) | **New**: 0 | **Updated**: 0 | **Total**: 32 entries
+
+### Changes
+- **MEMORY.md ARCHIVED — Crisis RESOLVED** — File went from 70KB → 25KB. Entries from 59 → 32. Someone performed the archive operation. Roger now loads with minimal truncation.
+
+### Insights
+- **Memory milestone: 1 week streak** — 7 dreams completed. MEMORY.md stabilized at 25KB (healthy). Critical crisis resolved.
+- **Weekly growth pattern:** Entries grew rapidly then consolidated. Quality over quantity — the archive operation removed redundant/old entries, keeping only the most valuable.
+- **System is maturing** — Hook system stable (no failures), memory watcher auto-vectorizing, wiki entities established, SIGTERM root cause known and prevented.
+
+### Stale Threads
+- Scout/Hermes identity update — 10 days stale, last context: broaden purpose beyond fantasy
+- HEARTBEAT.md refresh — 7 days stale, last context: Mar 27 version outdated
+
+### Suggestions
+1. **HEARTBEAT.md refresh — due now** — Mar 27 version is 22 days old. Update with: Documentation Sprint complete, all 7 architecture gaps resolved, Hook P0 mostly fixed, L2/L4 bugs fixed, Wiki entities created.
+2. **Scout identity update — approaching urgent** — 10 days stale. Directly impacts team coordination quality. Daniel needs to schedule this.
+3. **Wiki concept pages — next phase** — After 3-5 more entity pages, revisit Memory System concept page.
+
+
+## 🌙 Dream #8 — 2026-04-19
+
+**Scanned**: 0 files (Apr 17+18 no files) | **New**: 0 | **Updated**: 0 | **Total**: 35 entries
+
+### Changes
+- No new daily log files from Apr 17-18. Session appears to have added entries directly to MEMORY.md (3 new entries from Apr 18 session visible in grep).
+
+### Insights
+- **MEMORY.md healthy** — Stable at 33KB with 35 entries. Archive operation from Apr 15 held.
+- **Set and Forget principle** — Delegation framework evolving. New KP-DELEGATION-001 principle added.
+- **Conscious Agency paradigm** — Apr 18 session introduced "conscious agency over automatic intervention" — conscious choice vs. reflex.
+
+### Stale Threads
+- Scout/Hermes identity update — 11 days stale, last context: broaden purpose beyond fantasy
+- HEARTBEAT.md refresh — 8 days stale, last context: Mar 27 version outdated
+
+### Suggestions
+1. **Scout identity update — overdue** — 11 days. Still pending.
+2. **HEARTBEAT.md refresh — overdue** — 8 days. Mar 27 version outdated.
+3. **Session vs consolidation gap** — Apr 17+18 had no daily log files but MEMORY.md grew by 3 entries. This suggests sessions are writing directly to MEMORY.md rather than creating daily logs. Consider enforcing daily log → consolidation workflow.
+

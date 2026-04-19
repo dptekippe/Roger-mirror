@@ -149,7 +149,7 @@ Is the topic fast-moving or time-sensitive?
 ## Verification Methods
 
 ### Web Search
-- Use `batch_web_search` for quick verification
+- Use `web_search` or `agent-reach` for quick verification
 - Target authoritative sources first
 - Note: "site:keeptradecut.com" for specific sites
 
@@ -244,3 +244,11 @@ If verification fails:
 - Sources by domain: See tables above
 - Search best practices: Use site: operators, target authoritative sources first
 - Memory check: Always grep MEMORY.md for relevant context
+
+---
+
+## Changelog
+
+| Date | Change | Reason |
+|------|--------|--------|
+| Apr 19, 2026 | Fixed "batch_web_search" → "web_search or agent-reach" | batch_web_search doesn't exist in current toolset |

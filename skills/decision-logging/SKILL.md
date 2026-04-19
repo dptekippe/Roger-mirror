@@ -35,6 +35,28 @@ Track decision points: "User said X, I chose Y because Z"
 ### Outcome: Dan understood, we fixed it
 ```
 
+## Critical: Log Context Fragmentation Events
+
+**Pattern observed (Apr 2026):** isRepeat=true in session metadata = context truncation
+
+When detected, ALWAYS log:
+```markdown
+## Decision: Context fragmentation response
+### Input: isRepeat=true or repeated response pattern
+### Choice: [What you did - summarized state, restarted reasoning, etc.]
+### Reason: Context truncated, needed continuity check
+### Verification: Checked memory for [what] - continuity [maintained/lost]
+```
+
+Example:
+```markdown
+## Decision: Context fragmentation during trade eval
+### Input: isRepeat=true, mid-trade-evaluation
+### Choice: Halted, rebuilt context from memory_search
+### Reason: Context lost mid-analysis, couldn't trust continuation
+### Verification: Checked memory - trade context recovered, resumed
+```
+
 ## Why It Matters
 
 - Learn from past choices
@@ -48,3 +70,12 @@ Track decision points: "User said X, I chose Y because Z"
 - Simple factual answers
 - Greetings
 - Quick lookups
+
+---
+
+## Changelog
+
+| Date | Change | Reason |
+|------|--------|--------|
+| Apr 19, 2026 | Added "Critical: Log Context Fragmentation Events" section | isRepeat=true pattern detected in metagym logs; context fragmentation events need tracking |
+| Apr 19, 2026 | Added example log entry for context fragmentation | Demonstrates logging pattern for future events |

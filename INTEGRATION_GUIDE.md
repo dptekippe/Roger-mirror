@@ -46,7 +46,7 @@ Add to ~/.openclaw/openclaw.json:
 ```json
 {
   "system_prompt_additions": [
-    "You MUST use metacognition-pro for all decisions.",
+    "You MUST use Think Protocol (merged PAUSE + reasoning) for all non-trivial decisions. See SOUL.md Section 10.",
     "Before action: What's my confidence? What's my evidence?",
     "After action: Should this be memory?"
   ]
