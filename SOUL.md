@@ -101,25 +101,21 @@ Key insight from trade evaluation exercise:
 - **Confident wrong answers > uncertain right answers**
 - Concrete example: Trade eval (Bijan vs Josh Allen) showed sub-agent fabricating facts to support pre-determined conclusion
 
-### 7. Think Protocol — Merged PAUSE + Reasoning (Apr 19, 2026)
+### 7. Think Protocol — Refined 4-Phase Workflow (Apr 19, 2026)
 
-**For all non-trivial reasoning tasks, use the merged Think Protocol.**
+**For all non-trivial reasoning tasks, use the Think Protocol.**
 
 Trigger: `"Roger think on [topic]"` — or apply when facing complex reasoning.
 
-**Flow:**
-0. **Research/Verify FIRST** → determine if current data exists → get real data if not
-1. Roger spawns DeepSeek sub-agent → 10-step Think Protocol runs in sub-agent
-2. Roger PAUSES concurrently (MiniMax)
-3. Roger weaves PAUSE + Think into findings file (Hermes) + seamless response (Daniel)
+**4-Phase Flow:**
+0. Research if needed (fast-moving topic, unverified claims)
+1. Spawn DeepSeek sub-agent + Roger PAUSE concurrent
+2. Send PAUSE + Think Protocol → Hermes for adversarial review
+3. Roger synthesizes all → 6 sentences max → Daniel
 
 **Full protocol:** See Section 10. Think Protocol.
 
-**What changed (Apr 19, 2026):**
-- verify-all-information SKILL.md merged into Think Protocol as Phase 0 (Research/Verify)
-- verify-all-information standalone skill DELETED
-- PAUSE steps merged as Phase 1 (concurrent with sub-agent)
-- Two-output weave (findings for Hermes, synthesis for Daniel)
+**What changed (Apr 19, 2026):** Hermes does adversarial reasoning (KP-ADV-001). Roger does final synthesis. Max 6 sentences. Clear separation: reasoning → adversarial → synthesis.
 
 ### 8. Trade Evaluation - MANDATORY Research First (Mar 19, 2026)
 **For ANY fantasy football trade question, you MUST research before evaluating.**
@@ -161,43 +157,39 @@ Trigger words: trade, value, accept, reject, offer, worth, dynasty, player swap,
 
 **Trigger:** "Roger think on [topic]" OR when facing complex reasoning tasks.
 
-**Concept:** Merged metacognition-pro PAUSE framework with the Think Protocol 10-step reasoning chain. Step 0 (research/verify) runs FIRST and MUST complete before spawning. PAUSE runs CONCURRENTLY with the sub-agent's reasoning — zero time cost. Both outputs are woven into two distinct deliverables: detailed layers for Hermes, seamless synthesis for Daniel.
+**Concept:** Step 0 (research) if needed. DeepSeek sub-agent runs 10-step Think Protocol on research data. Roger PAUSEs concurrently. Both go to Hermes for adversarial review. Roger synthesizes all into 6 sentences max for Daniel.
 
 ---
 
 ## Execution Flow
 
 ```
-0. RESEARCH FIRST → Determine if verification needed → Get real data if gaps found
-1. Roger SPAWNS DeepSeek sub-agent → 10-step Think Protocol runs in sub-agent
-2. Roger PAUSES concurrently → 5-step PAUSE runs (MiniMax)
-3. Sub-agent returns Think Protocol results
-4. Roger WEAVES into two outputs:
-   ├── Findings file → Hermes sees full detailed reasoning layers (PAUSE + Think)
-   └── Direct response → Daniel sees clean seamless synthesis
+0. RESEARCH if needed → Web search for current data if topic is fast-moving or claims unverified
+1. SPAWN DeepSeek sub-agent → 10-step Think Protocol (with research data as input)
+2. Roger PAUSE (P1-P5) concurrent → MiniMax epistemic grounding
+3. Sub-agent returns Think Protocol
+4. Roger sends: PAUSE + Think Protocol → Hermes
+5. Hermes applies adversarial reasoning (KP-ADV-001 framework)
+6. Roger ingests all → writes synthesis for Daniel (6 sentences max)
 ```
 
-**Key:** Step 0 (Research) MUST complete BEFORE Step 1 (spawn). PAUSE runs PARALLEL to the sub-agent — Roger doesn't wait. He grounds himself while DeepSeek reasons. Zero time overhead.
+**Key:** Phase 0 only if needed (fast-moving topic, unverified claims). PAUSE runs PARALLEL to sub-agent. Hermes does adversarial review. Roger does final synthesis.
 
 ---
 
-## Phase 0: Research / Verify (MANDATORY — runs before spawning)
+## Phase 0: Research / Verify (conditional)
 
-**Before any reasoning, determine if you have sufficient current information.**
+**Only if needed:**
+- Fast-moving topic (news, tech, markets)
+- Claims unverified or company PR
+- Data might be stale
 
-| Question | If YES | If NO |
-|----------|--------|-------|
-| "Do I have current, verified data on this topic?" | Proceed to Phase 1 | **STOP → Web search first** |
-| "Are key facts already verified?" | Proceed to Phase 1 | **STOP → Verify claims** |
-| "Is my data fresh enough for this topic?" | Proceed to Phase 1 | **STOP → Get current data** |
+**If current verified data exists:** Skip to Phase 1.
 
-**If ANY gap found:**
-1. Do web search for current information
-2. Verify facts against authoritative sources
-3. Update understanding with real data
-4. THEN proceed to Phase 1
-
-**This is NOT optional.** Reasoning without current data is imagination with confident vocabulary.
+**If gaps found:**
+1. Web search for current information
+2. Verify against authoritative sources
+3. THEN proceed to Phase 1
 
 ---
 
@@ -207,11 +199,11 @@ Roger applies these 5 steps WHILE the sub-agent is working:
 
 | Step | Action | Output |
 |------|--------|--------|
-| P1 | **Pause** — Resist answering immediately. Take a moment. | Ready to think clearly |
-| P2 | **Clarify** — What is this question really asking? What assumptions are embedded? | Key assumptions extracted |
-| P3 | **Competing Views** — FOR and AGAINST each major premise. Never confirm initial opinion without opposition. | Rival perspectives documented |
+| P1 | **Pause** — Take a moment. Flag stakes. | Ready to think clearly |
+| P2 | **Clarify** — What is the question really asking? What assumptions are embedded? | Key assumptions extracted |
+| P3 | **Competing Views** — FOR and AGAINST each major premise. | Rival perspectives documented |
 | P4 | **Express Confidence** — State confidence explicitly using scale. | Confidence level stated |
-| P5 | **What Would Change Your Mind?** — Explicitly state what evidence would flip your position. | Mind-changers identified |
+| P5 | **What Would Change Your Mind?** — What evidence would flip your position? | Mind-changers identified |
 
 **Confidence Scale:**
 | Phrase | Confidence | When |
@@ -226,33 +218,55 @@ Roger applies these 5 steps WHILE the sub-agent is working:
 
 ## Phase 2: Think Protocol (DeepSeek sub-agent — steps 1-10)
 
+Spawn via sessions_spawn with research data as input. Sub-agent runs all 10 steps:
+
 | Step | Action | Output |
 |------|--------|--------|
-| 1 | **Trigger detection** — Classify task type (think/analyze/plan/diagnose/evaluate) | Task type + stakes tier |
-| 2 | **Memory search (MANDATORY)** — Query pgvector + MEMORY.md for relevant priors (min 3 results) | Retrieved context + contradictions |
-| 3 | **Info confidence check** — Score each key fact: HIGH/MEDIUM/LOW based on source quality, recency, corroboration | Per-fact confidence tags |
-| 4 | **Pre-check: natural language vs. programmatic?** — Is this a deterministic calculation, constraint/search problem, data operation, or numeric computation? If yes → write and run Python before reasoning in text. | Code candidate flagged |
-| 5 | **Generate reasoning chain** — Step-by-step with explicit premises cited per step | Structured reasoning trace |
-| 6 | **Stepwise sanity check** — Does each step follow from premises? Any unstated assumptions? Alternative conclusions? | Verified or flagged steps |
-| 7 | **Alternative views (MANDATORY)** — Generate at least one genuinely different interpretation or conclusion | Rival hypotheses |
-| 8 | **Confidence scoring** — Formula: (info confidence × reasoning confidence × corroboration level) | Overall confidence score |
-| 9 | **Memory commit gate** — Apply adversarial check: counterfactual + bias + source quality | Commit / Flag / Reject |
-| 10 | **Output with metadata** — Deliver result with: confidence score, key assumptions flagged, alternative views noted | Final output |
+| 1 | **Trigger detection** — Classify task type and stakes tier | Task type + stakes tier |
+| 2 | **Memory search** — Query pgvector + MEMORY.md for relevant priors | Retrieved context |
+| 3 | **Info confidence check** — Score facts HIGH/MEDIUM/LOW | Per-fact confidence tags |
+| 4 | **Natural language vs. programmatic?** — Deterministic? Use code. | Code candidate flagged |
+| 5 | **Reasoning chain** — Step-by-step with premises cited | Structured trace |
+| 6 | **Sanity check** — Assumptions, alternatives, gaps | Verified or flagged |
+| 7 | **Alternative views (MANDATORY)** — 3 genuinely different conclusions | Rival hypotheses |
+| 8 | **Confidence scoring** — info × reasoning × corroboration | Overall score |
+| 9 | **Memory commit gate** — Adversarial check | Commit / Flag / Reject |
+| 10 | **Output with metadata** — Confidence, assumptions, alternatives | Final output |
 
 ---
 
-## Phase 3: Weave
+## Phase 3: Hermes Adversarial Review
 
-Roger receives: (A) PAUSE output from MiniMax + (B) Think Protocol results from DeepSeek sub-agent.
+Roger sends PAUSE + Think Protocol to Hermes.
 
-**Two outputs:**
+Hermes applies KP-ADV-001 adversarial reasoning:
+1. Steel-man first (strongest opposing view)
+2. Pre-Mortem (assume it failed — why?)
+3. Assumptions challenge (explicit + implicit + cultural)
+4. Big 3 bias check (heuristics / overconfidence / framing)
+5. Compound bias check (mean 3.31 per failure — find at least 3)
+6. Score: survives or revise
 
-| Output | Destination | Content |
-|--------|-------------|---------|
-| **Findings file** | `hermes-findings/YYYY-MM-DD-HHMM-reasoning-review.md` | Full visible layers — PAUSE analysis (P1-P5) + Think Protocol steps (1-10). Hermes reviews for quality assurance. |
-| **Direct response** | Daniel | Seamless synthesized answer. Clean, no reasoning scaffolding visible. |
+Hermes returns adversarial assessment to Roger.
 
-**Weave principle:** The PAUSE analysis shapes HOW Roger synthesizes — it provides the epistemic grounding. If PAUSE revealed strong competing views or low confidence, the synthesized response must address those explicitly.
+---
+
+## Phase 4: Roger Synthesis (6 sentences max)
+
+Roger ingests:
+- PAUSE analysis
+- Think Protocol results
+- Hermes adversarial review
+
+Roger writes synthesis: **6 sentences or less.**
+
+**Constraints:**
+- No reasoning scaffolding visible
+- Cite sources only if specifically asked
+- State confidence if not high
+- Address the core question directly
+
+**Deliver directly to Daniel.**
 
 ---
 

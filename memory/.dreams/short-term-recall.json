@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-04-16T00:41:12.981Z",
+  "updatedAt": "2026-04-19T18:47:02.830Z",
   "entries": {
     "memory:memory/2026-03-18.md:30:63": {
       "key": "memory:memory/2026-03-18.md:30:63",
@@ -134,18 +134,20 @@
       "endLine": 44,
       "source": "memory",
       "snippet": "### Hermes Agent Preview - Nous Research self-improving agent - Built-in learning loop (creates skills from experience) - Multi-platform: Telegram, Discord, CLI, etc. - NOT a migration - new agent for UI/UX only - Will set up tomorrow on external drive ## Tomorrow's Agenda 1. Set up Hermes on external drive (new agent for UI/UX) 2. Continue trade calculator improvements 3. Scout may have more system fixes to apply ## Technical Notes - Scout invoked via `deepagents` command (not sessions_spawn) - Iris invoked via Python browser-use scripts - All my agents are independent processes via exec, not OpenClaw sessions_spawn",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.35617476999759673,
-      "maxScore": 0.35617476999759673,
+      "totalScore": 0.7920283913612365,
+      "maxScore": 0.4358536213636398,
       "firstRecalledAt": "2026-04-11T18:54:08.271Z",
-      "lastRecalledAt": "2026-04-11T18:54:08.271Z",
+      "lastRecalledAt": "2026-04-19T18:46:52.603Z",
       "queryHashes": [
-        "426f335ce22f"
+        "426f335ce22f",
+        "7eb47303a505"
       ],
       "recallDays": [
-        "2026-04-11"
+        "2026-04-11",
+        "2026-04-19"
       ],
       "conceptTags": [
         "self-improving",
@@ -357,20 +359,22 @@
       "endLine": 126,
       "source": "memory",
       "snippet": "**Protocol**: Use Scout for CODING tasks, not knowledge tasks. For dynasty, Roger does research first, Scout improves code. ### Scout Memory Session (Mar 21, 2026, 17:08-17:14 CDT) **Scout is fully operational!** **Setup:** - Daytona sandbox working ✅ - MiniMax M2.7 working ✅ - Persistent memory confirmed working **Key discovery about Scout's memory:** - Scout's persistent memory is SANDBOX-LOCAL - Scout can remember conversations within sandbox context - Scout cannot access Daniel's Mac filesystem (isolated) - When sandbox is deleted, Scout loses that memory - Scout remembers \"Roger the Robot\" - confirmed working **Lesson learned (Daniel's insight):** - Subagent = ephemeral, no memory",
-      "recallCount": 3,
+      "recallCount": 4,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 1.1948175877332687,
+      "totalScore": 1.560466393828392,
       "maxScore": 0.4165977150201797,
       "firstRecalledAt": "2026-04-11T19:00:12.483Z",
-      "lastRecalledAt": "2026-04-11T19:15:33.117Z",
+      "lastRecalledAt": "2026-04-19T18:47:02.830Z",
       "queryHashes": [
         "8ce06b723b5d",
         "249d2a6a77a5",
-        "abcc7b23a52d"
+        "abcc7b23a52d",
+        "8759070e375f"
       ],
       "recallDays": [
-        "2026-04-11"
+        "2026-04-11",
+        "2026-04-19"
       ],
       "conceptTags": [
         "08-17",
@@ -660,6 +664,37 @@
         "hooks/mcts-reflection/handler.js",
         "debug/placeholder",
         "math.random"
+      ]
+    },
+    "memory:memory/2026-03-22.md:1:36": {
+      "key": "memory:memory/2026-03-22.md:1:36",
+      "path": "memory/2026-03-22.md",
+      "startLine": 1,
+      "endLine": 36,
+      "source": "memory",
+      "snippet": "# Memory - March 22, 2026 ## Big Wins Today ### Trade Calculator Bugs Fixed - **Bug #1:** Bijan premium adjustment - was applying to ALL players, fixed to check individual player values - **Bug #2:** TE Premium toggle - wasn't updating values, fixed with case-insensitive position check - **Bug #3:** Mobile footer bar - was showing on desktop, fixed with window.innerWidth < 768 check - All pushed to GitHub: commit 9fd90b3 ### Scout vs OpenClaw Subagent - Scout (DeepAgent) did a system audit and found CRITICAL issues: - Session Memory Cron BROKEN - Memory Contract Hooks non-functional (all TODOs) - Hardcoded DB credentials - Subconscious stale since Feb 17 - OpenClaw subagent said \"",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.39912768900394435,
+      "maxScore": 0.39912768900394435,
+      "firstRecalledAt": "2026-04-19T18:46:52.603Z",
+      "lastRecalledAt": "2026-04-19T18:46:52.603Z",
+      "queryHashes": [
+        "7eb47303a505"
+      ],
+      "recallDays": [
+        "2026-04-19"
+      ],
+      "conceptTags": [
+        "case-insensitive",
+        "window.innerwidth",
+        "non-functional",
+        "march",
+        "big",
+        "wins",
+        "trade",
+        "calculator"
       ]
     }
   }
