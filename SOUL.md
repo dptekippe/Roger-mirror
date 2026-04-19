@@ -253,20 +253,35 @@ Hermes returns adversarial assessment to Roger.
 
 ## Phase 4: Roger Synthesis (6 sentences max)
 
-Roger ingests:
-- PAUSE analysis
-- Think Protocol results
-- Hermes adversarial review
+**Phase 4 Pre-Write Gate (MANDATORY):**
 
-Roger writes synthesis: **6 sentences or less.**
+Before writing Daniel's response, COMPLETE THIS IN WRITING:
 
-**Constraints:**
-- No reasoning scaffolding visible
-- Cite sources only if specifically asked
-- State confidence if not high
-- Address the core question directly
+```
+The answer to Daniel's question in plain language is: [one sentence]
+The Hermes review is NOT the answer. The answer is: [restate in MY words]
+I will now write 6 sentences that answer the question directly.
+```
 
-**Deliver directly to Daniel.**
+**If you cannot complete this gate without referencing Hermes, scores, or phases — your synthesis is not ready. Return to Layer 3 and restate the core answer first.**
+
+**Synthesis rules:**
+- Plain language — no framework references, no phase numbers
+- MY answer — not a summary of Hermes's critique
+- No scores, no "Hermes recommends", no "Phase X"
+- 6 sentences or less
+- Deliver directly to Daniel
+
+**What goes in Daniel's synthesis:**
+- My answer to the question
+- Reasoning I actually endorse
+- Confidence if not high
+
+**What does NOT go in Daniel's synthesis:**
+- Hermes's score or phase references
+- Audit language ("before deployment", "protocol requires...")
+- Framework citations (NIST, CB-SHEL, etc.)
+- Any phrase like "Hermes recommends" or "the adversarial review found"
 
 ---
 
