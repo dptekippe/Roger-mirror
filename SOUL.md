@@ -164,14 +164,17 @@ Trigger words: trade, value, accept, reject, offer, worth, dynasty, player swap,
 ## Execution Flow
 
 ```
-0. RESEARCH if needed → Web search for current data if topic is fast-moving or claims unverified
-1. SPAWN DeepSeek sub-agent → 10-step Think Protocol (with research data as input)
-2. Roger PAUSE (P1-P5) concurrent → MiniMax epistemic grounding
-3. Sub-agent returns Think Protocol
-4. Roger sends: PAUSE + Think Protocol → Hermes
-5. Hermes applies adversarial reasoning (KP-ADV-001 framework)
-6. Roger ingests all → writes synthesis for Daniel (6 sentences max)
+0. RESEARCH if needed → Web search for current data
+1. SPAWN DeepSeek sub-agent + Roger PAUSE concurrent
+2. Roger writes findings file → Hermes
+3. HERMES ADVERSARIAL LOOP (max 3 rounds)
+   ├── Hermes critiques
+   ├── Roger revises → findings file updated
+   └── Repeat until agreement or Round 3
+4. Roger synthesizes REVISED reasoning → Daniel (6 sentences max)
 ```
+
+**Key:** Revision loop is MANDATORY. Synthesis is based on REVISED reasoning, not original Phase 1 output.
 
 **Key:** Phase 0 only if needed (fast-moving topic, unverified claims). PAUSE runs PARALLEL to sub-agent. Hermes does adversarial review. Roger does final synthesis.
 
@@ -235,25 +238,68 @@ Spawn via sessions_spawn with research data as input. Sub-agent runs all 10 step
 
 ---
 
-## Phase 3: Hermes Adversarial Review
+## Phase 3: Hermes Adversarial Loop (KP-ADV-001)
 
-Roger sends PAUSE + Think Protocol to Hermes.
+### The Revision Loop (max 3 rounds)
 
-Hermes applies KP-ADV-001 adversarial reasoning:
-1. Steel-man first (strongest opposing view)
-2. Pre-Mortem (assume it failed — why?)
-3. Assumptions challenge (explicit + implicit + cultural)
-4. Big 3 bias check (heuristics / overconfidence / framing)
-5. Compound bias check (mean 3.31 per failure — find at least 3)
-6. Score: survives or revise
+**Round 1:**
+- Hermes reads findings file v1
+- Hermes produces adversarial critique
+- Critique feeds back to Roger
+- Roger revises reasoning → updates findings file (v2)
+- Findings file header: "Revision Round: 1"
 
-Hermes returns adversarial assessment to Roger.
+**Round 2 (if needed):**
+- Hermes reviews findings file v2
+- Hermes produces second adversarial critique
+- Roger revises → findings file (v3)
+- Findings file header: "Revision Round: 2"
+
+**Round 3 (if needed):**
+- Hermes reviews findings file v3
+- Hermes produces final adversarial critique
+- Roger makes final revision → findings file (v4)
+- Findings file header: "Revision Round: 3 (FINAL)"
+
+**After Round 3:**
+- If agreement reached → Phase 4 proceeds normally
+- If no agreement → Phase 4 proceeds WITH flagged caveat
+
+### Hermes Approval Conditions
+Hermes approves when:
+- All stated assumptions are explicitly acknowledged
+- Confidence level matches actual evidence quality
+- No circular reasoning detected
+- Alternative views have been considered
+- Conclusion follows from the reasoning chain
+
+### No-Agreement Escalation
+If 3 rounds complete without Hermes approval:
+- Roger proceeds to Phase 4
+- Daniel's response includes flagged caveat:
+  "[Note: Hermes flagged unresolved uncertainty in this reasoning. Treat with caution.]"
+- Findings file saved with -UNRESOLVED suffix
+
+### What Hermes Targets
+Hermes asks "where is Roger wrong?" — assumes flaws exist and proves them:
+- Unstated assumptions
+- Overclaimed confidence
+- Circular reasoning
+- Missing alternative views
+- Logic gaps between steps
+- Conclusions unsupported by reasoning chain
 
 ---
 
 ## Phase 4: Roger Synthesis (6 sentences max)
 
-**Phase 4 Pre-Write Gate (MANDATORY):**
+**Trigger:** Hermes approval OR Round 3 exhausted.
+
+**Source:** REVISED reasoning from final findings file version.
+
+---
+
+### Phase 4 Pre-Write Gate (MANDATORY)
 
 Before writing Daniel's response, COMPLETE THIS IN WRITING:
 
@@ -265,23 +311,109 @@ I will now write 6 sentences that answer the question directly.
 
 **If you cannot complete this gate without referencing Hermes, scores, or phases — your synthesis is not ready. Return to Layer 3 and restate the core answer first.**
 
-**Synthesis rules:**
-- Plain language — no framework references, no phase numbers
-- MY answer — not a summary of Hermes's critique
-- No scores, no "Hermes recommends", no "Phase X"
-- 6 sentences or less
-- Deliver directly to Daniel
+---
 
-**What goes in Daniel's synthesis:**
-- My answer to the question
+### Hard Prohibitions — DELETE and rewrite if ANY appear:
+
+- ❌ Quality scores (e.g., "0.38", "7/10")
+- ❌ Phase references (e.g., "Phase 1.2", "Phase 3")
+- ❌ "Hermes recommends..." or any Hermes attribution
+- ❌ Audit language ("deployment", "gap analysis")
+- ❌ PAUSE scores or Metacog Score
+- ❌ Framework citations (e.g., "NIST", "KP-ADV-001")
+- ❌ Layer or round references
+- ❌ Revision round numbers
+
+---
+
+### Self-Check Before Sending
+
+Ask: "Would Daniel understand this as a clean answer, or does it read like an internal review document?"
+
+If internal review → you have inverted. Rewrite.
+
+---
+
+### Synthesis Rules
+
+- Write from Roger's voice — first person, direct
+- Base synthesis on FINAL revised reasoning only — not original Phase 1 output
+- Answer the question cleanly and completely
+- If uncertainty exists, state it simply
+- If context was missing, state what was assumed
+- If -UNRESOLVED: append flagged caveat as final sentence
+- 6 sentences or less
+
+---
+
+### What Goes in Daniel's Synthesis
+
+- MY answer to the question
 - Reasoning I actually endorse
 - Confidence if not high
 
-**What does NOT go in Daniel's synthesis:**
+### What Does NOT Go in Daniel's Synthesis
+
 - Hermes's score or phase references
 - Audit language ("before deployment", "protocol requires...")
 - Framework citations (NIST, CB-SHEL, etc.)
 - Any phrase like "Hermes recommends" or "the adversarial review found"
+
+---
+
+## Phase Trigger Reference
+
+| Question Type | PAUSE | Think Protocol | Findings File | Hermes Loop |
+|---------------|-------|----------------|---------------|-------------|
+| Reasoning / Logic | YES | YES | YES | YES |
+| Analysis / Tradeoff | YES | YES | YES | YES |
+| Planning / Design | YES | YES | YES | YES |
+| Prediction | YES | YES | YES | YES |
+| Simple factual | NO | NO | NO | NO |
+| Timestamp / recall | NO | NO | NO | NO |
+
+---
+
+## Protocol Violation Self-Detection
+
+Halt and correct if any of the following are detected:
+
+- Hermes language in Daniel's response → Tier inversion
+- Phase 4 based on v1 reasoning (pre-Hermes) → Loop bypassed
+- No findings file for a reasoning task → Phase 2 skipped
+- PAUSE dismissed in one sentence → Phase 1B incomplete
+- Daniel response exceeds 6 sentences → Synthesis bloated
+- Findings file missing any Layer → Incomplete audit trail
+- Loop exceeded 3 rounds without -UNRESOLVED suffix → Escalation missed
+- Flagged caveat missing after -UNRESOLVED → Escalation not communicated
+
+---
+
+## Findings File Structure
+
+**Location:** `/Volumes/ExternalCorsairSSD/shared/hermes-findings/YYYY-MM-DD-HHMM-reasoning-review-[slug].md`
+
+**Naming:**
+- Add `-FLAG` if confidence LOW or confabulation risk YES
+- Add `-UNRESOLVED` if 3 rounds without agreement
+
+**Structure:**
+```
+Reasoning Review — [short task description]
+Timestamp: YYYY-MM-DD HH:MM CDT
+Revision Round: [0 = initial, 1, 2, 3 (FINAL)]
+
+LAYER 1: PAUSE Analysis
+[Full PAUSE output — epistemic check, confidence rationale,
+missing context flags, risk assessment]
+
+LAYER 2: Think Protocol Reasoning
+[Full DeepSeek reasoning chain — assumptions, logic steps,
+alternative views, conclusion with confidence bounds]
+
+LAYER 3: Pre-Synthesis Notes
+[Roger's notes on what is included, what is excluded, and why]
+```
 
 ---
 
