@@ -125,8 +125,19 @@ TASK_WITH_CONTEXT="[BLACKBOARD TASK: $TASK_ID]
 $TASK_DESCRIPTION
 
 This task is tracked in the AI Plan Manager blackboard (task ID: $TASK_ID).
-When complete, Scout must: mark the task complete in the blackboard and
-include the blackboard task ID in the completion summary."
+
+CRITICAL — output file requirement:
+Your last action MUST be: echo \"[TASK DONE] <description of what was done>\" > $OUTPUT_FILE
+The run_scout.sh script will NOT write a success sentinel if the output file is empty or missing.
+If you exit with code 0 but don't produce an output file, you will be treated as FAILED.
+
+Tools available for DB access: blackboard_client.py (Python, no shell sqlite3 needed):
+  python3 /Volumes/ExternalCorsairSSD/shared/coordination/blackboard_client.py --query \"SELECT ...\"
+  python3 /Volumes/ExternalCorsairSSD/shared/coordination/blackboard_client.py --update \"UPDATE ...\"
+  python3 /Volumes/ExternalCorsairSSD/shared/coordination/blackboard_client.py --insert \"INSERT ...\"
+  python3 /Volumes/ExternalCorsairSSD/shared/coordination/blackboard_client.py --list-pending
+  python3 /Volumes/ExternalCorsairSSD/shared/coordination/blackboard_client.py --count-tasks --tag spec:v1.4
+"
 
 "$DEEPAGENTS" \
     --model anthropic:MiniMax-M2.7 \
@@ -138,10 +149,20 @@ SC_EXIT=$?
 
 # ── Post-execution: sentinel + notify ─────────────────────────────────────────
 if [ $SC_EXIT -eq 0 ]; then
-  write_success_sentinel
-  notify_roger "[SCOUT] Task complete: task_id=$TASK_ID output=$OUTPUT_FILE"
-  echo "[run_scout] SUCCESS: task $TASK_ID complete. Sentinel written. Roger notified."
-  exit 0
+  # Verify output file has meaningful content before declaring success
+  # Scout's last action should be: echo "[TASK DONE] N tasks/items created" > $OUTPUT_FILE
+  if [ -f "$OUTPUT_FILE" ] && [ -s "$OUTPUT_FILE" ]; then
+    write_success_sentinel
+    notify_roger "[SCOUT] Task complete: task_id=$TASK_ID output=$OUTPUT_FILE"
+    echo "[run_scout] SUCCESS: task $TASK_ID complete. Output verified. Sentinel written. Roger notified."
+    exit 0
+  else
+    # Exit 0 but no output = Scout claimed done without producing verifiable output
+    write_failure_sentinel "exit 0 but output file empty or missing: $OUTPUT_FILE" "$SC_EXIT"
+    notify_roger "[SCOUT] Task FAILED: task_id=$TASK_ID — exit 0 but no verifiable output"
+    echo "[run_scout] AMBIGUOUS: task $TASK_ID exit 0 but output file missing/empty. Failure sentinel written."
+    exit 1
+  fi
 else
   write_failure_sentinel "deepagents exited with code $SC_EXIT" "$SC_EXIT"
   notify_roger "[SCOUT] Task FAILED: task_id=$TASK_ID exit_code=$SC_EXIT — Daniel notification needed"
