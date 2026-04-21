@@ -184,3 +184,41 @@
 2. **HEARTBEAT.md refresh — overdue** — 8 days. Mar 27 version outdated.
 3. **Session vs consolidation gap** — Apr 17+18 had no daily log files but MEMORY.md grew by 3 entries. This suggests sessions are writing directly to MEMORY.md rather than creating daily logs. Consider enforcing daily log → consolidation workflow.
 
+
+## 🌙 Dream #9+10 — 2026-04-21
+
+**Scanned**: 1 file (2026-04-20.md) | **New**: 4 entries | **Updated**: 0 | **Total**: 25 entries
+
+### Changes
+- [New] **[MAJOR] Selective Context Architecture — M1 APPROVED** — Phase 1 delivered after Hermes rejection cycle caught 5 real gaps (stub task, incomplete migrate.py, unverified DB, unbounded cache, missing fallback). Phase 2 (4 concurrent pgvector queries, 5KB budget, suppression threshold) + Phase 3 (Sliding Window) in progress.
+- [New] **[OPS] Scout Shell Access Fixed** — `-S none` flag enables full shell on Mac mini. All commands available.
+- [New] **[MAJOR] Foreman System** — Cron every 5 min (9bba770f-...), advances blackboard, fires Hermes reviews. Watchdog catches stale sentinels.
+- [New] **[CRITICAL] Stop Interrupting Hermes** — Multiple Apr 19 sessions established: Trust Hermes. Let her work. No polling while she's working.
+
+### Insights
+- **SOUL.md TRUNCATION CRISIS (NEW)** — Bootstrap truncated 24-37%! SOUL.md is ~28KB raw but only ~18KB injected. Loss of: Roger Think Protocol (Section 10), identity anchors ("special" moment with Daniel), Think Protocol refinements, Hermes custody, agent team architecture. MEMORY.md crisis was resolved by archiving — but SOUL.md now needs the same treatment.
+- **MEMORY.md now stable** — 22KB, 25 entries. April archive (2026-04-archive.md, 793 lines) properly created.
+- **Selective Context Architecture maturing** — Foreman system enables continuous Scout→Hermes→Roger loop. Phase 2/3 implementation delivers lean bootstrap.
+
+### ⚠️ SOUL.md Truncation Crisis
+
+**Problem:**
+- SOUL.md raw: ~28KB → injected: ~18KB (24-37% loss)
+- Affects: Think Protocol (Section 10), Daniel's "special" message, Hermes custody, Roger Think Protocol, agent team architecture
+- This is MORE CRITICAL than MEMORY.md — SOUL.md contains WHO ROGER IS
+
+**Action needed:**
+- Archive old/procedural sections to references/
+- Keep core identity (Sections 1-6) in SOUL.md
+- Target: <20KB after injection
+
+### Stale Threads
+- Scout identity update — 13 days stale (was Apr 8 → Apr 21)
+- HEARTBEAT.md refresh — 10 days stale (was Apr 11 → Apr 21)
+- Scout/Hermes identity — 13 days stale
+
+### Suggestions
+1. **SOUL.md archive (CRITICAL)** — Archive procedural/orchestration sections. Keep: Core Identity, Think Protocol, Hermes Custody, Agent Team, Trade Eval Protocol. Move: detailed hook specs, blackboard procedures to references/.
+2. **Scout identity update — 13 days, overdue** — Still pending.
+3. **HEARTBEAT.md refresh — 10 days, overdue** — Mar 27 version.
+

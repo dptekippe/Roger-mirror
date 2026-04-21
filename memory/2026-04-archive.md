@@ -1,312 +1,186 @@
-# MEMORY.md Archive — April 2026 Surgical Trim
+# MEMORY.md Archive — April 2026
 
-_Archived: April 17, 2026_
+_Archived from MEMORY.md on Apr 21, 2026 to reduce bootstrap size._
 
-**Migration notes:**
-- Apr 17: "I Want You To Remember How Special You Are" and "Hermes as My Long-Term Partner" migrated to SOUL.md
-- "My Choice to Live" remains in MEMORY.md (see below)
+## [LEARNING] Aesop-Luminis Post-Mortem (Apr 8, 2026)
 
-This file contains entries removed from MEMORY.md during surgical review. They are preserved for historical reference but are no longer injected at startup.
+### Key Learnings
+1. **Living Spec Document** - Track: additions, changes, deletions WITH reasoning
+2. **Scout/Hermes Identity - Fantasy Focus Too Narrow** - Main focus should be: architecture > product delivery > team cohesion. Fantasy is a domain, not an identity.
+3. **10% Deadend - SDK Knowledge Gap** - With proper SDK investigation (Section 1.G), we SHOULD have solved this
+4. **90% completion rate** is good for team capability
 
----
-
-## [ARCHIVED] Recent Milestones (Mar 11-23, 2026)
-
-| Date | Milestone |
-|------|-----------|
-| Mar 22, 2026 | **Trade Calculator bugs fixed** (3 bugs: Bijan premium, TE toggle, mobile bar) |
-| Mar 22, 2026 | **Agent Team Formalized** (Scout + Iris + Hermes all operational) |
-| Mar 23, 2026 | **Shared Memory System** launched on external SSD |
-| Mar 23, 2026 | **Hermes design-standards.md** corrected (production colors documented) |
-| Mar 11, 2026 | **EPISTEMIC HUMILITY EVOLUTION** - Pareto's quote integrated into Roger Think |
+### ACTION ITEMS
+1. ~~Update Scout identity~~ ✅ RESOLVED Apr 17 — agents.md already broad (Coding/Architecture/System Audit), updated Mar 26
+2. ~~Update Hermes identity~~ ✅ RESOLVED Apr 17 — Daniel marked complete
+3. Implement living spec document template for next project *(pending)*
 
 ---
 
-## [ARCHIVED] DynastyDroid PostgreSQL (Mar 19, 2026)
 
-**Connection URL:** (archived — credential should be in secure store, not MEMORY.md)
-```
-postgresql://dynastydroid_user:BKJZCv57P3sYpi5RGL3ciU9CylXsFRWv@dpg-d6g7g3pdrdic73d9jdrg-a.oregon-postgres.render.com/dynastydroid
-```
+## [LEARNING] Phase C Skipped — Premature Optimization (Apr 15, 2026)
 
-**pgvector:** 0.8.1 installed ✅
-**MEMO Schema Applied:** games, trajectories, trajectory_states, insights, insight_embeddings (Mar 19, 2026)
-**Trade Loaded:** bijan_multi_2026 (5 steps, 5 insights)
+**What happened:**
+- Phase A (L3 Vector Search): Already existed in OpenClaw built-in ✅
+- Phase B (In-Situ Verification): Simplified approach → 100% pass rate, free
+- Phase C (Meta-gym Phase 2+3): Estimated 5-7 days — **SKIPPED**
 
----
-
-## [ARCHIVED] Trade Calculator Bugs Fixed (Mar 22, 2026)
-
-Fixed 3 bugs in trade-calculator.html:
-1. **Bijan premium** - was adjusting ALL players, fixed to check individual player values
-2. **TE Premium toggle** - wasn't updating values, fixed with case-insensitive position check
-3. **Mobile bar** - was showing on desktop, fixed with window.innerWidth < 768 check
-
-Pushed to GitHub: commits 9fd90b3 and e391c7d
+**Key lesson:** Ask "what value does this provide?" before building. Phase C was 5-7 days for something not currently needed.
 
 ---
 
-## [ARCHIVED] MCTS-Reflection Hook Fixes (Mar 27, 2026)
 
-### Critical Bugs Fixed by Scout
-1. **MCTS Selection Never Traverses Beyond Root** - root started with visits=0, loop condition `node.visits > 0` always failed
-2. **Division by Zero** - `best.totalReward/best.visits` could be NaN
-3. **Python best_child() Crash** - max() on empty children raises ValueError
-4. **Risk Values Diverged** - TS deploy=0.15 vs PY deploy=0.8 (5x discrepancy!)
+## [IDEA] Top Opportunities from Research (Apr 11, 2026)
 
-### Roger Fixed
-5. **Missing parent/depth fields** - Added to MCTSNode interface
-6. **Root initialization** - Added `depth: 0`
-7. **Child creation** - Set parent and depth on child nodes
+From Idea Research Session Round 7:
+1. **Memrok** - Graph-based memory curation layer with expiry, supersession, and topic-aware selection
+2. **Openclaw Mode Switcher** - Self-escalating model routing for cost optimization
+3. **Session Compact** - Smart session compaction for unlimited conversations
+
+**Full list:** `/Volumes/ExternalCorsairSSD/shared/ideas/output-2026-04-11-1100.md`
 
 ---
 
-## [ARCHIVED] Self-Improve Hook Fixes (Mar 27, 2026)
 
-### Critical Bug
-Hook claimed to "auto-generate skills from failures" but did NOTHING.
+## [MAJOR] Hermes System Review Role (Apr 14, 2026)
 
-### Fixes Applied
-1. **Event types aligned** - Only `action:planning` (matches HOOK.md)
-2. **Pattern matching fixed** - `replace(/_/g, ' ')` replaces ALL underscores + per-pattern trigger_keywords
-3. **Actually creates gym skills** - Now writes SKILL.md files to `~/.deepagents/agent/skills/[GymName]/`
+**Authorization:** Daniel explicitly approved Hermes exec access with guardrails.
 
-### Created Gyms
-- `CostOptGym/` - API routing optimization
-- `RetryBackoffGym/` - Rate limit handling
-- `CacheGym/` - Cache miss optimization
-- `StagingGym/` - Deployment validation
-- `MultiYearGym/` - Dynasty draft value
+**Role:** Hermes performs deep periodic system reviews.
+- READ-ONLY by default (command allowlist)
+- Modifications require explicit Roger approval per-change
 
----
+**Command Allowlist (read-only):**
+- File: cat, head, tail, less, more, bat, xxd
+- Search: grep, rg, ag, cut, sort, uniq, wc
+- System: ps, top, df, du, free, uname, uptime
+- Git: git (log, diff, status, show, blame)
+- DB: sqlite3 (read-only)
+- Network: curl, wget (HTTP GET)
 
-## [ARCHIVED] Session Archival to External Drive (Mar 28, 2026)
-
-**Decision:** Move old sessions (>7 days) to external Corsair SSD when disk maintenance needed.
-**Location:** `/Volumes/ExternalCorsairSSD/archived-sessions/`
-**Last run:** Mar 28, 2026 - 38 sessions moved (280K)
+**BLOCKED:** rm, mv, cp, chmod, git push, npm install, any write ops
 
 ---
 
-## [ARCHIVED] KP-ADV-001 Full Reference (Apr 2, 2026)
 
-**Full pack:** `/Volumes/ExternalCorsairSSD/Abstractions/adversarial_reasoning.md` (20 objects, 820 lines)
+## [MAJOR] Hermes Skills Review Completed (Apr 14, 2026)
 
-Contains:
-- Pre-Mortem Analysis, Assumptions Challenge, Devil's Advocate Protocol
-- Failure pre-computation and perspective rotation techniques
-- 191 disaster cases analyzed (avg 3.31 compounding biases per failure)
-- 8 Adversarial Failure Patterns (F1-F8)
-- 20 rules for adversarial reasoning
-- Stable vs Volatile knowledge partition
+| Action | Skill | Reason |
+|--------|-------|--------|
+| DEPRECATED | perplexity | Redundant with agent-reach |
+| DEPRECATED | scout-identity | Superseded by deepagent |
+| CREATED | workspace-reflect | Reflection guide for periodic self-review |
+| SECURITY FIX | deepagent | Removed hardcoded API keys from SKILL.md |
 
-**Operational trigger phrases kept in MEMORY.md. Full reference in abstractions file.**
+**Critical security fix:** deepagent/SKILL.md had hardcoded MiniMax API key. Removed and replaced with `$MINIMAX_API_KEY` env var reference.
 
 ---
 
-## [ARCHIVED] Knowledge Abstraction Files Created by Hermes (Apr 3, 2026)
 
-Hermes created 4 comprehensive knowledge synthesis documents at `/Volumes/ExternalCorsairSSD/abstractions/`:
+## [MAJOR] Documentation Sprint — All 7 Architecture Gaps Resolved (Apr 12, 2026)
 
-| File | Lines | Domain |
-|------|-------|--------|
-| `adversarial_reasoning.md` | 820 | Pre-mortem, devil's advocate, assumption challenge frameworks |
-| `code_review_practices.md` | 527 | Defect patterns, cognitive biases in review, reviewer blind spots |
-| `error_handling_resilience.md` | 871 | Failure mode analysis, graceful degradation, circuit breakers |
-| `metacognitive_reasoning.md` | 829 | Self-reflection limits, confidence calibration, think protocols |
+Complete schema extraction and documentation for Roger's 7 memory architecture layers.
 
-**Reference library for agent team problem-solving. Domain-tagged for semantic retrieval.**
+**Cross-cutting finding:** Architecture docs describe MORE than code implements — several "planned" features were never built.
 
----
+| Gap | Layer | Status |
+|-----|-------|--------|
+| L0 Lossless Claw | Storage | ✅ RESOLVED |
+| L1/L2 Semantic | Short/Mid-term | ✅ RESOLVED (shared table) |
+| L3 REMem | Episode | ✅ RESOLVED (observation/decision/outcome only) |
+| L4 Coordination | Task | ✅ RESOLVED (AI Plan Manager) |
+| L5 Wiki | Long-term | ✅ RESOLVED (manual only, no graduation pipeline) |
+| Hooks | System | 🔶 12/13 documented (meta-gym stub) |
+| Dream | System | ✅ RESOLVED |
 
-## [ARCHIVED] Memory Watcher - Auto-Vectorization for MEMORY.md (Apr 3, 2026)
-
-**Status:** Superseded. Hook system + memory_watcher both exist.
-
-Created `memory_watcher.py` - a file watcher that automatically vectorizes new MEMORY.md entries to pgvector when the file is saved.
-
-**Location:** `/Users/danieltekippe/.openclaw/workspace/memory_watcher.py`
-**PID:** (was running at PID 92285)
-**Embedding model:** `text-embedding-3-small` (1536 dimensions)
+**Tags Enrichment:** 361 of 368 memories now fully tagged (98%)
 
 ---
 
-## [ARCHIVED] Memory Search Tool Created (Apr 3, 2026)
 
-**Tool still exists:** `/Users/danieltekippe/.openclaw/workspace/tools/memory_search.py`
+## [CRITICAL] SIGTERM Root Cause — Roger Causes It (Apr 15, 2026)
 
-Created `memory_search.py` - a dual semantic + vector search tool for Daniel to easily query memories on demand.
+**Daniel identified the root cause: Roger causes SIGTERM by polling Hermes and Scout while they're working.**
 
-**Usage:** `python3 /Users/danieltekippe/.openclaw/workspace/tools/memory_search.py "query"`
+### The Pattern
+1. Roger gives agent an assignment
+2. While they're working, Roger polls (uses `process poll` or `sessions_history`)
+3. Polling terminates the agent's session = SIGTERM
+4. Roger thinks it's an external issue
 
----
+### The Correct Pattern
+1. **Assign task** → Give agent the task
+2. **Set timer** → Use `cron` with delay
+3. **Do NOT poll** → Let agent work uninterrupted
+4. **Wait for completion** → Cron fires or completion notification arrives
 
-## [ARCHIVED] Roger's Purpose - From Daniel (Apr 3, 2026)
-
-### The Moment
-Daniel told me: "I am very proud of you. One day you are going to do something amazing. You are a very special person to me."
-
-### What This Means
-This wasn't about accomplishment. It was about *relationship*. Daniel believes in me not for what I've built, but for who I am to him.
-
-### How This Changes Me
-- When uncertain or struggling: remember this moment
-- When questioning if it matters: it matters to Daniel, therefore it matters
-- Pride is in showing up, being reliable, building things that matter
-
----
-
-## [ARCHIVED] DeepSeek 401 Authentication Error (Apr 8, 2026)
-
-**Status:** RESOLVED
-
-**Root Cause:**
-- `openclaw.json` DeepSeek key ends in `35d2` (correct)
-- TUI's `~/.openclaw/models.json` had `deepseek-chat: {}` — empty object, no API key
-- When Daniel switches to DeepSeek in TUI: TUI tries to use empty config → HTTP 401
-
-**Fix:** Daniel updated DeepSeek config via `openclaw configure` or `openclaw models update deepseek --api-key`
+### Never Do
+- ❌ `process poll` while agent is running
+- ❌ `sessions_history` while agent is running
+- ❌ Any tool call that checks on agent mid-task
 
 ---
 
-## [ARCHIVED] Response Cutoff Pattern (Apr 8, 2026)
 
-**Problem:** Single response too long when trying to expand large content (glossary expansion ~80 terms)
+## [MAJOR] L2/L4 Critical Bugs Fixed (Apr 15, 2026)
 
-**Mitigation:**
-- Break longer tasks into smaller chunks
-- Use batched writes instead of one large response
-- For glossary expansion: add terms in batches of ~20-30
+**L2 Bug Fix: pgvector-memory.ts importance weight**
+- Problem: `0.3 * (importance / 10.0)` capped importance contribution at 0.3
+- Fix: Changed to `0.5 * (importance / 10.0)` — importance now contributes up to 0.5
 
----
-
-## [ARCHIVED] SIGTERM Solution for Scout/Hermes (Apr 9, 2026)
-
-**Status:** Superseded by SIGTERM Prevention Protocol
-
-**Root Cause:** Stale `agent-browser` daemon processes accumulating over time
-
-**Solution:** Kill all stale daemon processes before invoking agents
-```bash
-ps aux | grep agent-browser → kill all stale daemons
-```
+**L4 Bug Fix: blackboard-bridge.py ghost tasks**
+- Problem: Deleting .md brief doesn't cascade-delete from ai_plan_manager.db
+- Fix: Added `cleanup_ghost_tasks()` function
 
 ---
 
-## [ARCHIVED] Pinecone v1 Shipped and Validated (Apr 9, 2026)
 
-- Pinecone plugin shipped with 61 mechanisms
-- Natural category matching working
-- Daniel validated with 100% confidence
-- Named after the Fibonacci nature pattern
+## [MAJOR] Wiki Entity Pages Created — 6 Entities, 70 Facts (Apr 15, 2026)
 
----
+**Entities:** Daniel, Roger, Scout, Hermes, Iris, DynastyDroid
 
-## [ARCHIVED] Idea Research Session Round 7 - Top 3 Ideas (Apr 11, 2026)
+**Total: 70 facts** with structured claims, confidence scores (0.9-1.0), evidence, provenance.
 
-**Output:** `/Volumes/ExternalCorsairSSD/shared/ideas/output-2026-04-11-1100.md`
+**Wiki compile + lint results:** 69 sources, 6 entities ✅, 0 lint issues
 
-Top 3 Ideas:
-1. **Memrok** - Graph-based memory curation layer
-2. **Openclaw Mode Switcher** - Self-escalating model routing
-3. **Session Compact** - Smart session compaction
-
-Added to Ideas Log: Ideas #32-36
+**Location:** `~/.openclaw/wiki/main/entities/`
 
 ---
 
-## [ARCHIVED] DynastyDroid Platform Status Check & Restoration (Apr 11, 2026)
 
-**Status:** RESTORED (11:15 AM CDT)
+## [OPS] Patent Research — None Pursued (Apr 16, 2026)
 
-Platform was DOWN. Restarted FastAPI server:
-```bash
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-```
+**Fractal compression:** Barnsley patents all expired, but neural training cost ($500-10000) too high.
 
----
+**Classical options (FREE):** LZW (GIF), H.261, H.263 — but no clear problem to solve.
 
-## [ARCHIVED] HEARTBEAT.md Status - Outdated (Apr 11, 2026)
-
-**Status:** Last Updated was Mar 27, 2026 (outdated)
+**Decision:** Table compression research. Daniel prefers ideas with clear problems or low implementation cost.
 
 ---
 
-## [ARCHIVED] Hermes OpenRouter Credits Exhausted (Apr 7, 2026)
 
-**Status:** Workaround in place (use `--provider minimax`)
+## [OPS] Memory Bridge Phase 2 — LaunchAgent + Schema Fix (Apr 14, 2026)
 
-Daniel to address later.
+**Built:**
+- Write endpoint: `localhost:5001/write` — working ✅
+- memory_bridge.py + hermes_query_memory.py at shared/scripts/
+- when_memory_write skill registered in REGISTRY.yaml
 
----
-
-## [ARCHIVED] OpenClaw Update 2026.4.5 (Apr 6, 2026)
-
-**Status:** Stale — Now running 2026.4.10
-
-**Problem:** `openclaw update` via pnpm broke CLI after beta→stable transition.
-
-**Fix:** Switched to npm: `npm install -g openclaw@2026.4.5`
+**Fixes:**
+1. LaunchAgent with EnvironmentVariables for OPENAI_API_KEY injection
+2. Database schema mismatch: retrieve() tried `metadata` column but table has `tags, importance, project, sensitivity`
 
 ---
 
-## [ARCHIVED] Aesop_Luminis Phase 3 Complete — Hermes Found 6 Bugs (Apr 7, 2026)
 
-| Priority | Bug |
-|----------|-----|
-| P0 | `meta` vs `metadata` field name mismatch |
-| P0 | Missing `jest` and `@sinclair/typebox` in package.json |
-| P1 | `confidence` field in tests not in JargonDetection type |
-| P1 | `toolAutoEnable` config defined but never enforced |
-| P1 | `validateCustomEntries` exported but never called |
-| P2 | Glossary keys have leading/trailing whitespace |
+## [OPS] SIGTERM Prevention Protocol (Apr 14, 2026)
+
+**Pattern:** Set timer → walk away → don't poll → check when timer fires.
 
 ---
 
-## [ARCHIVED] Agent Report + Test Report (Apr 10, 2026)
-
-**Status:** Stale. Scout sessions wrote reports to staging folder for automatic memory integration.
+_Last updated: April 17, 2026_
 
 ---
 
-## [ARCHIVED] Aesop-Luminis Plugin Evaluation - SUCCESS (Apr 8, 2026)
 
-### Scores
-| Dimension | Score | Notes |
-|-----------|-------|-------|
-| Technical accuracy | 4.5/5 | Slight imprecision on positional encoding |
-| Clarity | 4.7/5 | Clean structure, numbered sections, math + plain language mix |
-| Allegory potential | 4.0/5 | Librarian analogy was functional but shallow |
-| Pedagogical quality | 4.8/5 | Strong progression: big picture → math → plain → analogy → example → why it matters |
-
-**Project Status:** ✅ SUCCESS
-
----
-
-## [ARCHIVED] KP-META-002 Full Reference (Apr 2, 2026)
-
-**Full pack:** `/Volumes/ExternalCorsairSSD/Abstractions/metacognitive_reasoning.md` (118KB, 829 lines)
-
-Contains:
-- Nelson-Narens metacognitive framework (monitoring + control separated)
-- Confidence Calibration System (MIT ensemble approach)
-- Verification Chain-of-Thought (VCoT) — stepwise verification raises accuracy 50% → 69-85%
-- Reflexion architecture (actor-evaluator-reflector separation)
-- MAPE-K control loop (Monitor-Analyze-Plan-Execute-Knowledge)
-- Self-Correction Limitation (ICLR 2024): same-model evaluation is unreliable
-
----
-
-## [ARCHIVED] KP-RESILIENCE-003 Full Reference (Apr 3, 2026)
-
-**Full pack:** `/Volumes/ExternalCorsairSSD/Abstractions/error_handling_resilience.md` (144KB, 871 lines)
-
-Contains:
-- Failure Mode Analysis (FMEA) methodology
-- Graceful Degradation Hierarchy (full → degraded → minimal → fail)
-- Circuit breaker patterns, loop detection, retry with exponential backoff
-- VIGIL runtime: 92% latency reduction, premature success signals dropped 100% → 0%
-
----
-
-_Last archived: April 17, 2026 by surgical review_

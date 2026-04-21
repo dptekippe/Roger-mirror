@@ -48,3 +48,46 @@ web_search({ query: "best practices for fantasy football drafting", count: 10 })
 - Use `freshness: "pd"` for time-sensitive topics
 - Use `count: 5-10` for thorough research
 - Follow up with `web_fetch` if you need to extract content from specific URLs
+
+---
+
+## Agentic Research Pattern (Apr 13, 2026)
+
+**Observed during:** Scout agentic-money-landscape research (Apr 13, 2026)
+
+When conducting multi-vector research, apply this pattern:
+
+1. **Scope definition** — Define revenue vectors, saturation levels, real numbers vs claims
+2. **Multi-source synthesis** — Combine: industry reports + operator interviews + revenue disclosures + market analysis
+3. **Saturation analysis** — Rate each vector: Low/Medium/High saturation + evidence
+4. **Framework output** — End with "where to focus" guidance based on biggest openings
+
+**Key quality markers from agentic-money-landscape research:**
+- Real revenue numbers (not just " ARR estimates")
+- Specific case studies with quantified outcomes
+- Honest saturation ratings with reasoning
+- Clear "pick one" recommendation at end
+
+---
+
+## Domain-Specific Search Filters
+
+For **business/agentic AI research**, prioritize:
+- Enterprise platforms: UiPath, Automation Anywhere (public revenue data)
+- Developer tools: Cursor, GitHub (adoption metrics)
+- No-code automation: Zapier (scale metrics)
+
+For **fantasy football research**, use:
+- `site:underdogfantasy.com` — Draft capital data
+- `site:fantasypros.com` — ADP/consensus rankings
+- `site:sleeper.app` — Platform data
+- `site:dynastyprocess.com` — Dynasty-specific analysis
+
+---
+
+## Changelog
+
+| Date | Change | Reason |
+|------|--------|--------|
+| Apr 19, 2026 | Added Agentic Research Pattern section | Codified Scout's multi-vector research approach from agentic-money-landscape |
+| Apr 19, 2026 | Added domain-specific search filters | Systematic coverage for business AI and fantasy football research |

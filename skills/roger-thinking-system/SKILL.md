@@ -1,7 +1,14 @@
 ---
-name: roger-thinking-system
-description: Comprehensive thinking framework for complex queries. Use when facing important decisions, technical problems, research tasks, or any multi-step reasoning. Triggers on: "think about", "analyze", "consider", "decide", "plan", "evaluate", "assess", "review", "debug", "architect", "design", "research", or when the query involves multiple components or uncertainty.
+name: when_think
+description: Roger's unified thinking framework. Use when_think skill instead — this file is archived.
 ---
+
+# ARCHIVED — See when_think skill
+
+This skill has been merged into `when_think/SKILL.md`.
+
+**when_think** contains the unified Think Protocol + Roger Think + Metacognition Pro
+in one coherent framework. Use that instead of this file.
 
 # Roger's Thinking System v3
 

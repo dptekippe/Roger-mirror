@@ -144,7 +144,7 @@ Tools available for DB access: blackboard_client.py (Python, no shell sqlite3 ne
     --model-params '{"base_url": "https://api.minimax.io/anthropic", "api_key": "'"$MINIMAX_API_KEY"'"}' \
     -n "$TASK_WITH_CONTEXT" \
     -y \
-    -S recommended
+    -S none
 SC_EXIT=$?
 
 # ── Post-execution: sentinel + notify ─────────────────────────────────────────

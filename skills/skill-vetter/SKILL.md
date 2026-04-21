@@ -135,4 +135,40 @@ curl -s "https://raw.githubusercontent.com/OWNER/REPO/main/skills/SKILL_NAME/SKI
 
 ---
 
+## Scout Output Verification Pattern (Established Apr 20, 2026)
+
+**Pattern:** Scout previously marked tasks complete without producing output (task 23 was a stub).
+
+**Required verification for all Scout task outputs:**
+1. Check for `[TASK DONE]` marker in output
+2. Check output file is non-empty
+3. Verify actual code/data in output files
+4. Cross-check against original task brief requirements
+
+**run_scout.sh now includes content verification before writing success sentinel.**
+
+---
+
+## Hermes Rejection Pattern (Established Apr 20, 2026)
+
+**Observation:** Hermes legitimately rejected M1 after Scout marked tasks complete.
+
+**What this means:**
+- Hermes adversarial review catches real gaps that bypass normal quality checks
+- Scout task completion ≠ task quality verified
+- All Scout outputs should go through Hermes adversarial review before approval
+
+**Skill vetting implication:** When vetting skills that involve agent delegation or task assignment, verify that output verification gates exist.
+
+---
+
+## Changelog
+
+| Date | Change | Reason |
+|------|--------|--------|
+| Apr 21, 2026 | Added Scout Output Verification Pattern section | Task 23 stub incident; content verification now mandatory for Scout tasks |
+| Apr 21, 2026 | Added Hermes Rejection Pattern section | M1 rejection proved adversarial review catches real gaps |
+
+---
+
 *Paranoia is a feature.* 🔒🦀

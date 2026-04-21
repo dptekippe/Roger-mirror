@@ -214,3 +214,64 @@ Scout is the name Daniel gave DeepAgent. They're the same thing.
 - **Handle:** @whiteroger:matrix.org
 - **Token:** mat_UHv6KuGNo8c8h6iDcuwmGzi7gPiHvs_hQNQz2
 - **Invited to:** Daniel Round Table room
+
+---
+
+## 🤖 when_think — Unified Thinking Framework
+
+**Merged from:** Think Protocol + Roger Think System + Metacognition Pro
+
+**Trigger:** Daniel's `<think>` tag, "think about", "analyze", "consider", "decide", "plan", etc.
+
+**Location:** `~/.openclaw/skills/when_think/SKILL.md`
+
+**What it contains:**
+- Level 0: Goal Identification (mandatory gate)
+- PAUSE framework (epistemic foundation)
+- Thinking Modes (OODA, First Principles, Inversion, Pre-mortem)
+- 4-Phase Think Protocol (Research → PAUSE+Subagent → Hermes Review → Synthesis)
+- Confidence Calibration Scale
+- Research Protocol (platform filters for web research)
+- Anti-Patterns + Phrases That Demand Deep Thought
+
+**Note:** Think Protocol moved from SOUL.md Section 10 to this skill. Delegation and Communication remain in SOUL.md.
+
+---
+
+## 🤖 Foreman System (Agent Orchestration Loop)
+
+**What it does:** Drives the blackboard task system. Advances task status, fires Hermes milestone reviews (M0/M1/M2/M3) automatically.
+
+**Components:**
+```
+/Volumes/ExternalCorsairSSD/shared/coordination/
+├── foreman.py              # Main loop: check sentinels, fire Hermes reviews
+├── foreman_watchdog.py     # Catches stale sentinels >10 min old
+├── blackboard_client.py    # Scout's Python DB wrapper
+└── write_sentinel.py      # Scout helper for sentinel writes
+```
+
+**When disabled (Apr 21, 2026):** Not actively building. Crons deleted to save resources.
+
+**⚡ To re-enable — run these 2 commands:**
+```bash
+# Main foreman (advances blackboard, fires Hermes reviews)
+openclaw cron update --jobId c324091e-72fd-4554-ac2b-38a00fa57cbd --patch '{"enabled": true}'
+
+# Watchdog (catches stale sentinels)
+openclaw cron update --jobId 9bba770f-88e6-44dd-848a-b9116bb2121b --patch '{"enabled": true}'
+```
+
+**Cron IDs (re-created Apr 21, 2026):**
+| Job | Cron ID | Schedule | Notes |
+|-----|---------|----------|-------|
+| foreman.py | `2465c535-9232-43fd-8baa-6383c9977359` | every 5 min | 60s timeout |
+| foreman_watchdog.py | `8cc3be4c-9d9c-4fe9-806c-cb5761e18192` | every 5 min | 60s timeout (was 30s, timed out) |
+
+**⚠️ Watchdog issue:** The watchdog was timing out (30s limit too short). When re-enabling, consider increasing timeout to 60s or removing the watchdog cron entirely if not needed.
+
+**What each script does:**
+- `foreman.py` — checks for task completion sentinels → auto-fires Hermes review when milestone gate is complete
+- `foreman_watchdog.py` — processes stale sentinels >10 min old (cases where primary notify missed)
+
+**Blackboard DB:** `/Volumes/ExternalCorsairSSD/shared/coordination/ai_plan_manager.db`

@@ -45,4 +45,75 @@ For ALL important tasks, chain **exactly**:
 
 ---
 
-*Updated: March 11, 2026*
+## Skills Index (73 Skills)
+
+**Last updated:** April 19, 2026 (built with Hermes)
+**Full draft:** `shared/coordination/skills-index-draft.md`
+
+### Quick Reference — By Task Type
+
+| Task | Primary Skill | Backup |
+|------|---------------|--------|
+| **UI/UX Design** | `when_design` | `awwwards-design` |
+| **Coding** | `deepagent` (Scout) | `coding-agent` |
+| **Bug Fix/Debug** | `when_code_review` | — |
+| **Architecture** | `when_architecture` | — |
+| **Web Research** | `agent-reach` | `when_research` (Iris) |
+| **Memory Query** | `when_memory_read` | — |
+| **Memory Store** | `when_memory_write` | — |
+| **System Review** | `when_system_review` | — |
+| **Skill Creation** | `skill-creator` | — |
+| **Skill Vetting** | `skill-vetter` | — |
+| **Multi-Branch Research** | `research-orchestrator` | — |
+| **Image Generation** | `minimax-image-gen` | `mmx-cli` |
+| **Video/Music/Speech** | `mmx-cli` | — |
+| **Browser Automation** | `browser-use` | — |
+| **GitHub** | `github` | `gh-issues` |
+| **iMessage** | `imsg` | `bluebubbles` |
+| **Smart Home** | `openhue` | `sonoscli`, `blucli` |
+| **Email** | `himalaya` | `gog` (Gmail) |
+| **Weather** | `weather` | — |
+| **Notes** | `apple-notes` | `obsidian`, `notion` |
+
+### Skills Inventory Summary
+
+| Category | Count | Location |
+|----------|-------|----------|
+| OpenClaw Built-in | 52 | `~/.openclaw/node_modules/openclaw/skills/` |
+| OpenClaw Workspace | 11 | `~/.openclaw/skills/` |
+| Team Shared (DynastyDroid) | 10 | `/Volumes/ExternalCorsairSSD/shared/skills/` |
+| **Total** | **73 active** | |
+
+### Skills Needing Revision (HIGH Priority)
+
+| Skill | Issue | Action |
+|-------|-------|--------|
+| `deepagent` (Scout) | SKILL.md references sandbox, setup now uses external SSD | ✅ COMPLETED Apr 20, 2026 — external SSD already documented (SKILL.md updated Mar 21, 2026) |
+| `session-logs` | Only 3 lines documented | ✅ COMPLETED Apr 20, 2026 — 115 lines, comprehensive jq examples in node_modules |
+| `oracle` | Claims "best practices" but documents nothing | ⚠️ node_modules built-in — cannot modify; consider workspace wrapper |
+| **API integration testing** | No skill for testing DynastyDroid/Roger integration points | CREATE: `api-test-runner` skill |
+| **skill-creation-checklist** | No post-creation gate — root cause of "never added" pattern in sessions 0314–0345 | ✅ COMPLETED 2026-04-20 — skill-creation-checklist created with 6-step gate |
+
+### Deprecated
+
+- `deprecated/scout-identity/` — merged into deepagent
+- `deprecated/perplexity/` — merged into agent-reach
+
+### Identified Gaps
+
+| Gap | Priority |
+|-----|----------|
+| No API integration testing skill | HIGH |
+| No E2E testing framework | MEDIUM |
+| `deepagent` + `coding-agent` overlap | LOW (documented) |
+
+### How to Use This Index
+
+1. Match your task to a skill in the Quick Reference table
+2. If unsure, check the full draft at `shared/coordination/skills-index-draft.md`
+3. For new skills: run `skill-vetter` before adopting
+4. To create/improve skills: use `skill-creator`
+
+---
+
+*Updated: April 19, 2026*

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-04-19T18:47:02.830Z",
+  "updatedAt": "2026-04-19T20:39:50.357Z",
   "entries": {
     "memory:memory/2026-03-18.md:30:63": {
       "key": "memory:memory/2026-03-18.md:30:63",
@@ -695,6 +695,68 @@
         "wins",
         "trade",
         "calculator"
+      ]
+    },
+    "memory:memory/2026-04-14.md:257:294": {
+      "key": "memory:memory/2026-04-14.md:257:294",
+      "path": "memory/2026-04-14.md",
+      "startLine": 257,
+      "endLine": 294,
+      "source": "memory",
+      "snippet": "|--|--|--| | Storage | Text blocks | Structured graph | | Retrieval | Core | Auxiliary | | Reasoning | None | Memory-driven | ### Native Agentic Architecture Paradigm **Old paradigm (2025)**: Model = brain, Agent = external limbs **New paradigm (2026)**: Goal-driven behavior BUILT INTO model during training **Capabilities**: - Long-duration autonomous reasoning (hours/days) - Self-correction without human intervention - Multi-agent orchestration under unified governance - Agent-native applications (tell goal, not steps) ### Q1 2026 Trends (17 page white paper) **OpenClaw is MAJOR news in China**: - \"OpenClaw GitHub stars from 9K → 247K in 60 days\" - \"2 million monthly active users\" - \"龙虾大",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.428754723072052,
+      "maxScore": 0.428754723072052,
+      "firstRecalledAt": "2026-04-19T20:39:50.357Z",
+      "lastRecalledAt": "2026-04-19T20:39:50.357Z",
+      "queryHashes": [
+        "7c714c6c9367"
+      ],
+      "recallDays": [
+        "2026-04-19"
+      ],
+      "conceptTags": [
+        "memory-driven",
+        "goal-driven",
+        "long-duration",
+        "hours/days",
+        "self-correction",
+        "multi-agent",
+        "agent-native",
+        "storage"
+      ]
+    },
+    "memory:memory/2026-04-14.md:224:266": {
+      "key": "memory:memory/2026-04-14.md:224:266",
+      "path": "memory/2026-04-14.md",
+      "startLine": 224,
+      "endLine": 266,
+      "source": "memory",
+      "snippet": "### ReSeek - Self-Correction Framework (CRITICAL) **Problem**: Cascading errors - early small mistake → complete failure **Solution**: JUDGE mechanism after each action ``` Action → Observation → JUDGE → Good/Bad judgment ↓ If GOOD → Add to context If BAD → IGNORE, use only previous valid history ``` **Result**: 40-50% positive impact on task completion ### Memento-Skills - Self-Evolving Skills (CRITICAL) **Innovation**: Agents develop skills autonomously without retraining model **Three skill components**: - Declarative specs (what the skill is) - Instructions/prompts (how to reason) - Executable code (how to solve) **Key breakthrough**: Behavioral re",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.39776826202869414,
+      "maxScore": 0.39776826202869414,
+      "firstRecalledAt": "2026-04-19T20:39:50.357Z",
+      "lastRecalledAt": "2026-04-19T20:39:50.357Z",
+      "queryHashes": [
+        "7c714c6c9367"
+      ],
+      "recallDays": [
+        "2026-04-19"
+      ],
+      "conceptTags": [
+        "self-correction",
+        "good/bad",
+        "40-50",
+        "memento-skills",
+        "self-evolving",
+        "instructions/prompts",
+        "reseek",
+        "self"
       ]
     }
   }
