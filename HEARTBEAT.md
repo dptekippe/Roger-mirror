@@ -143,4 +143,14 @@ Managed in: `/Volumes/ExternalCorsairSSD/shared/ideas/`
 
 ---
 
-*Last updated: Apr 17, 2026 18:32 CDT by Roger*
+**Apr 21, 2026 — Selective Context v4 Complete + Hermes on Kimi K2.6**
+
+- ✅ Selective Context Architecture v4 — all 8 tasks complete
+- ✅ Hook security fixes (SQL injection + byte enforcement) — task 36
+- ✅ Hermes running on Moonshot Kimi K2.6 (via `hermes setup`)
+- ✅ Foreman autonomy system documented (`06_foreman_autonomy.md`)
+- 📊 Next: MiniMax billing review in ~2 days to measure token reduction
+
+---
+
+*Last updated: Apr 21, 2026 08:18 CDT by Roger*
