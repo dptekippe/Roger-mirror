@@ -10,10 +10,13 @@ import os
 import re
 import yaml
 import json
+import logging
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 import hashlib
+
+logger = logging.getLogger(__name__)
 
 # Configuration
 WORKSPACE = Path("/Users/danieltekippe/.openclaw/workspace")
@@ -334,9 +337,43 @@ class SubconsciousProcessor:
         # Write back
         with open(MEMORY_FILE, 'w', encoding='utf-8') as f:
             f.write('\n'.join(updated_lines))
-            
+
         print(f"  📝 Updated MEMORY.md with {len(significant_entries)} significant memories")
+
+        # Also persist to vector memory store
+        self._sync_to_vector_store(significant_entries)
         
+    def _sync_to_vector_store(self, memory_entries: List[Dict]):
+        """Persist significant memories to the pgvector-backed store."""
+        try:
+            from app.core.memory_store import write_memory
+        except Exception as e:
+            logger.warning("Vector memory store unavailable, skipping sync: %s", e)
+            return
+
+        synced = 0
+        for entry in memory_entries:
+            metadata = entry["metadata"]
+            content = entry["content"]
+            try:
+                mid = write_memory(
+                    content=content,
+                    memory_type=metadata.get("context", "general"),
+                    importance=float(metadata.get("importance", 5)),
+                    metadata={
+                        "title": metadata.get("title", ""),
+                        "tags": metadata.get("tags", []),
+                        "source": "subconscious",
+                    },
+                )
+                if mid:
+                    synced += 1
+            except Exception as e:
+                logger.warning("Failed to sync memory to vector store: %s", e)
+
+        if synced:
+            print(f"  🧠 Synced {synced} memories to vector store")
+
     def cleanup_conscious_logs(self, processed_files: List[Path]):
         """Delete processed conscious logs."""
         for log_file in processed_files:
